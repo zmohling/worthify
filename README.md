@@ -1,2 +1,2 @@
 # Team_10
-hello
+A dynamic personal net worth tracker.
