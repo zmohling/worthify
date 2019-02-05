@@ -1,4 +1,4 @@
-package team_10.client;
+package team_10.client.activity;
 
 import android.Manifest;
 import android.support.v7.app.AppCompatActivity;
