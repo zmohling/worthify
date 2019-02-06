@@ -22,6 +22,6 @@ public class PraticeController {
 
     @DeleteMapping("/practiceDELETE")
     public void delete(){
-        System.out.println("DELET msg received");
+        System.out.println("DELETE msg received");
     }
 }
