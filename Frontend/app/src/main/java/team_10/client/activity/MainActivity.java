@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -114,13 +115,19 @@ public class MainActivity extends AppCompatActivity {
 
                                 //getting the user from the response
                                 JSONObject userJson = obj.getJSONObject("user");
+                                Iterator<String> iter = userJson.keys();
+                                int tempId = userJson.getInt(iter.next());
+                                String tempUsername = userJson.getString(iter.next());
+                                String tempEmail = userJson.getString(iter.next());
+
+                                User user = new User(tempId, tempUsername, tempEmail);
 
                                 //creating a new user object
-                                User user = new User(
-                                        userJson.getInt("id"),
-                                        userJson.getString("username"),
-                                        userJson.getString("email")
-                                );
+                                /*User user = new User(
+                                        userJson.getInt(iter.next()),
+                                        userJson.getString(iter.next()),
+                                        userJson.optString(iter.next())
+                                );*/
 
                                 //storing the user in shared preferences
                                 SharedPreferencesManager.getInstance(getApplicationContext()).userLogin(user);

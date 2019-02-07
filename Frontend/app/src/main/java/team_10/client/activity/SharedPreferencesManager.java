@@ -8,7 +8,6 @@ public class SharedPreferencesManager {
     private static final String SHARED_PREF_NAME = "networthsharedpref";
     private static final String KEY_USERNAME = "keyusername";
     private static final String KEY_EMAIL = "keyemail";
-    private static final String KEY_GENDER = "keygender";
     private static final String KEY_ID = "keyid";
 
     private static SharedPreferencesManager mInstance;
@@ -48,8 +47,7 @@ public class SharedPreferencesManager {
         return new User(
                 sharedPreferences.getInt(KEY_ID, -1),
                 sharedPreferences.getString(KEY_USERNAME, null),
-                sharedPreferences.getString(KEY_EMAIL, null),
-                sharedPreferences.getString(KEY_GENDER, null)
+                sharedPreferences.getString(KEY_EMAIL, null)
         );
     }
 
