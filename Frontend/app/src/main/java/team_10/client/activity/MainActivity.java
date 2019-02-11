@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             finish();
+            Intent intent = new Intent(this, ProfileActivity.class);
+            Intent intent2 = new Intent(this, RegisterActivity.class);
             startActivity(new Intent(this, ProfileActivity.class));
             return;
         }
@@ -56,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //open register screen
-                finish();
-                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+                //finish();
+                startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
             }
         });
     }
