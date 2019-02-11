@@ -20,13 +20,13 @@ public class UserController{
 
         //userRepo.save(user);
         String rString =
-        "\"error\":\"false\","
+        "{\"error\":\"false\","
             + "\"message\":\"user login success\","
             +  "\"user\":{"
             + "\"id\":\"" + user.getId() + "\"," +
                 "\"username\":\"" +  user.getUserName() + "\"," +
-                "\"email\":\"" + user.getEmail() + "\"}";
-
+                "\"email\":\"" + user.getEmail() + "\"}}";
+        System.out.println(rString);
         return rString;
     }
 }

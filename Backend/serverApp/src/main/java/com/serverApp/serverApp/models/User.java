@@ -19,16 +19,15 @@ public class User implements Serializable {
     private String firstName;*/
 
     public String getUserName() {
-        return userName;
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserName(String username) {
+        this.username = username;
     }
 
-    @Column(name = "userName")
-
-    private String userName;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "email")
     private String email;
