@@ -29,11 +29,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_main);
 
         if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             finish();
             startActivity(new Intent(this, ProfileActivity.class));
+            return;
         }
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //open register screen
                 finish();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
             }
         });
     }

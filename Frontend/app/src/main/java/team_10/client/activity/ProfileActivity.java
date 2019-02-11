@@ -19,7 +19,7 @@ public class ProfileActivity extends AppCompatActivity {
         //starting the login activity
         if (!SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             finish();
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
         }
 
 

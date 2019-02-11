@@ -19,7 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -27,11 +26,10 @@ public class RegisterActivity extends AppCompatActivity {
     EditText editTextUsername, editTextEmail, editTextPassword;
     ProgressBar progressBar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -62,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
                 //if user pressed on login
                 //we will open the login screen
                 finish();
-                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
 
