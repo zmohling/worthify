@@ -13,13 +13,13 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -50,7 +50,11 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //if user pressed on button register
                 //here we will register the user to server
-                registerUser();
+                try {
+                    registerUser();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -66,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser() {
+    private void registerUser() throws JSONException {
         final String username = editTextUsername.getText().toString().trim();
         final String email = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
@@ -96,6 +100,12 @@ public class RegisterActivity extends AppCompatActivity {
             editTextPassword.requestFocus();
             return;
         }
+        JSONObject json = new JSONObject();
+
+        json.put("username", username);
+        json.put("email", email);
+        json.put("password", password);
+        final String requestBody = json.toString();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.URL_REGISTER,
                 new Response.Listener<String>() {
@@ -142,16 +152,22 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", username);
-                params.put("email", email);
-                params.put("password", password);
-                return params;
+            public String getBodyContentType() {
+                return String.format("application/json; charset=utf-8");
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                            requestBody, "utf-8");
+                    return null;
+                }
             }
         };
 
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
-
     }
 }
