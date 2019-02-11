@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController{
     @RequestMapping("/login")
     public String login(@RequestBody User user){
-        System.out.println("Received user object");
-        return "";
+        System.out.println("Login: " + user.getFirstName() + " " + user.getLastName());
+        return "success";
     }
 }
