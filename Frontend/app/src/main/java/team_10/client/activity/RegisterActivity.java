@@ -21,67 +21,83 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
-    EditText editTextUsername, editTextPassword;
+    EditText editTextUsername, editTextEmail, editTextPassword;
     ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
 
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        //if the user is already logged in we will directly start the profile activity
         if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             finish();
             startActivity(new Intent(this, ProfileActivity.class));
             return;
         }
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         editTextUsername = (EditText) findViewById(R.id.editTextUsername);
+        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 
 
-        //if user presses on login
-        //calling the method login
-        findViewById(R.id.buttonLogin).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.buttonRegister).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userLogin();
+                //if user pressed on button register
+                //here we will register the user to server
+                registerUser();
             }
         });
 
-        //if user presses on not registered
-        findViewById(R.id.textViewRegister).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.textViewLogin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //open register screen
+                //if user pressed on login
+                //we will open the login screen
                 finish();
-                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
+
     }
 
-    private void userLogin() {
-        //first getting the values
-        final String username = editTextUsername.getText().toString();
-        final String password = editTextPassword.getText().toString();
+    private void registerUser() {
+        final String username = editTextUsername.getText().toString().trim();
+        final String email = editTextEmail.getText().toString().trim();
+        final String password = editTextPassword.getText().toString().trim();
 
-        //validating inputs
+        //first we will do the validations
+
         if (TextUtils.isEmpty(username)) {
-            editTextUsername.setError("Please enter your username");
+            editTextUsername.setError("Please enter username");
             editTextUsername.requestFocus();
             return;
         }
 
+        if (TextUtils.isEmpty(email)) {
+            editTextEmail.setError("Please enter your email");
+            editTextEmail.requestFocus();
+            return;
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            editTextEmail.setError("Enter a valid email");
+            editTextEmail.requestFocus();
+            return;
+        }
+
         if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Please enter your password");
+            editTextPassword.setError("Enter a password");
             editTextPassword.requestFocus();
             return;
         }
 
-        //if everything is fine
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.URL_LOGIN,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.URL_REGISTER,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -102,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                                 User user = new User(
                                         userJson.getInt("id"),
                                         userJson.getString("username"),
-                                        userJson.getString("email")
+                                        userJson.optString("email")
                                 );
 
                                 //storing the user in shared preferences
@@ -129,11 +145,13 @@ public class MainActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("username", username);
+                params.put("email", email);
                 params.put("password", password);
                 return params;
             }
         };
 
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
     }
 }
