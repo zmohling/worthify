@@ -6,9 +6,12 @@ import android.content.SharedPreferences;
 
 public class SharedPreferencesManager {
     private static final String SHARED_PREF_NAME = "networthsharedpref";
-    private static final String KEY_USERNAME = "keyusername";
+    private static final String KEY_FIRSTNAME = "keyfirstname";
+    private static final String KEY_LASTNAME = "keylastname";
+    //private static final String KEY_USERNAME = "keyusername";
     private static final String KEY_EMAIL = "keyemail";
     private static final String KEY_ID = "keyid";
+    private static final String KEY_TYPE = "keytype";
 
     private static SharedPreferencesManager mInstance;
     private static Context mCtx;
@@ -30,15 +33,17 @@ public class SharedPreferencesManager {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(KEY_ID, user.getId());
-        editor.putString(KEY_USERNAME, user.getUsername());
+        editor.putString(KEY_LASTNAME, user.getLastName());
+        editor.putString(KEY_FIRSTNAME, user.getFirstName());
         editor.putString(KEY_EMAIL, user.getEmail());
+        editor.putInt(KEY_TYPE, user.getType());
         editor.apply();
     }
 
     //this method will checker whether user is already logged in or not
     public boolean isLoggedIn() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(KEY_USERNAME, null) != null;
+        return sharedPreferences.getString(KEY_EMAIL, null) != null;
     }
 
     //this method will give the logged in user
@@ -46,8 +51,10 @@ public class SharedPreferencesManager {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return new User(
                 sharedPreferences.getInt(KEY_ID, -1),
-                sharedPreferences.getString(KEY_USERNAME, null),
-                sharedPreferences.getString(KEY_EMAIL, null)
+                sharedPreferences.getString(KEY_LASTNAME, null),
+                sharedPreferences.getString(KEY_FIRSTNAME, null),
+                sharedPreferences.getString(KEY_EMAIL, null),
+                sharedPreferences.getInt(KEY_TYPE, -1)
         );
     }
 

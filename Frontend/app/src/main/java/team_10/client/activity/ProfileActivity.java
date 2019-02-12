@@ -33,7 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         //setting the values to the textviews
         textViewId.setText(String.valueOf(user.getId()));
-        textViewUsername.setText(user.getUsername());
+        textViewUsername.setText(user.getFirstName() + user.getLastName());
         textViewEmail.setText(user.getEmail());
 
         //when the user presses logout button
