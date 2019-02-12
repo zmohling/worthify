@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //open register screen
-                //finish();
+                finish();
                 startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
             }
         });
