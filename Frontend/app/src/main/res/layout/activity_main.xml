@@ -42,7 +42,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:background="#383C4A"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:background="@drawable/card_bg"
             android:text="Login"
             android:textColor="#EDE8D6" />
 
