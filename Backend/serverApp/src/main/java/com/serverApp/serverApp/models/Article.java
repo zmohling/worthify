@@ -4,22 +4,22 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name="article")
+@Table(name="articles")
 public class Article implements Serializable {
     private static final long serialVersionUID = 2L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "userID")
-    private long userID;
+    @Column(name = "userId")
+    private long userId;
 
     @Column(name = "url")
     private String url;
 
     @Column(name = "isActive")
-    private boolean isActive;
+    private int isActive;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -33,12 +33,12 @@ public class Article implements Serializable {
         this.id = id;
     }
 
-    public long getUserID() {
-        return userID;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setUserID(long userID) {
-        this.userID = userID;
+    public void setUserId(long userID) {
+        this.userId = userID;
     }
 
     public String getUrl() {
@@ -49,11 +49,11 @@ public class Article implements Serializable {
         this.url = url;
     }
 
-    public boolean isActive() {
+    public int getIsActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
     }
 }
