@@ -99,6 +99,22 @@
             android:layout_marginBottom="10dp"
             android:text="Logout"
             android:textColor=" #EDE8D6" />
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/displayLinear"
+            android:background="@drawable/card_bg"
+            android:orientation="vertical" >
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/display_row"
+                android:layout_marginTop="280dip" />
+
+        </TableLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

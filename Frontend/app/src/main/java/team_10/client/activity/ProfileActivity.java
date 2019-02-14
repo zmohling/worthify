@@ -1,14 +1,26 @@
 package team_10.client.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Request.Method;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    TextView textViewId, textViewUsername, textViewEmail, textViewGender;
+    TextView textViewId, textViewFullName, textViewEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         textViewId = (TextView) findViewById(R.id.textViewId);
-        textViewUsername = (TextView) findViewById(R.id.textViewUsername);
+        textViewFullName = (TextView) findViewById(R.id.textViewUsername);
         textViewEmail = (TextView) findViewById(R.id.textViewEmail);
 
 
@@ -33,7 +45,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         //setting the values to the textviews
         textViewId.setText(String.valueOf(user.getId()));
-        textViewUsername.setText(user.getFirstName() + user.getLastName());
+        textViewFullName.setText(user.getFirstName() + " " + user.getLastName());
         textViewEmail.setText(user.getEmail());
 
         //when the user presses logout button
@@ -45,5 +57,56 @@ public class ProfileActivity extends AppCompatActivity {
                 SharedPreferencesManager.getInstance(getApplicationContext()).logout();
             }
         });
+
+
+        String urlArticles = "http://cs309-jr-1.misc.iastate.edu:8080/article/getAll";
+
+        StringRequest stringRequest = new StringRequest(Method.GET, urlArticles,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject returned = new JSONObject(response);
+                            int numArticles = returned.getInt("numArticles");
+                            String[] articleURLS = new String[numArticles];
+                            int i;
+                            for (i = 0; i < numArticles; i++)
+                            {
+                                try {
+                                    JSONObject userJson = returned.getJSONObject("article"+ i);
+                                    articleURLS[i] = userJson.getString("url");
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            TableLayout ll = (TableLayout) findViewById(R.id.displayLinear);
+
+                            for (int j = 0; j < numArticles; j++) {
+
+                                TableRow row= new TableRow(getApplicationContext());
+                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                                row.setLayoutParams(lp);
+                                TextView tv = new TextView(getApplicationContext());
+                                tv.setText(articleURLS[j]);
+                                tv.setTextColor(Color.parseColor("#EDE8D6"));
+                                row.addView(tv);
+                                ll.addView(row,j);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+// Access the RequestQueue through your singleton class.
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 }
