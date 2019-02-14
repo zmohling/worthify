@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#34db93"
+    android:background="#16A085"
     tools:context=".RegisterActivity">
 
     <LinearLayout
@@ -16,13 +16,24 @@
 
 
         <EditText
-            android:id="@+id/editTextUsername"
+            android:id="@+id/editTextFirstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:hint="Username"
-            android:inputType="text" />
+            android:hint="First Name"
+            android:inputType="text"
+            android:textColor="#EDE8D6" />
+
+        <EditText
+            android:id="@+id/editTextLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:hint="Last Name"
+            android:inputType="text"
+            android:textColor="#EDE8D6" />
 
         <EditText
             android:id="@+id/editTextEmail"
@@ -31,7 +42,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:hint="Email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textColor="#EDE8D6" />
 
         <EditText
             android:id="@+id/editTextPassword"
@@ -41,7 +53,8 @@
             android:layout_marginBottom="8dp"
             android:fontFamily="sans-serif"
             android:hint="Password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="#EDE8D6" />
 
         <Button
             android:id="@+id/buttonRegister"
@@ -49,8 +62,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:background="#db4d34"
-            android:text="Register" />
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:background="@drawable/card_bg"
+            android:text="Register"
+            android:textColor="#EDE8D6" />
 
         <TextView
             android:id="@+id/textViewLogin"
@@ -60,7 +76,8 @@
             android:layout_marginBottom="8dp"
             android:text="Already Registered?\nLogin Here"
             android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="#EDE8D6" />
     </LinearLayout>
 
     <ProgressBar
