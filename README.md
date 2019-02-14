@@ -1,4 +1,3 @@
 # Team_10
 
-
-hello
+NetWorthr - Dynamic Net Worth Tracker
