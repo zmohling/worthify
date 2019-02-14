@@ -13,17 +13,17 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText editTextUsername, editTextEmail, editTextPassword;
+    EditText editTextFirstName, editTextLastName, editTextEmail, editTextPassword;
     ProgressBar progressBar;
 
     @Override
@@ -40,7 +40,9 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        editTextUsername = (EditText) findViewById(R.id.editTextUsername);
+        //editTextUsername = (EditText) findViewById(R.id.editTextUsername);
+        editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
+        editTextLastName = (EditText) findViewById(R.id.editTextLastName);
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 
@@ -50,7 +52,11 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //if user pressed on button register
                 //here we will register the user to server
-                registerUser();
+                try {
+                    registerUser();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -66,16 +72,23 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser() {
-        final String username = editTextUsername.getText().toString().trim();
+    private void registerUser() throws JSONException {
+        final String firstName = editTextFirstName.getText().toString().trim();
+        final String lastName = editTextLastName.getText().toString().trim();
         final String email = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
 
         //first we will do the validations
 
-        if (TextUtils.isEmpty(username)) {
-            editTextUsername.setError("Please enter username");
-            editTextUsername.requestFocus();
+        if (TextUtils.isEmpty(firstName)) {
+            editTextFirstName.setError("Please enter first name");
+            editTextFirstName.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(lastName)) {
+            editTextLastName.setError("Please enter last name");
+            editTextLastName.requestFocus();
             return;
         }
 
@@ -96,6 +109,13 @@ public class RegisterActivity extends AppCompatActivity {
             editTextPassword.requestFocus();
             return;
         }
+        JSONObject json = new JSONObject();
+        json.put("lastName", lastName);
+        json.put("firstName", firstName);
+        json.put("email", email);
+        json.put("password", password);
+        json.put("type", 0);
+        final String requestBody = json.toString();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.URL_REGISTER,
                 new Response.Listener<String>() {
@@ -117,8 +137,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 //creating a new user object
                                 User user = new User(
                                         userJson.getInt("id"),
-                                        userJson.getString("username"),
-                                        userJson.optString("email")
+                                        userJson.getString("lastName"),
+                                        userJson.getString("firstName"),
+                                        userJson.getString("email"),
+                                        userJson.getInt("type")
                                 );
 
                                 //storing the user in shared preferences
@@ -142,16 +164,22 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", username);
-                params.put("email", email);
-                params.put("password", password);
-                return params;
+            public String getBodyContentType() {
+                return String.format("application/json; charset=utf-8");
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                            requestBody, "utf-8");
+                    return null;
+                }
             }
         };
 
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
-
     }
 }
