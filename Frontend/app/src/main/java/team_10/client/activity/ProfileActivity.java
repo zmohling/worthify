@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -58,7 +59,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
         String urlArticles = "http://cs309-jr-1.misc.iastate.edu:8080/article/getAll";
 
         StringRequest stringRequest = new StringRequest(Method.GET, urlArticles,
@@ -86,11 +86,16 @@ public class ProfileActivity extends AppCompatActivity {
 
                                 TableRow row= new TableRow(getApplicationContext());
                                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                                lp.setMargins(10, 10, 10, 10);
                                 row.setLayoutParams(lp);
                                 TextView tv = new TextView(getApplicationContext());
                                 tv.setText(articleURLS[j]);
+                                tv.setPadding(10,5,10,5);
                                 tv.setTextColor(Color.parseColor("#EDE8D6"));
+                                tv.setMaxLines(1);
+                                tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
                                 row.addView(tv);
+                                row.setVisibility(View.GONE);
                                 ll.addView(row,j);
                             }
                         } catch (JSONException e) {
@@ -108,5 +113,26 @@ public class ProfileActivity extends AppCompatActivity {
 
 // Access the RequestQueue through your singleton class.
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+        findViewById(R.id.buttonArticles).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TableLayout table = (TableLayout) findViewById(R.id.displayLinear);
+                for(int i = 0, j = table.getChildCount(); i < j; i++) {
+                    View views = table.getChildAt(i);
+                    if (views instanceof TableRow) {
+                        if (views.getVisibility() == View.VISIBLE)
+                        {
+                            views.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            views.setVisibility(View.VISIBLE);
+                        }
+                        }
+                    }
+                }
+            }
+        );
     }
 }
