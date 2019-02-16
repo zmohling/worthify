@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -93,10 +93,11 @@ public class ProfileActivity extends AppCompatActivity {
                                 tv.setPadding(10,5,10,5);
                                 tv.setTextColor(Color.parseColor("#EDE8D6"));
                                 tv.setMaxLines(1);
-                                tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+                                //tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+                                //Linkify.addLinks(tv, Linkify.WEB_URLS);
                                 row.addView(tv);
-                                row.setVisibility(View.GONE);
-                                ll.addView(row,j);
+                                //row.setVisibility(View.GONE);
+                                ll.addView(row,j + 1);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -117,20 +118,15 @@ public class ProfileActivity extends AppCompatActivity {
         findViewById(R.id.buttonArticles).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TableLayout table = (TableLayout) findViewById(R.id.displayLinear);
-                for(int i = 0, j = table.getChildCount(); i < j; i++) {
-                    View views = table.getChildAt(i);
-                    if (views instanceof TableRow) {
-                        if (views.getVisibility() == View.VISIBLE)
-                        {
-                            views.setVisibility(View.GONE);
-                        }
-                        else
-                        {
-                            views.setVisibility(View.VISIBLE);
-                        }
-                        }
-                    }
+                ScrollView table = (ScrollView) findViewById(R.id.list_scroll);
+                if (table.getVisibility() == View.VISIBLE)
+                {
+                    table.setVisibility(View.GONE);
+                }
+                else
+                {
+                    table.setVisibility(View.VISIBLE);
+                }
                 }
             }
         );

@@ -87,26 +87,14 @@
 
             </TableRow>
 
-            <Button
-                android:id="@+id/buttonLogout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/greenbtn_bg"
-                android:layout_marginLeft="100dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="100dp"
-                android:layout_marginBottom="10dp"
-                android:text="Logout"
-                android:textColor=" #EDE8D6" />
-
         </TableLayout>
 
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/displayLinear"
             android:background="@drawable/card_bg"
-            android:orientation="vertical" >
+            android:layout_marginBottom="15dp">
 
             <Button
                 android:id="@+id/buttonArticles"
@@ -120,8 +108,46 @@
                 android:text="Articles"
                 android:textColor=" #EDE8D6" />
 
-        </TableLayout>
+            <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:layout_below="@id/buttonArticles"
+                android:visibility="gone"
+                android:id="@+id/list_scroll">
+
+                <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/displayLinear"
+                    android:orientation="vertical" >
+                    <TableRow>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+
+                    </TableRow>
+
+                </TableLayout>
+
+            </ScrollView>
+
+        </RelativeLayout>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/greenbtn_bg"
+        android:text="Logout"
+        android:textColor=" #EDE8D6" />
 
 </RelativeLayout>
