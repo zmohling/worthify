@@ -2,18 +2,13 @@ package team_10.client.account;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.Vector;
 
 public class Loan extends Account {
 
-    private Map<LocalDate, Transaction> transactions;
-
     public Loan(int id)
     {
         super(id);
-        this.transactions = new TreeMap<LocalDate, Transaction>();
 
     }
 
@@ -39,8 +34,8 @@ public class Loan extends Account {
                 }
 
                 //A = P(1 + r/n)^nt -> Daily Compound Interest
-                double principle = total + transactions.get(fromDate).getAmount();
-                double rate = transactions.get(fromDate).getInterestRate();
+                double principle = total + ((Transaction) transactions.get(fromDate)).getAmount();
+                double rate = ((Transaction) transactions.get(fromDate)).getInterestRate();
                 long n = fromDate.until(toDate, ChronoUnit.DAYS); //number of compounding periods (DAYS) per unit t
                 double t = n / (double) fromDate.lengthOfYear();
 
@@ -51,19 +46,22 @@ public class Loan extends Account {
         return total;
     }
 
-    public void addTransaction(LocalDate date, double value, double interestRate) {
-
-        Transaction t = new Transaction(value, interestRate);
-
-        transactions.put(date, t);
+    /* Overloaded addTransaction method */
+    public void addTransaction(LocalDate d, double amount, double interestRate)
+    {
+        Transaction t = new Transaction(amount, interestRate);
+        transactions.put(d, t);
     }
 
-    private class Transaction extends Account.Transaction {
+    protected class Transaction extends Account.Transaction {
+
         double interestRate;
 
-        private Transaction(double amount, double interestRate) {
+        Transaction(double amount, double interestRate)
+        {
             super(amount);
             this.interestRate = interestRate;
+
         }
 
         public double getAmount() {
