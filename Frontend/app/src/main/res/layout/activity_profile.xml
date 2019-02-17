@@ -110,9 +110,14 @@
 
             <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
-                android:layout_height="100dp"
+                android:maxHeight="150dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/buttonArticles"
+                android:paddingBottom="15dp"
                 android:visibility="gone"
+                android:scrollbarThumbVertical="@drawable/scrollbar"
+                android:scrollbarSize="4dp"
+                android:fadeScrollbars="false"
                 android:id="@+id/list_scroll">
 
                 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"

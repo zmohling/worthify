@@ -93,6 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 tv.setPadding(10,5,10,5);
                                 tv.setTextColor(Color.parseColor("#EDE8D6"));
                                 tv.setMaxLines(1);
+                                tv.setPadding(0,5,0,5);
                                 //tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
                                 //Linkify.addLinks(tv, Linkify.WEB_URLS);
                                 row.addView(tv);
