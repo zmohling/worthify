@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -58,7 +59,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
         String urlArticles = "http://cs309-jr-1.misc.iastate.edu:8080/article/getAll";
 
         StringRequest stringRequest = new StringRequest(Method.GET, urlArticles,
@@ -86,12 +86,19 @@ public class ProfileActivity extends AppCompatActivity {
 
                                 TableRow row= new TableRow(getApplicationContext());
                                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                                lp.setMargins(10, 10, 10, 10);
                                 row.setLayoutParams(lp);
                                 TextView tv = new TextView(getApplicationContext());
                                 tv.setText(articleURLS[j]);
+                                tv.setPadding(10,5,10,5);
                                 tv.setTextColor(Color.parseColor("#EDE8D6"));
+                                tv.setMaxLines(1);
+                                tv.setPadding(0,5,0,5);
+                                //tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+                                //Linkify.addLinks(tv, Linkify.WEB_URLS);
                                 row.addView(tv);
-                                ll.addView(row,j);
+                                //row.setVisibility(View.GONE);
+                                ll.addView(row,j + 1);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -108,5 +115,21 @@ public class ProfileActivity extends AppCompatActivity {
 
 // Access the RequestQueue through your singleton class.
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+        findViewById(R.id.buttonArticles).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ScrollView table = (ScrollView) findViewById(R.id.list_scroll);
+                if (table.getVisibility() == View.VISIBLE)
+                {
+                    table.setVisibility(View.GONE);
+                }
+                else
+                {
+                    table.setVisibility(View.VISIBLE);
+                }
+                }
+            }
+        );
     }
 }
