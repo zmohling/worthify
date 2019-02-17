@@ -1,8 +1,14 @@
 package team_10.client.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+import team_10.client.account.*;
+
 public class User {
     private int id, type;
     private String lastName, firstName, email; //Password doesn't need to be in user
+
+    List<Account> accounts;
 
     public User(int id, String lastName, String firstName, String email, int type) {
         this.id = id;
@@ -10,6 +16,8 @@ public class User {
         this.firstName = firstName;
         this.email = email;
         this.type = type;
+
+        accounts = new ArrayList<>();
     }
 
     public int getId() {
