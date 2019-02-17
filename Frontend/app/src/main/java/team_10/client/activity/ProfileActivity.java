@@ -15,9 +15,15 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import team_10.client.account.Account;
+import team_10.client.account.Loan;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -42,7 +48,18 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         //getting the current user
-        User user = SharedPreferencesManager.getInstance(this).getUser();
+        final User user = SharedPreferencesManager.getInstance(this).getUser();
+
+        // Accounts Testing
+        //==================================================
+
+        Loan carloan = new Loan(1234);
+        carloan.addTransaction(LocalDate.now(), 100, 0.04);
+        carloan.addTransaction(LocalDate.now().plusYears(1), 1000, 0.08);
+
+        user.addAccount(carloan);
+
+        //==================================================
 
         //setting the values to the textviews
         textViewId.setText(String.valueOf(user.getId()));
@@ -130,6 +147,49 @@ public class ProfileActivity extends AppCompatActivity {
                 }
                 }
             }
+        );
+
+        findViewById(R.id.buttonAccounts).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ScrollView table = (ScrollView) findViewById(R.id.list_scroll_accounts);
+                        if (table.getVisibility() == View.VISIBLE) {
+                            table.setVisibility(View.GONE);
+                        } else {
+                            TableLayout ll = (TableLayout) findViewById(R.id.displayLinearAccounts);
+
+                            ArrayList<Account> accounts = new ArrayList<>(user.getAccountsList());
+                            int numAccounts = accounts.size();
+
+                            Gson gsonObject = new Gson();
+
+                            for (int j = 0; j < numAccounts; j++) {
+
+                                String s = gsonObject.toJson(accounts.get(j));
+
+                                TableRow row= new TableRow(getApplicationContext());
+                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                                lp.setMargins(10, 10, 10, 10);
+                                row.setLayoutParams(lp);
+                                TextView tv = new TextView(getApplicationContext());
+                                tv.setText(s);
+                                tv.setPadding(10,5,10,5);
+                                tv.setTextColor(Color.parseColor("#EDE8D6"));
+                                tv.setMaxLines(1);
+                                tv.setPadding(0,5,0,5);
+                                //tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+                                //Linkify.addLinks(tv, Linkify.WEB_URLS);
+                                row.addView(tv);
+                                //row.setVisibility(View.GONE);
+                                ll.addView(row,j + 1);
+                                System.out.println(s);
+                            }
+
+                            table.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
         );
     }
 }

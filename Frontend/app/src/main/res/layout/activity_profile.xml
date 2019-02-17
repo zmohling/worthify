@@ -142,6 +142,58 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_bg"
+            android:layout_marginBottom="15dp">
+
+            <Button
+                android:id="@+id/buttonAccounts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/greenbtn_bg"
+                android:layout_marginLeft="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="100dp"
+                android:layout_marginBottom="10dp"
+                android:text="Accounts"
+                android:textColor=" #EDE8D6" />
+
+            <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:maxHeight="150dp"
+                android:layout_height="150dp"
+                android:layout_below="@id/buttonAccounts"
+                android:paddingBottom="15dp"
+                android:visibility="gone"
+                android:scrollbarThumbVertical="@drawable/scrollbar"
+                android:scrollbarSize="4dp"
+                android:fadeScrollbars="false"
+                android:id="@+id/list_scroll_accounts">
+
+                <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dp"
+                    android:paddingLeft="5dp"
+                    android:id="@+id/displayLinearAccounts"
+                    android:orientation="vertical" >
+                    <TableRow>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone" />
+
+                    </TableRow>
+
+                </TableLayout>
+
+            </ScrollView>
+
+        </RelativeLayout>
+
     </LinearLayout>
 
     <Button

@@ -20,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-
 import team_10.client.constant.URLs;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             finish();

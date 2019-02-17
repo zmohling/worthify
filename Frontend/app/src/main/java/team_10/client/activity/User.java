@@ -28,6 +28,12 @@ public class User {
 
     public String getFirstName() {return firstName;}
 
+    public List<Account> getAccountsList() { return accounts; }
+
+    public void addAccount(Account a) {
+        accounts.add(a);
+    }
+
 
     //public String getUsername() {
      //   return username;
