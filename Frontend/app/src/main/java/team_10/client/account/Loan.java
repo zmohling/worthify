@@ -1,14 +1,34 @@
 package team_10.client.account;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Vector;
 
+/**
+ * Loan Account Type. Add transactions of absolute interest
+ * rate or change in principal. Interest compounds daily.
+ */
 public class Loan extends Account {
 
     public Loan() {}
 
+    /**
+     * Overloaded addTransaction method for Loan.
+     * @param d Date of transaction.
+     * @param amount Amount of transaction, aka change of principal amount. (negative or positive)
+     * @param interestRate Interest rate at the time of the transaction.
+     */
+    public void addTransaction(LocalDate d, double amount, double interestRate)
+    {
+        Transaction t = new Transaction(amount, interestRate);
+        transactions.put(d, t);
+    }
+
+    /**
+     * Get the value of this Loan at a specified date.
+     * @param d LocalDate which to calculate value.
+     * @return Value at LocalDate <code>d</code>
+     */
     public double getValue(LocalDate d) {
         Vector<LocalDate> transaction_dates = new Vector<LocalDate>(transactions.keySet());
 
@@ -17,7 +37,6 @@ public class Loan extends Account {
         if (transaction_dates.size() <= 0) {
             throw new IllegalStateException("No transactions for this account.");
         } else {
-
             for (int i = 0; i < transaction_dates.size(); i++) {
 
                 LocalDate fromDate = transaction_dates.get(i);
@@ -40,17 +59,18 @@ public class Loan extends Account {
             }
         }
 
-        return (double)Math.round(total * 100d) / 100d;
+        return (double)Math.round(total * 100d) / 100d; // round to nearest cent
     }
 
-    /* Overloaded addTransaction method */
-    public void addTransaction(LocalDate d, double amount, double interestRate)
-    {
-        Transaction t = new Transaction(amount, interestRate);
-        transactions.put(d, t);
-    }
 
-    protected class Transaction extends team_10.client.account.Transaction {
+
+
+
+
+    /**
+     * Loan specific Transaction object.
+     */
+    private class Transaction extends team_10.client.account.Transaction {
 
         double interestRate;
 
@@ -63,9 +83,8 @@ public class Loan extends Account {
         public double getAmount() {
             return this.amount;
         }
-
-        public double getInterestRate() {
-            return this.interestRate;
-        }
+        public void setAmount(double amount) { this.amount = amount; }
+        public double getInterestRate() { return this.interestRate; }
+        public void setInterestRate(double interestRate) { this.interestRate = interestRate; }
     }
 }

@@ -1,7 +1,5 @@
 package team_10.client.utility;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,11 +8,6 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.JsonDeserializer;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.lang.reflect.Type;
 
 import team_10.client.account.Account;
@@ -43,13 +36,13 @@ public class AbstractAccountAdapter implements JsonSerializer<Account>, JsonDese
         JsonPrimitive prim = (JsonPrimitive) jsonObject.get(CLASSNAME);
         String className = prim.getAsString();
 
-        Class<?> klass = null;
+        Class<?> _class = null;
         try {
-            klass = Class.forName(className);
+            _class = Class.forName(className);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             throw new JsonParseException(e.getMessage());
         }
-        return context.deserialize(jsonObject.get(INSTANCE), klass);
+        return context.deserialize(jsonObject.get(INSTANCE), _class);
     }
 }

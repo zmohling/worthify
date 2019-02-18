@@ -1,8 +1,11 @@
 package team_10.client.account;
 
 import java.util.List;
-import java.util.ArrayList;
 
+/*
+ * Wrapper class for sending serializing, sending, and
+ * receiving accounts.
+ */
 public class AccountsWrapper {
 
     private List<Account> accounts;

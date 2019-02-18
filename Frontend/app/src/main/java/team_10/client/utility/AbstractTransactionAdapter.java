@@ -8,7 +8,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-
 import java.lang.reflect.Type;
 
 import team_10.client.account.Transaction;
@@ -36,13 +35,13 @@ public class AbstractTransactionAdapter implements JsonSerializer<Transaction>, 
         JsonPrimitive prim = (JsonPrimitive) jsonObject.get(CLASSNAME);
         String className = prim.getAsString();
 
-        Class<?> klass = null;
+        Class<?> _class = null;
         try {
-            klass = Class.forName(className);
+            _class = Class.forName(className);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             throw new JsonParseException(e.getMessage());
         }
-        return context.deserialize(jsonObject.get(INSTANCE), klass);
+        return context.deserialize(jsonObject.get(INSTANCE), _class);
     }
 }
