@@ -13,12 +13,11 @@ import java.lang.reflect.Type;
 
 import team_10.client.account.Transaction;
 
-public class AbstractTransactionAdapter implements JsonSerializer<Transaction>, JsonDeserializer<Transaction> {
+public class AbstractTransactionAdapter implements JsonDeserializer<Transaction> {
 
     private static final String CLASSNAME = "CLASSNAME";
     private static final String INSTANCE  = "INSTANCE";
 
-    @Override
     public JsonElement serialize(Transaction src, Type typeOfSrc,
                                  JsonSerializationContext context) {
 

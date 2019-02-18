@@ -168,15 +168,10 @@ public class ProfileActivity extends AppCompatActivity {
                             b.setPrettyPrinting();
                             Gson g = b.create();
 
+                            //System.out.println(response);
+
                             AccountsWrapper wrapper = g.fromJson(response, AccountsWrapper.class);
                             List<Account> accounts = user.getAccounts();
-
-                            for (Account a : user.getAccounts())
-                            {
-                                System.out.println("Type: " + a.getClass().getSimpleName() +
-                                        ", ID: " + a.getID() + ", Today's Value: " +
-                                        a.getValue(LocalDate.now()));
-                            }
 
                             TableLayout ll = (TableLayout) findViewById(R.id.displayLinearAccounts);
 
