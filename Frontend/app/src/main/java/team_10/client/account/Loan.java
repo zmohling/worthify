@@ -1,16 +1,13 @@
 package team_10.client.account;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Vector;
 
 public class Loan extends Account {
 
-    public Loan(int id)
-    {
-        super(id);
-
-    }
+    public Loan() {}
 
     public double getValue(LocalDate d) {
         Vector<LocalDate> transaction_dates = new Vector<LocalDate>(transactions.keySet());
@@ -43,7 +40,7 @@ public class Loan extends Account {
             }
         }
 
-        return total;
+        return (double)Math.round(total * 100d) / 100d;
     }
 
     /* Overloaded addTransaction method */
@@ -53,15 +50,14 @@ public class Loan extends Account {
         transactions.put(d, t);
     }
 
-    protected class Transaction extends Account.Transaction {
+    protected class Transaction extends team_10.client.account.Transaction {
 
         double interestRate;
 
         Transaction(double amount, double interestRate)
         {
-            super(amount);
+            this.amount = amount;
             this.interestRate = interestRate;
-
         }
 
         public double getAmount() {

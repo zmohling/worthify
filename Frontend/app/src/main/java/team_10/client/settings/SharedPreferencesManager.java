@@ -1,8 +1,11 @@
-package team_10.client.activity;
+package team_10.client.settings;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
+import team_10.client.activity.MainActivity;
+import team_10.client.activity.User;
 
 public class SharedPreferencesManager {
     private static final String SHARED_PREF_NAME = "networthsharedpref";

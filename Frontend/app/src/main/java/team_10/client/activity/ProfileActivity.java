@@ -15,9 +15,17 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import team_10.client.account.*;
+import team_10.client.settings.*;
+import team_10.client.utility.*;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -42,7 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         //getting the current user
-        User user = SharedPreferencesManager.getInstance(this).getUser();
+        final User user = SharedPreferencesManager.getInstance(this).getUser();
 
         //setting the values to the textviews
         textViewId.setText(String.valueOf(user.getId()));
@@ -59,8 +67,8 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        // Articles Volley Request
         String urlArticles = "http://cs309-jr-1.misc.iastate.edu:8080/article/getAll";
-
         StringRequest stringRequest = new StringRequest(Method.GET, urlArticles,
                 new Response.Listener<String>() {
                     @Override
@@ -109,11 +117,74 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        System.out.println(error.getMessage());
                     }
                 });
 
 
-// Access the RequestQueue through your singleton class.
+        // Accounts Volley Request
+        String urlAccounts = "https://8b67c89e-e67a-4c42-8bbe-747d4438afc8.mock.pstmn.io/getAccounts";
+        final StringRequest accountsStringRequest = new StringRequest(Method.GET, urlAccounts,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject returned = new JSONObject(response);
+
+                            GsonBuilder b = new GsonBuilder();
+                            b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
+                            b.registerTypeAdapter(Transaction.class, new AbstractTransactionAdapter());
+                            b.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
+                            b.setPrettyPrinting();
+                            Gson g = b.create();
+
+                            AccountsWrapper wrapper = g.fromJson(response, AccountsWrapper.class);
+                            List<Account> wrapperAccounts = wrapper.getAccounts();
+
+                            List<Account> accounts = user.getAccounts();
+                            accounts.addAll(wrapperAccounts);
+
+                            TableLayout ll = (TableLayout) findViewById(R.id.displayLinearAccounts);
+
+                            for (int j = 0; j < accounts.size(); j++) {
+
+                                Account a = accounts.get(j);
+
+                                TableRow row= new TableRow(getApplicationContext());
+                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                                lp.setMargins(10, 10, 10, 10);
+                                row.setLayoutParams(lp);
+                                TextView tv = new TextView(getApplicationContext());
+                                tv.setText("Type: " + a.getClass().getSimpleName() +
+                                        ", ID: " + a.getID() + ", Today's Value: " +
+                                        a.getValue(LocalDate.now().plusMonths(18)));
+                                tv.setPadding(10,5,10,5);
+                                tv.setTextColor(Color.parseColor("#EDE8D6"));
+                                tv.setMaxLines(1);
+                                tv.setPadding(0,5,0,5);
+                                //tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+                                //Linkify.addLinks(tv, Linkify.WEB_URLS);
+                                row.addView(tv);
+                                //row.setVisibility(View.GONE);
+                                ll.addView(row,j + 1);
+
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        System.out.println(error.getMessage());
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        VolleySingleton.getInstance(this).addToRequestQueue(accountsStringRequest);
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
 
         findViewById(R.id.buttonArticles).setOnClickListener(new View.OnClickListener() {
@@ -130,6 +201,20 @@ public class ProfileActivity extends AppCompatActivity {
                 }
                 }
             }
+        );
+
+        findViewById(R.id.buttonAccounts).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ScrollView table = (ScrollView) findViewById(R.id.list_scroll_accounts);
+                        if (table.getVisibility() == View.VISIBLE) {
+                            table.setVisibility(View.GONE);
+                        } else {
+                            table.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
         );
     }
 }
