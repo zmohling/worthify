@@ -189,7 +189,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 TextView tv = new TextView(getApplicationContext());
                                 tv.setText("Type: " + accounts.get(j).getClass().getSimpleName() +
                                         ", ID: " + accounts.get(j).getID() + ", Today's Value: " +
-                                        accounts.get(j).getValue(LocalDate.now()));
+                                        accounts.get(j).getValue(LocalDate.now().plusMonths(18)));
                                 tv.setPadding(10,5,10,5);
                                 tv.setTextColor(Color.parseColor("#EDE8D6"));
                                 tv.setMaxLines(1);

@@ -42,7 +42,7 @@ public class Loan extends Account implements Serializable {
             }
         }
 
-        return total;
+        return (double)Math.round(total * 100d) / 100d;
     }
 
     /* Overloaded addTransaction method */
