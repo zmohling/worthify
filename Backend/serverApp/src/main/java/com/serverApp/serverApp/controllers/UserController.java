@@ -39,8 +39,16 @@ public class UserController{
 
     @RequestMapping("/login")
     public String login(@RequestBody User user){
-        User retrievedUser = userRepo.getUser(user.getEmail(), user.getPassword(), user.getSalt());
-
+        User retrievedUser = userRepo.getUser(user.getEmail());
+        String hashedPassword = hashingFunction.hashingFunction(user.getPassword(), retrievedUser.getSalt());
+        if(retrievedUser.getPassword() == hashedPassword)
+        {
+            //should return success
+        }
+        else
+        {
+            //should return failed
+        }
         String rString =
                 "{\"error\":\"false\","
                         + "\"message\":\"user login success\","
