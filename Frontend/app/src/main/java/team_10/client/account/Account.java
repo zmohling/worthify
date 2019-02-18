@@ -6,16 +6,18 @@ import java.util.TreeMap;
 public abstract class Account
 {
     protected int id;
-    protected Map<LocalDate, Transaction> transactions;
+    public TreeMap<LocalDate, team_10.client.account.Transaction> transactions;
 
-    public Account(int id) {
-        this.id = id;
-
-        transactions = new TreeMap<LocalDate, Transaction>();
+    public Account() {
+        transactions = new TreeMap<>();
     }
 
     public int getID() {
         return this.id;
+    }
+
+    public void setID(int id) {
+        this.id = id;
     }
 
     public void addTransaction(LocalDate d, double amount) {
@@ -25,7 +27,7 @@ public abstract class Account
 
     public abstract double getValue(LocalDate d);
 
-    protected class Transaction {
+    protected class Transaction extends team_10.client.account.Transaction {
         double amount;
 
         protected Transaction(double amount) {
