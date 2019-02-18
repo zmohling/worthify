@@ -22,6 +22,8 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 import team_10.client.constant.URLs;
+import team_10.client.settings.SharedPreferencesManager;
+import team_10.client.utility.VolleySingleton;
 
 public class RegisterActivity extends AppCompatActivity {
 

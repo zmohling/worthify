@@ -17,25 +17,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.reflect.TypeToken;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
 
-import team_10.client.account.Account;
-import team_10.client.account.AccountsWrapper;
-import team_10.client.account.Loan;
-import team_10.client.account.Transaction;
+import team_10.client.account.*;
+import team_10.client.settings.*;
 import team_10.client.utility.*;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -63,24 +52,6 @@ public class ProfileActivity extends AppCompatActivity {
         //getting the current user
         final User user = SharedPreferencesManager.getInstance(this).getUser();
 
-        // Accounts Testing
-        //==================================================
-
-        Loan carloan = new Loan();
-        carloan.setID(1234);
-        carloan.addTransaction(LocalDate.now(), 100, 0.04);
-        carloan.addTransaction(LocalDate.now().plusYears(1), 1000, 0.08);
-
-        user.addAccount(carloan);
-
-        Loan mortage = new Loan();
-        mortage.setID(1235);
-        mortage.addTransaction(LocalDate.now().plusMonths(3), 233000, 0.03);
-
-        user.addAccount(mortage);
-
-        //==================================================
-
         //setting the values to the textviews
         textViewId.setText(String.valueOf(user.getId()));
         textViewFullName.setText(user.getFirstName() + " " + user.getLastName());
@@ -96,8 +67,8 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        // Articles Volley Request
         String urlArticles = "http://cs309-jr-1.misc.iastate.edu:8080/article/getAll";
-
         StringRequest stringRequest = new StringRequest(Method.GET, urlArticles,
                 new Response.Listener<String>() {
                     @Override
@@ -151,9 +122,8 @@ public class ProfileActivity extends AppCompatActivity {
                 });
 
 
-        final Gson gsonObject = new Gson();
+        // Accounts Volley Request
         String urlAccounts = "https://8b67c89e-e67a-4c42-8bbe-747d4438afc8.mock.pstmn.io/getAccounts";
-
         final StringRequest accountsStringRequest = new StringRequest(Method.GET, urlAccounts,
                 new Response.Listener<String>() {
                     @Override
@@ -168,23 +138,26 @@ public class ProfileActivity extends AppCompatActivity {
                             b.setPrettyPrinting();
                             Gson g = b.create();
 
-                            //System.out.println(response);
-
                             AccountsWrapper wrapper = g.fromJson(response, AccountsWrapper.class);
+                            List<Account> wrapperAccounts = wrapper.getAccounts();
+
                             List<Account> accounts = user.getAccounts();
+                            accounts.addAll(wrapperAccounts);
 
                             TableLayout ll = (TableLayout) findViewById(R.id.displayLinearAccounts);
 
                             for (int j = 0; j < accounts.size(); j++) {
+
+                                Account a = accounts.get(j);
 
                                 TableRow row= new TableRow(getApplicationContext());
                                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                                 lp.setMargins(10, 10, 10, 10);
                                 row.setLayoutParams(lp);
                                 TextView tv = new TextView(getApplicationContext());
-                                tv.setText("Type: " + accounts.get(j).getClass().getSimpleName() +
-                                        ", ID: " + accounts.get(j).getID() + ", Today's Value: " +
-                                        accounts.get(j).getValue(LocalDate.now().plusMonths(18)));
+                                tv.setText("Type: " + a.getClass().getSimpleName() +
+                                        ", ID: " + a.getID() + ", Today's Value: " +
+                                        a.getValue(LocalDate.now().plusMonths(18)));
                                 tv.setPadding(10,5,10,5);
                                 tv.setTextColor(Color.parseColor("#EDE8D6"));
                                 tv.setMaxLines(1);
@@ -194,9 +167,8 @@ public class ProfileActivity extends AppCompatActivity {
                                 row.addView(tv);
                                 //row.setVisibility(View.GONE);
                                 ll.addView(row,j + 1);
-                            }
 
-                            //System.out.println("FUCKKK2222");
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -207,7 +179,7 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                        System.out.println("FUCKKKK" + error.getMessage());
+                        System.out.println(error.getMessage());
                     }
                 });
 

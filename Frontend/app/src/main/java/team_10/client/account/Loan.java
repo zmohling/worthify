@@ -5,11 +5,9 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Vector;
 
-public class Loan extends Account implements Serializable {
+public class Loan extends Account {
 
-    public Loan() {
-
-    }
+    public Loan() {}
 
     public double getValue(LocalDate d) {
         Vector<LocalDate> transaction_dates = new Vector<LocalDate>(transactions.keySet());
