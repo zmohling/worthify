@@ -1,11 +1,14 @@
 package com.serverApp.serverApp.controllers;
 
+import com.serverApp.serverApp.hashingFunction;
 import com.serverApp.serverApp.models.User;
 import com.serverApp.serverApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 public class UserController{
@@ -14,10 +17,12 @@ public class UserController{
     UserRepository userRepo;
 
     @RequestMapping("/register")
-    public String register(@RequestBody User user){
+    public String register(@RequestBody User user) throws NoSuchAlgorithmException {
     // System.out.println("Login: Id: " + user.getId() + ": " + user.getFirstName() + " " +
     // user.getLastName());userRepo.save(user);
-
+        byte[] salt = hashingFunction.getSalt();
+        user.setSalt(salt);
+        user.setPassword(hashingFunction.hashingFunction(user.getPassword(), salt));
         userRepo.save(user);
         String rString =
         "{\"error\":\"false\","
@@ -34,7 +39,7 @@ public class UserController{
 
     @RequestMapping("/login")
     public String login(@RequestBody User user){
-        User retrievedUser = userRepo.getUser(user.getEmail(), user.getPassword());
+        User retrievedUser = userRepo.getUser(user.getEmail(), user.getPassword(), user.getSalt());
 
         String rString =
                 "{\"error\":\"false\","
