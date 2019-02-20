@@ -48,4 +48,21 @@ public class UserController{
         System.out.println("Login: " + retrievedUser.getEmail() + ", " + retrievedUser.getPassword());
         return rString;
     }
+
+    @RequestMapping("/adminlogin")
+    public String adminLogin(@RequestBody User user){
+        User retrievedUser = userRepo.getAdmin(user.getEmail(), user.getPassword());
+
+        String rString =
+                "{\"error\":\"false\","
+                        + "\"message\":\"login success\","
+                        +  "\"user\":{"
+                        + "\"id\":\"" + retrievedUser.getId() + "\"," +
+                        "\"lastName\":\"" + retrievedUser.getLastName() + "\"," +
+                        "\"firstName\":\"" + retrievedUser.getFirstName() + "\"," +
+                        "\"email\":\"" + retrievedUser.getEmail() + "\"," +
+                        "\"type\":\"" + retrievedUser.getType() + "\"}}";
+        System.out.println("Admin Login: " + retrievedUser.getEmail() + ", " + retrievedUser.getPassword());
+        return rString;
+    }
 }
