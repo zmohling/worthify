@@ -13,23 +13,28 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
+import team_10.client.constant.URLs;
+import team_10.client.settings.SharedPreferencesManager;
+import team_10.client.utility.VolleySingleton;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText editTextUsername, editTextPassword;
+    EditText editTextEmail, editTextPassword;
     ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             finish();
@@ -38,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        editTextUsername = (EditText) findViewById(R.id.editTextUsername);
+        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 
 
@@ -47,7 +52,11 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.buttonLogin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userLogin();
+                try {
+                    userLogin();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -57,20 +66,20 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //open register screen
                 finish();
-                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+                startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
             }
         });
     }
 
-    private void userLogin() {
+    private void userLogin() throws JSONException {
         //first getting the values
-        final String username = editTextUsername.getText().toString();
+        final String email = editTextEmail.getText().toString();
         final String password = editTextPassword.getText().toString();
 
         //validating inputs
-        if (TextUtils.isEmpty(username)) {
-            editTextUsername.setError("Please enter your username");
-            editTextUsername.requestFocus();
+        if (TextUtils.isEmpty(email)) {
+            editTextEmail.setError("Please enter your email");
+            editTextEmail.requestFocus();
             return;
         }
 
@@ -79,6 +88,11 @@ public class MainActivity extends AppCompatActivity {
             editTextPassword.requestFocus();
             return;
         }
+
+        JSONObject json = new JSONObject();
+        json.put("email", email);
+        json.put("password", password);
+        final String requestBody = json.toString();
 
         //if everything is fine
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.URL_LOGIN,
@@ -101,8 +115,10 @@ public class MainActivity extends AppCompatActivity {
                                 //creating a new user object
                                 User user = new User(
                                         userJson.getInt("id"),
-                                        userJson.getString("username"),
-                                        userJson.getString("email")
+                                        userJson.getString("lastName"),
+                                        userJson.getString("firstName"),
+                                        userJson.getString("email"),
+                                        userJson.getInt("type")
                                 );
 
                                 //storing the user in shared preferences
@@ -126,11 +142,19 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("username", username);
-                params.put("password", password);
-                return params;
+            public String getBodyContentType() {
+                return String.format("application/json; charset=utf-8");
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                            requestBody, "utf-8");
+                    return null;
+                }
             }
         };
 

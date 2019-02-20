@@ -1,4 +1,4 @@
-package team_10.client.activity;
+package team_10.client.utility;
 
 import android.content.Context;
 
