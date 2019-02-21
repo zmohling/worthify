@@ -147,29 +147,23 @@ public class ProfileActivity extends AppCompatActivity {
                             TableLayout ll = (TableLayout) findViewById(R.id.displayLinearAccounts);
 
                             for (int j = 0; j < accounts.size(); j++) {
-
                                 Account a = accounts.get(j);
 
-                                TableRow row= new TableRow(getApplicationContext());
+                                TableRow row = new TableRow(getApplicationContext());
                                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                                 lp.setMargins(10, 10, 10, 10);
                                 row.setLayoutParams(lp);
                                 TextView tv = new TextView(getApplicationContext());
                                 tv.setText("Type: " + a.getClass().getSimpleName() +
-                                        ", ID: " + a.getID() + ", Today's Value: " +
+                                        ", ID: " + a.getId() + ", Today's Value: " +
                                         a.getValue(LocalDate.now().plusMonths(18)));
-                                tv.setPadding(10,5,10,5);
+                                tv.setPadding(10, 5, 10, 5);
                                 tv.setTextColor(Color.parseColor("#EDE8D6"));
                                 tv.setMaxLines(1);
-                                tv.setPadding(0,5,0,5);
-                                //tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-                                //Linkify.addLinks(tv, Linkify.WEB_URLS);
+                                tv.setPadding(0, 5, 0, 5);
                                 row.addView(tv);
-                                //row.setVisibility(View.GONE);
-                                ll.addView(row,j + 1);
-
+                                ll.addView(row, j + 1);
                             }
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -187,22 +181,20 @@ public class ProfileActivity extends AppCompatActivity {
         VolleySingleton.getInstance(this).addToRequestQueue(accountsStringRequest);
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
 
-        findViewById(R.id.buttonArticles).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ScrollView table = (ScrollView) findViewById(R.id.list_scroll);
-                if (table.getVisibility() == View.VISIBLE)
-                {
-                    table.setVisibility(View.GONE);
+        // Button listeners.
+        findViewById(R.id.buttonArticles).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ScrollView table = (ScrollView) findViewById(R.id.list_scroll);
+                        if (table.getVisibility() == View.VISIBLE) {
+                            table.setVisibility(View.GONE);
+                        } else {
+                            table.setVisibility(View.VISIBLE);
+                        }
+                    }
                 }
-                else
-                {
-                    table.setVisibility(View.VISIBLE);
-                }
-                }
-            }
         );
-
         findViewById(R.id.buttonAccounts).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
