@@ -25,5 +25,9 @@ function login(){
 			error: function(xhr, status, error) {
                	alert("login failure: " + error);
           	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 75e60860bf711620e73fce6de34c65dfc5beba41
 		});
 }
