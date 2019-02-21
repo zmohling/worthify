@@ -21,6 +21,9 @@ public class User implements Serializable {
       @Column(name = "email")
       private String email;
 
+      @Column(name = "salt")
+      private byte[] salt;
+
       @Column(name = "password")
       private String password;
 
@@ -55,15 +58,23 @@ public class User implements Serializable {
         this.firstName = firstName;
       }
 
-      public String getEmail() {
+    public String getEmail() {
         return email;
-      }
+    }
 
-      public void setEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
-      }
+    }
 
-      public String getPassword() {
+    public byte[] getSalt() {
+        return salt;
+    }
+
+    public void setSalt(byte[] salt) {
+        this.salt = salt;
+    }
+
+    public String getPassword() {
         return password;
       }
 
