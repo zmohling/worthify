@@ -1,5 +1,5 @@
 package com.serverApp.serverApp.controllers;
-
+/*
 import com.serverApp.serverApp.models.Accounts;
 import com.serverApp.serverApp.models.User;
 import com.serverApp.serverApp.repositories.AccountsRepository;
@@ -30,4 +30,4 @@ public class AccountsController {
         accountsRepo.delete(accounts);
         return "";
     }
-}
+}*/

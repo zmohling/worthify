@@ -23,42 +23,48 @@ public class UserController{
         byte[] salt = hashingFunction.getSalt();
         user.setSalt(salt);
         user.setPassword(hashingFunction.hashingFunction(user.getPassword(), salt));
-        userRepo.save(user);
-        String rString =
-        "{\"error\":\"false\","
-            + "\"message\":\"user login success\","
-            +  "\"user\":{"
-            + "\"id\":\"" + user.getId() + "\"," +
-                "\"lastName\":\"" + user.getLastName() + "\"," +
-                "\"firstName\":\"" + user.getFirstName() + "\"," +
-                "\"email\":\"" + user.getEmail() + "\"," +
-                "\"type\":\"" + user.getType() + "\"}}";
-        System.out.println(rString);
-        return rString;
+        System.out.println(userRepo.checkEmail(user.getEmail()));
+        if(userRepo.checkEmail(user.getEmail()) == 0) {
+            String rString =
+                    "{\"error\":\"false\","
+                            + "\"message\":\"user login success\","
+                            + "\"user\":{"
+                            + "\"id\":\"" + user.getId() + "\"," +
+                            "\"lastName\":\"" + user.getLastName() + "\"," +
+                            "\"firstName\":\"" + user.getFirstName() + "\"," +
+                            "\"email\":\"" + user.getEmail() + "\"," +
+                            "\"type\":\"" + user.getType() + "\"}}";
+            System.out.println("Registered Successfully");
+            userRepo.save(user);
+            return rString;
+        } else {
+            System.out.println("Registration Failed!");
+            return "";
+        }
     }
 
     @RequestMapping("/login")
     public String login(@RequestBody User user){
         User retrievedUser = userRepo.getUser(user.getEmail());
         String hashedPassword = hashingFunction.hashingFunction(user.getPassword(), retrievedUser.getSalt());
-        if(retrievedUser.getPassword() == hashedPassword)
+        if(retrievedUser.getPassword().equals(hashedPassword))
         {
-            //should return success
+            System.out.println("Password Successful!");
+            String rString =
+                    "{\"error\":\"false\","
+                            + "\"message\":\"user login success\","
+                            +  "\"user\":{"
+                            + "\"id\":\"" + retrievedUser.getId() + "\"," +
+                            "\"lastName\":\"" + retrievedUser.getLastName() + "\"," +
+                            "\"firstName\":\"" + retrievedUser.getFirstName() + "\"," +
+                            "\"email\":\"" + retrievedUser.getEmail() + "\"," +
+                            "\"type\":\"" + retrievedUser.getType() + "\"}}";
+            System.out.println("Login: " + retrievedUser.getEmail() + ", " + "\n" + retrievedUser.getPassword());
+            return rString;
         }
-        else
-        {
-            //should return failed
+        else {
+            System.out.println("Password Unsuccessful!");
+            return "";
         }
-        String rString =
-                "{\"error\":\"false\","
-                        + "\"message\":\"user login success\","
-                        +  "\"user\":{"
-                        + "\"id\":\"" + retrievedUser.getId() + "\"," +
-                        "\"lastName\":\"" + retrievedUser.getLastName() + "\"," +
-                        "\"firstName\":\"" + retrievedUser.getFirstName() + "\"," +
-                        "\"email\":\"" + retrievedUser.getEmail() + "\"," +
-                        "\"type\":\"" + retrievedUser.getType() + "\"}}";
-        System.out.println("Login: " + retrievedUser.getEmail() + ", " + retrievedUser.getPassword());
-        return rString;
     }
 }
