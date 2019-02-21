@@ -1,6 +1,6 @@
 package com.serverApp.serverApp.models;
 
-/*
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -60,4 +60,4 @@ public class Accounts implements Serializable{
         this.actionList = actionList;
     }
 }
-*/
+

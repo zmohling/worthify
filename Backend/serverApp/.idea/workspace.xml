@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e45e236e-4a23-4a94-a6db-815ebff7e570" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/AccountsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/AccountsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Accounts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Accounts.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/AccountsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/AccountsRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/serverApp/serverApp/ServerAppApplicationTests.java" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -27,11 +20,32 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Accounts.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1054">
-              <caret line="62" column="2" selection-start-line="62" selection-start-column="2" selection-end-line="62" selection-end-column="2" />
+            <state relative-caret-position="34">
+              <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#542#543#0" expanded="true" />
+                <element signature="e#581#582#0" expanded="true" />
+                <element signature="e#608#609#0" expanded="true" />
+                <element signature="e#633#634#0" expanded="true" />
+                <element signature="e#667#668#0" expanded="true" />
+                <element signature="e#695#696#0" expanded="true" />
+                <element signature="e#726#727#0" expanded="true" />
+                <element signature="e#755#756#0" expanded="true" />
+                <element signature="e#797#798#0" expanded="true" />
+                <element signature="e#833#834#0" expanded="true" />
+                <element signature="e#861#862#0" expanded="true" />
+                <element signature="e#888#889#0" expanded="true" />
+                <element signature="e#925#926#0" expanded="true" />
+                <element signature="e#957#958#0" expanded="true" />
+                <element signature="e#994#995#0" expanded="true" />
+                <element signature="e#1027#1028#0" expanded="true" />
+                <element signature="e#1079#1080#0" expanded="true" />
+                <element signature="e#1123#1124#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -63,7 +77,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/UserController.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="204">
@@ -147,12 +161,12 @@
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/User.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/ServerAppApplication.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/AccountsController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Accounts.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/AccountsRepository.java" />
         <option value="$PROJECT_DIR$/src/main/resources/application.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/hashingFunction.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/UserRepository.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/UserController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Accounts.java" />
       </list>
     </option>
   </component>
@@ -313,7 +327,7 @@
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19127516" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19127516" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -331,7 +345,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="DB Execution Console" order="7" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.34844193" />
+      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.34844193" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Build" order="10" visible="true" weight="0.32857144" />
       <window_info anchor="bottom" id="Console" order="11" />
@@ -382,13 +396,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/build/reports/tests/test/index.html" />
     <entry file="file://$PROJECT_DIR$/src/test/java/com/serverApp/serverApp/ServerAppApplicationTests.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Accounts.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1054">
-          <caret line="62" column="2" selection-start-line="62" selection-start-column="2" selection-end-line="62" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/AccountsRepository.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
@@ -462,6 +469,34 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="30" column="42" lean-forward="true" selection-start-line="30" selection-start-column="42" selection-end-line="30" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Accounts.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#542#543#0" expanded="true" />
+            <element signature="e#581#582#0" expanded="true" />
+            <element signature="e#608#609#0" expanded="true" />
+            <element signature="e#633#634#0" expanded="true" />
+            <element signature="e#667#668#0" expanded="true" />
+            <element signature="e#695#696#0" expanded="true" />
+            <element signature="e#726#727#0" expanded="true" />
+            <element signature="e#755#756#0" expanded="true" />
+            <element signature="e#797#798#0" expanded="true" />
+            <element signature="e#833#834#0" expanded="true" />
+            <element signature="e#861#862#0" expanded="true" />
+            <element signature="e#888#889#0" expanded="true" />
+            <element signature="e#925#926#0" expanded="true" />
+            <element signature="e#957#958#0" expanded="true" />
+            <element signature="e#994#995#0" expanded="true" />
+            <element signature="e#1027#1028#0" expanded="true" />
+            <element signature="e#1079#1080#0" expanded="true" />
+            <element signature="e#1123#1124#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
