@@ -1,4 +1,4 @@
-package com.serverApp.serverApp;
+package com.serverApp.serverApp.other;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
