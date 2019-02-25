@@ -21,6 +21,12 @@ public class ArticleController {
         return "";
     }
 
+    @RequestMapping("/article/updateDB")
+    public String listTitles(){
+
+        return null;
+    }
+
 
     @GetMapping("/article/getAll")
     public String getAll(){
