@@ -1,6 +1,6 @@
 package com.serverApp.serverApp.controllers;
 
-import com.serverApp.serverApp.hashingFunction;
+import com.serverApp.serverApp.other.hashingFunction;
 import com.serverApp.serverApp.models.User;
 import com.serverApp.serverApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
