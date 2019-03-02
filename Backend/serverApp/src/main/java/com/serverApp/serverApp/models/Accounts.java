@@ -14,15 +14,14 @@ public class Accounts implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Id
-    @Column(name = "userId")
-    private long userId;
-
     @Column(name = "type")
     private int type;
 
-    @Column(name = "actionLsit")
-    private String actionList;
+    @Column(name = "label")
+    private String label;
+
+    @Column(name = "userId")
+    private long userId;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -36,14 +35,6 @@ public class Accounts implements Serializable{
         this.id = id;
     }
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
     public int getType() {
         return type;
     }
@@ -52,12 +43,20 @@ public class Accounts implements Serializable{
         this.type = type;
     }
 
-    public String getActionList() {
-        return actionList;
+    public String getLabel() {
+        return label;
     }
 
-    public void setActionList(String actionList) {
-        this.actionList = actionList;
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }
 

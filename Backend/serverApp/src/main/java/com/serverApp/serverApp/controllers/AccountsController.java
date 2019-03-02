@@ -1,11 +1,10 @@
 package com.serverApp.serverApp.controllers;
-/*
+
 import com.serverApp.serverApp.models.Accounts;
 import com.serverApp.serverApp.models.User;
 import com.serverApp.serverApp.repositories.AccountsRepository;
-import com.serverApp.serverApp.repositories.ArticleRepository;
+import com.serverApp.serverApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,12 +15,27 @@ public class AccountsController {
     @Autowired
     AccountsRepository accountsRepo;
 
-    @RequestMapping("/add")
-    public String add(@RequestBody Accounts accounts) {
-        //is this right?
-        accounts.setId(User.getSerialVersionUID());
-        accountsRepo.save(accounts);
+    @RequestMapping("/getAccounts")
+    public String getAccounts(@RequestBody User user) {
+        accountsRepo.getAccounts(user.getId());
+
         return "";
+    }
+
+    @RequestMapping("/add")
+    public String add(@RequestBody User user, @RequestBody Accounts accounts) {
+
+        accounts.setId(user.getId());
+        accountsRepo.save(accounts);
+        String rString =
+                "{\"error\":\"false\","
+                        + "\"message\":\"account addition success\","
+                        + "\"user\":{"
+                        + "\"id\":\"" + accounts.getId() + "\"," +
+                        "\"type\":\"" + accounts.getType() + "\"," +
+                        "\"label\":\"" + accounts.getLabel() + "\"," +
+                        "\"userId\":\"" + accounts.getUserId() + "\"}}";
+        return rString;
     }
 
     @RequestMapping("/remove")
@@ -30,4 +44,4 @@ public class AccountsController {
         accountsRepo.delete(accounts);
         return "";
     }
-}*/
+}
