@@ -47,13 +47,16 @@ public abstract class Account implements Serializable
     private class Transaction extends team_10.client.account.Transaction {
         double amount;
 
+        protected Transaction() { }
         protected Transaction(double amount) {
             this.amount = amount;
         }
 
+
         public double getAmount() {
             return this.amount;
         }
+        public void setAmount(double amount) { this.amount = amount; }
     }
 }
 

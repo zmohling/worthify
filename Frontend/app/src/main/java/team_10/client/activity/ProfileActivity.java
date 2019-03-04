@@ -177,6 +177,8 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
 
+        accountsTest();
+
         // Access the RequestQueue through your singleton class.
         //VolleySingleton.getInstance(this).addToRequestQueue(accountsStringRequest);
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
@@ -209,14 +211,13 @@ public class ProfileActivity extends AppCompatActivity {
                 }
         );
 
-        accountsTest();
     }
 
     public void accountsTest() {
         GsonBuilder b = new GsonBuilder();
         b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
         //b.registerTypeAdapter(Transaction.class, new AbstractTransactionAdapter());
-        b.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
+        //b.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
         //b.setPrettyPrinting();
         Gson g = b.create();
 

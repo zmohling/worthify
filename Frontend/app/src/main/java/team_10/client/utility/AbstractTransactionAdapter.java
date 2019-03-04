@@ -31,17 +31,7 @@ public class AbstractTransactionAdapter implements JsonSerializer<Transaction>, 
     @Override
     public Transaction deserialize(JsonElement json, Type typeOfT,
                                JsonDeserializationContext context) throws JsonParseException {
-        JsonObject jsonObject = json.getAsJsonObject();
-        JsonPrimitive prim = (JsonPrimitive) jsonObject.get(CLASSNAME);
-        String className = prim.getAsString();
 
-        Class<?> _class = null;
-        try {
-            _class = Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new JsonParseException(e.getMessage());
-        }
-        return context.deserialize(jsonObject.get(INSTANCE), _class);
+        return context.deserialize(json, typeOfT);
     }
 }

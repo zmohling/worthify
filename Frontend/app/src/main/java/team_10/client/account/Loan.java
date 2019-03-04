@@ -74,6 +74,7 @@ public class Loan extends Account {
 
         double interestRate;
 
+        protected Transaction() { }
         Transaction(double amount, double interestRate)
         {
             this.amount = amount;
