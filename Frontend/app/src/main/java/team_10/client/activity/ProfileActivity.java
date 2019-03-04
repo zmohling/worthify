@@ -217,7 +217,7 @@ public class ProfileActivity extends AppCompatActivity {
         b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
         //b.registerTypeAdapter(Transaction.class, new AbstractTransactionAdapter());
         b.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
-        b.setPrettyPrinting();
+        //b.setPrettyPrinting();
         Gson g = b.create();
 
         // Accounts Testing
@@ -239,10 +239,43 @@ public class ProfileActivity extends AppCompatActivity {
 
         //==================================================
 
-        AccountsWrapper a = new AccountsWrapper();
-        a.setAccounts(user.getAccounts());
+        AccountsWrapper _a = new AccountsWrapper();
+        _a.setAccounts(user.getAccounts());
 
 
-        System.out.println(g.toJson(a, AccountsWrapper.class));
+        String response = g.toJson(_a, AccountsWrapper.class);
+
+        try {
+            JSONObject returned = new JSONObject(response);
+
+            AccountsWrapper wrapper = g.fromJson(response, AccountsWrapper.class);
+            List<Account> wrapperAccounts = wrapper.getAccounts();
+
+            List<Account> accounts = user.getAccounts();
+            accounts.addAll(wrapperAccounts);
+
+            TableLayout ll = (TableLayout) findViewById(R.id.displayLinearAccounts);
+
+            for (int j = 0; j < accounts.size(); j++) {
+                Account a = accounts.get(j);
+
+                TableRow row = new TableRow(getApplicationContext());
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(10, 10, 10, 10);
+                row.setLayoutParams(lp);
+                TextView tv = new TextView(getApplicationContext());
+                tv.setText("Type: " + a.getClass().getSimpleName() +
+                        ", ID: " + a.getId() + ", Today's Value: " +
+                        a.getValue(LocalDate.now().plusMonths(18)));
+                tv.setPadding(10, 5, 10, 5);
+                tv.setTextColor(Color.parseColor("#EDE8D6"));
+                tv.setMaxLines(1);
+                tv.setPadding(0, 5, 0, 5);
+                row.addView(tv);
+                ll.addView(row, j + 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

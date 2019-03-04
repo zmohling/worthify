@@ -1,5 +1,6 @@
 package team_10.client.utility;
 
+import com.google.gson.*;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,7 +11,7 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.JsonDeserializer;
 import java.lang.reflect.Type;
 
-import team_10.client.account.Account;
+import team_10.client.account.*;
 
 public class AbstractAccountAdapter implements JsonSerializer<Account>, JsonDeserializer<Account> {
 
@@ -20,12 +21,12 @@ public class AbstractAccountAdapter implements JsonSerializer<Account>, JsonDese
     @Override
     public JsonElement serialize(Account src, Type typeOfSrc,
                                  JsonSerializationContext context) {
+        Gson gson = new Gson();
+        String className = src.getClass().getSimpleName();
+        JsonElement elem = gson.toJsonTree(src, src.getClass());
+        JsonObject retValue = elem.getAsJsonObject();
+        retValue.addProperty("type", className);
 
-        JsonObject retValue = new JsonObject();
-        String className = src.getClass().getName();
-        retValue.addProperty(CLASSNAME, className);
-        JsonElement elem = context.serialize(src);
-        retValue.add(INSTANCE, elem);
         return retValue;
     }
 
@@ -33,8 +34,8 @@ public class AbstractAccountAdapter implements JsonSerializer<Account>, JsonDese
     public Account deserialize(JsonElement json, Type typeOfT,
                                JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
-        JsonPrimitive prim = (JsonPrimitive) jsonObject.get(CLASSNAME);
-        String className = prim.getAsString();
+        JsonPrimitive prim = (JsonPrimitive) jsonObject.get("type");
+        String className = "team_10.client.account." + prim.getAsString();
 
         Class<?> _class = null;
         try {

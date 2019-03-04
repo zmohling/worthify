@@ -1,5 +1,6 @@
 package team_10.client.account;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.TreeMap;
 
@@ -7,7 +8,7 @@ import java.util.TreeMap;
  * Abstract Account class for all account types. All transactions for all types that extend
  * this class are put in the transactions TreeMap.
  */
-public abstract class Account
+public abstract class Account implements Serializable
 {
     protected int id;
     protected String label;
@@ -43,7 +44,7 @@ public abstract class Account
 
 
 
-    protected class Transaction extends team_10.client.account.Transaction {
+    private class Transaction extends team_10.client.account.Transaction {
         double amount;
 
         protected Transaction(double amount) {
