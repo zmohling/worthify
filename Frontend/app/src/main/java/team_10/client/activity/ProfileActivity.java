@@ -178,7 +178,7 @@ public class ProfileActivity extends AppCompatActivity {
                 });
 
         // Access the RequestQueue through your singleton class.
-        VolleySingleton.getInstance(this).addToRequestQueue(accountsStringRequest);
+        //VolleySingleton.getInstance(this).addToRequestQueue(accountsStringRequest);
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
 
         // Button listeners.
@@ -208,5 +208,41 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        accountsTest();
+    }
+
+    public void accountsTest() {
+        GsonBuilder b = new GsonBuilder();
+        b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
+        //b.registerTypeAdapter(Transaction.class, new AbstractTransactionAdapter());
+        b.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
+        b.setPrettyPrinting();
+        Gson g = b.create();
+
+        // Accounts Testing
+        //==================================================
+        final User user = SharedPreferencesManager.getInstance(this).getUser();
+
+        Loan carloan = new Loan();
+        carloan.setId(1234);
+        carloan.addTransaction(LocalDate.now(), 100, 0.04);
+        carloan.addTransaction(LocalDate.now().plusYears(1), 1000, 0.08);
+
+        user.addAccount(carloan);
+
+        Loan mortage = new Loan();
+        mortage.setId(1235);
+        mortage.addTransaction(LocalDate.now().plusMonths(3), 233000, 0.03);
+
+        user.addAccount(mortage);
+
+        //==================================================
+
+        AccountsWrapper a = new AccountsWrapper();
+        a.setAccounts(user.getAccounts());
+
+
+        System.out.println(g.toJson(a, AccountsWrapper.class));
     }
 }
