@@ -1,48 +1,75 @@
 package team_10.client.utility;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.google.gson.JsonDeserializer;
+import com.google.gson.*;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 
-import team_10.client.account.Account;
+import team_10.client.account.*;
 
 public class AbstractAccountAdapter implements JsonSerializer<Account>, JsonDeserializer<Account> {
 
-    private static final String CLASSNAME = "CLASSNAME";
-    private static final String INSTANCE  = "INSTANCE";
+    private static final String PACKAGE = "team_10.client.account";
 
     @Override
     public JsonElement serialize(Account src, Type typeOfSrc,
                                  JsonSerializationContext context) {
+        Gson gson = new Gson();
+        String className = src.getClass().getSimpleName();
+        JsonElement elem = gson.toJsonTree(src, src.getClass());
+        JsonObject retValue = elem.getAsJsonObject();
+        retValue.addProperty("type", className);
 
-        JsonObject retValue = new JsonObject();
-        String className = src.getClass().getName();
-        retValue.addProperty(CLASSNAME, className);
-        JsonElement elem = context.serialize(src);
-        retValue.add(INSTANCE, elem);
         return retValue;
     }
 
     @Override
     public Account deserialize(JsonElement json, Type typeOfT,
                                JsonDeserializationContext context) throws JsonParseException {
-        JsonObject jsonObject = json.getAsJsonObject();
-        JsonPrimitive prim = (JsonPrimitive) jsonObject.get(CLASSNAME);
-        String className = prim.getAsString();
+        /* Dummy instantiation */
+        Account account = null;
 
-        Class<?> _class = null;
         try {
-            _class = Class.forName(className);
-        } catch (ClassNotFoundException e) {
+            JsonObject jsonObject = json.getAsJsonObject();
+
+            Class<?> accountClass = null;
+            Class<?> transactionClass = null;
+            try {
+                /* Get account type */
+                JsonElement prim = jsonObject.get("type");
+                String accountClassString = PACKAGE + "." + prim.getAsString();
+                jsonObject.remove("type");
+
+                /* Get classes from String */
+                accountClass = Class.forName(accountClassString);
+                transactionClass = (accountClass.getClasses())[0];
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                throw new JsonParseException(e.getMessage());
+            }
+
+            /* Gson builders with custom Type Adapters for parsing */
+            GsonBuilder outerBuilder = new GsonBuilder();
+            final Class<?> finalTransactionClass = transactionClass;
+            outerBuilder.registerTypeAdapter(Transaction.class, new JsonDeserializer<Transaction>() {
+                @Override
+                public Transaction deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    GsonBuilder innerBuilder = new GsonBuilder();
+                    innerBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
+                    Gson innerGson = innerBuilder.create();
+
+                    return (Transaction) innerGson.fromJson(json, finalTransactionClass);
+                }
+            });
+            outerBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
+
+            Gson outerGson = outerBuilder.create();
+
+            account = (Account) outerGson.fromJson(jsonObject, accountClass);
+
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new JsonParseException(e.getMessage());
         }
-        return context.deserialize(jsonObject.get(INSTANCE), _class);
+
+        return account;
     }
 }
