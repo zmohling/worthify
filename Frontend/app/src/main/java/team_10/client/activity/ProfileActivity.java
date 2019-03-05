@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import team_10.client.account.*;
@@ -133,8 +134,6 @@ public class ProfileActivity extends AppCompatActivity {
 
                             GsonBuilder b = new GsonBuilder();
                             b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
-                            b.registerTypeAdapter(Transaction.class, new AbstractTransactionAdapter());
-                            b.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
                             b.setPrettyPrinting();
                             Gson g = b.create();
 
@@ -216,9 +215,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void accountsTest() {
         GsonBuilder b = new GsonBuilder();
         b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
-        //b.registerTypeAdapter(Transaction.class, new AbstractTransactionAdapter());
-        //b.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
-        //b.setPrettyPrinting();
+        b.setPrettyPrinting();
         Gson g = b.create();
 
         // Accounts Testing
@@ -232,11 +229,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         user.addAccount(carloan);
 
-        Loan mortage = new Loan();
-        mortage.setId(1235);
-        mortage.addTransaction(LocalDate.now().plusMonths(3), 233000, 0.03);
+        Loan mortgage = new Loan();
+        mortgage.setId(1235);
+        mortgage.addTransaction(LocalDate.now().plusMonths(3), 233000, 0.03);
 
-        user.addAccount(mortage);
+        user.addAccount(mortgage);
 
         //==================================================
 
@@ -246,13 +243,15 @@ public class ProfileActivity extends AppCompatActivity {
 
         String response = g.toJson(_a, AccountsWrapper.class);
 
+        System.out.println(response);
+
         try {
             JSONObject returned = new JSONObject(response);
 
             AccountsWrapper wrapper = g.fromJson(response, AccountsWrapper.class);
             List<Account> wrapperAccounts = wrapper.getAccounts();
 
-            List<Account> accounts = user.getAccounts();
+            List<Account> accounts = new ArrayList<>();//user.getAccounts();
             accounts.addAll(wrapperAccounts);
 
             TableLayout ll = (TableLayout) findViewById(R.id.displayLinearAccounts);
