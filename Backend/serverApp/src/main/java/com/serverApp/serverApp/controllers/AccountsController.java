@@ -22,6 +22,9 @@ public class AccountsController {
     @Autowired
     AccountsRepository accountsRepo;
 
+    @Autowired
+    LoanTransactionRepository loanTransactionRepo;
+
     @RequestMapping("/getAccounts")
     public String getAccounts(@RequestBody User user) {
         Collection<Accounts> allAccounts = new ArrayList<Accounts>();
@@ -33,17 +36,17 @@ public class AccountsController {
         while(((Iterator) iterator).hasNext()) {
             rString = rString + ",\"id\":\"" + iterator.next().getId() + "\"," +
                     "\"type\":\"" + iterator.next().getType() + "\"," +
-                    "\"label\":\"" + iterator.next().getLabel() + "\"," +
-                    "\"userId\":\"" + iterator.next().getUserId() + "\"";
+                    "\"label\":\"" + iterator.next().getLabel() + "\",";
+         //           "\"userId\":\"" + iterator.next().getUserId() + "\"";
         }
         return "";
     }
 
     @RequestMapping("/addAccount")
-    public String add(@RequestBody String string) {
-        Accounts accounts = new Accounts();
-        String string1 = "";
-        add(accounts);
+    public String add(@RequestBody(required = false) Accounts accounts,
+                      @RequestBody(required = false) LoanTransaction loanTransaction,
+                      @RequestBody(required = false) User user) {
+        System.out.println(accounts.getType() + "\n" + loanTransaction.getDate());
         /*accounts.setId(user.getId());
         accountsRepo.save(accounts);
 
@@ -73,8 +76,8 @@ public class AccountsController {
                         + "\"account\":{"
                         + "\"id\":\"" + accounts.getId() + "\"," +
                         "\"type\":\"" + accounts.getType() + "\"," +
-                        "\"label\":\"" + accounts.getLabel() + "\"," +
-                        "\"userId\":\"" + accounts.getUserId() + "\"}}";
+                        "\"label\":\"" + accounts.getLabel() + "\",";
+        //                "\"userId\":\"" + accounts.getUserId() + "\"}}";
         return rString;
     }
 }
