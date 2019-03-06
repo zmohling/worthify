@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "accounts")
 public class Accounts implements Serializable{
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = 4L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,7 +21,7 @@ public class Accounts implements Serializable{
     private String label;
 
     @Column(name = "userId")
-    private long userId;
+    private int userId;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -55,7 +55,7 @@ public class Accounts implements Serializable{
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 }
