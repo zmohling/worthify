@@ -1,5 +1,6 @@
 package com.serverApp.serverApp.controllers;
 
+import com.google.gson.Gson;
 import com.serverApp.serverApp.models.Article;
 import com.serverApp.serverApp.models.User;
 import com.serverApp.serverApp.other.ArticleRetrieval;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 @RestController
 public class ArticleController {
@@ -29,18 +31,23 @@ public class ArticleController {
     public String listTitles(){
         //API key is b46a1992ed6c457bb31e58178813a3cd
         ArticleRetrieval r = new ArticleRetrieval();
-        String rString;
+        ArrayList<Article> articles;
+        Gson g = new Gson();
         try{
             URL articlesURL = new URL("https://newsapi.org/v2/top-headlines?" +
                 "sources=financial-times&" +
                 "apiKey=b46a1992ed6c457bb31e58178813a3cd");
-            rString = r.getFromURL(articlesURL);
+            articles = r.getFromURL(articlesURL);
+
+            for(int i = 0; i < articles.size(); i ++){
+                articleRepo.save(articles.get(i));
+            }
+
+            return g.toJson(articles);
         }catch(MalformedURLException e){
             System.out.println("Malformed URL in listTitles()");
-            rString = "error";
         }
-
-        return rString;
+        return null;
     }
 
 
@@ -62,8 +69,14 @@ public class ArticleController {
                                 + "\"id\":\""
                                 + articles[i].getId()
                                 + "\","
-                                + "\"userId\":\""
-                                + articles[i].getUserId()
+                                + "\"title\":\""
+                                + articles[i].getTitle()
+                                + "\","
+                                + "\"description\":\""
+                                + articles[i].getDescription()
+                                + "\","
+                                + "\"pictureUrl\":\""
+                                + articles[i].getUrlToImage()
                                 + "\","
                                 + "\"url\":\""
                                 + articles[i].getUrl()
@@ -79,8 +92,14 @@ public class ArticleController {
                                 + "\"id\":\""
                                 + articles[i].getId()
                                 + "\","
-                                + "\"userId\":\""
-                                + articles[i].getUserId()
+                                + "\"title\":\""
+                                + articles[i].getTitle()
+                                + "\","
+                                + "\"description\":\""
+                                + articles[i].getDescription()
+                                + "\","
+                                + "\"pictureUrl\":\""
+                                + articles[i].getUrlToImage()
                                 + "\","
                                 + "\"url\":\""
                                 + articles[i].getUrl()
