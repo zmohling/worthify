@@ -27,6 +27,8 @@ import java.util.List;
 import team_10.client.account.*;
 import team_10.client.settings.*;
 import team_10.client.utility.*;
+import team_10.client.R;
+
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -41,7 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
         //starting the login activity
         if (!SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             finish();
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
         }
 
 

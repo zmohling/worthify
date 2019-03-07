@@ -20,110 +20,84 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-
 import team_10.client.constant.URLs;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.VolleySingleton;
+
 import team_10.client.R;
 
+public class LoginActivity extends AppCompatActivity {
 
-public class RegisterActivity extends AppCompatActivity {
-
-    EditText editTextFirstName, editTextLastName, editTextEmail, editTextPassword;
+    EditText editTextEmail, editTextPassword;
     ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_login);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        //if the user is already logged in we will directly start the profile activity
+
         if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             finish();
             startActivity(new Intent(this, ProfileActivity.class));
             return;
         }
 
-        //editTextUsername = (EditText) findViewById(R.id.editTextUsername);
-        editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
-        editTextLastName = (EditText) findViewById(R.id.editTextLastName);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 
 
-        findViewById(R.id.buttonRegister).setOnClickListener(new View.OnClickListener() {
+        //if user presses on login
+        //calling the method login
+        findViewById(R.id.buttonLogin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //if user pressed on button register
-                //here we will register the user to server
                 try {
-                    registerUser();
+                    userLogin();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
 
-        findViewById(R.id.textViewLogin).setOnClickListener(new View.OnClickListener() {
+        //if user presses on not registered
+        findViewById(R.id.textViewRegister).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //if user pressed on login
-                //we will open the login screen
+                //open register screen
                 finish();
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
             }
         });
-
     }
 
-    private void registerUser() throws JSONException {
-        final String firstName = editTextFirstName.getText().toString().trim();
-        final String lastName = editTextLastName.getText().toString().trim();
-        final String email = editTextEmail.getText().toString().trim();
-        final String password = editTextPassword.getText().toString().trim();
+    private void userLogin() throws JSONException {
+        //first getting the values
+        final String email = editTextEmail.getText().toString();
+        final String password = editTextPassword.getText().toString();
 
-        //first we will do the validations
-
-        if (TextUtils.isEmpty(firstName)) {
-            editTextFirstName.setError("Please enter first name");
-            editTextFirstName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(lastName)) {
-            editTextLastName.setError("Please enter last name");
-            editTextLastName.requestFocus();
-            return;
-        }
-
+        //validating inputs
         if (TextUtils.isEmpty(email)) {
             editTextEmail.setError("Please enter your email");
             editTextEmail.requestFocus();
             return;
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            editTextEmail.setError("Enter a valid email");
-            editTextEmail.requestFocus();
-            return;
-        }
-
         if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Enter a password");
+            editTextPassword.setError("Please enter your password");
             editTextPassword.requestFocus();
             return;
         }
+
         JSONObject json = new JSONObject();
-        json.put("lastName", lastName);
-        json.put("firstName", firstName);
         json.put("email", email);
         json.put("password", password);
-        json.put("type", 0);
         final String requestBody = json.toString();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.URL_REGISTER,
+        //if everything is fine
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.URL_LOGIN,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

@@ -1,163 +1,64 @@
 package team_10.client.activity;
 
-import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import team_10.client.R;
+import team_10.client.fragment.DashboardFragment;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.StringRequest;
+public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener {
 
-import org.json.JSONException;
-import org.json.JSONObject;
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-import java.io.UnsupportedEncodingException;
-import team_10.client.constant.URLs;
-import team_10.client.settings.SharedPreferencesManager;
-import team_10.client.utility.VolleySingleton;
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment f = null;
 
-public class MainActivity extends AppCompatActivity {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    return true;
+                case R.id.navigation_dashboard:
+                    f = new DashboardFragment();
+                    return true;
+                case R.id.navigation_notifications:
+                    return true;
+            }
 
-    EditText editTextEmail, editTextPassword;
-    ProgressBar progressBar;
+            return loadFragment(f);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-
-        if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
-            finish();
-            startActivity(new Intent(this, ProfileActivity.class));
-            return;
-        }
-
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-
-
-        //if user presses on login
-        //calling the method login
-        findViewById(R.id.buttonLogin).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    userLogin();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        //if user presses on not registered
-        findViewById(R.id.textViewRegister).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //open register screen
-                finish();
-                startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
-            }
-        });
+        navigation.setSelectedItemId(R.id.navigation_dashboard);
+        loadFragment(new DashboardFragment());
     }
 
-    private void userLogin() throws JSONException {
-        //first getting the values
-        final String email = editTextEmail.getText().toString();
-        final String password = editTextPassword.getText().toString();
-
-        //validating inputs
-        if (TextUtils.isEmpty(email)) {
-            editTextEmail.setError("Please enter your email");
-            editTextEmail.requestFocus();
-            return;
+    private boolean loadFragment(Fragment fragment) {
+        //switching fragment
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
+            return true;
         }
+        return false;
+    }
 
-        if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Please enter your password");
-            editTextPassword.requestFocus();
-            return;
-        }
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
-        JSONObject json = new JSONObject();
-        json.put("email", email);
-        json.put("password", password);
-        final String requestBody = json.toString();
-
-        //if everything is fine
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.URL_LOGIN,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        progressBar.setVisibility(View.GONE);
-
-                        try {
-                            //converting response to json object
-                            JSONObject obj = new JSONObject(response);
-
-                            //if no error in response
-                            if (!obj.getBoolean("error")) {
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-
-                                //getting the user from the response
-                                JSONObject userJson = obj.getJSONObject("user");
-
-                                //creating a new user object
-                                User user = new User(
-                                        userJson.getInt("id"),
-                                        userJson.getString("lastName"),
-                                        userJson.getString("firstName"),
-                                        userJson.getString("email"),
-                                        userJson.getInt("type")
-                                );
-
-                                //storing the user in shared preferences
-                                SharedPreferencesManager.getInstance(getApplicationContext()).userLogin(user);
-
-                                //starting the profile activity
-                                finish();
-                                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                            } else {
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-            @Override
-            public String getBodyContentType() {
-                return String.format("application/json; charset=utf-8");
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return requestBody == null ? null : requestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                            requestBody, "utf-8");
-                    return null;
-                }
-            }
-        };
-
-        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 }
