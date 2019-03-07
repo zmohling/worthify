@@ -4,11 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import team_10.client.R;
+import team_10.client.article.Article;
+import team_10.client.article.ArticlesAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,7 +71,23 @@ public class NewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_news, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_news, container, false);
+
+        RecyclerView list = rootView.findViewById(R.id.rvArticles);
+        ArrayList<Article> articles;
+
+        RecyclerView rvArticles = (RecyclerView) rootView.findViewById(R.id.rvArticles);
+
+        // Initialize contacts
+        articles = Article.createArticlesList(getActivity(), getContext());
+        // Create adapter passing in the sample user data
+        ArticlesAdapter adapter = new ArticlesAdapter(articles);
+        // Attach the adapter to the recyclerview to populate items
+        rvArticles.setAdapter(adapter);
+        // Set layout manager to position the items
+        rvArticles.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
