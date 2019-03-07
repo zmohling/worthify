@@ -20,12 +20,12 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
             Fragment f = null;
 
             switch (item.getItemId()) {
-                case R.id.navigation_home:
+                case R.id.navigation_news:
                     return true;
                 case R.id.navigation_dashboard:
                     f = new DashboardFragment();
                     return true;
-                case R.id.navigation_notifications:
+                case R.id.navigation_transactions:
                     return true;
             }
 
