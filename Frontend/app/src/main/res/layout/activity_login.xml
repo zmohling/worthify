@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context="activity.RegisterActivity">
+    tools:context="activity.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,40 +16,17 @@
 
 
         <EditText
-            android:id="@+id/editTextFirstName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="@color/edit_text_color"
-            android:hint="First Name"
-            android:inputType="text"
-            android:textColor="@color/text"
-            android:textColorHint="@color/text" />
-
-        <EditText
-            android:id="@+id/editTextLastName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:hint="Last Name"
-            android:inputType="text"
-            android:textColor="@color/text"
-            android:textColorHint="@color/text"
-            android:backgroundTint="@color/edit_text_color" />
-
-        <EditText
             android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/edit_text_color"
             android:hint="Email"
-            android:inputType="textEmailAddress"
+            android:inputType="text"
+            android:textAllCaps="true"
             android:textColor="@color/text"
-            android:textColorHint="@color/text"
-            android:backgroundTint="@color/edit_text_color" />
+            android:textColorHint="@color/text" />
 
         <EditText
             android:id="@+id/editTextPassword"
@@ -65,7 +42,7 @@
             android:backgroundTint="@color/edit_text_color" />
 
         <Button
-            android:id="@+id/buttonRegister"
+            android:id="@+id/buttonLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -73,19 +50,20 @@
             android:layout_marginLeft="100dp"
             android:layout_marginRight="100dp"
             android:background="@drawable/card_bg"
-            android:text="Register"
+            android:text="Login"
             android:textColor="@color/text" />
 
         <TextView
-            android:id="@+id/textViewLogin"
+            android:id="@+id/textViewRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Already Registered?\nLogin Here"
+            android:text="Dont' have an account?\nRegister Here"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/text" />
+
     </LinearLayout>
 
     <ProgressBar
