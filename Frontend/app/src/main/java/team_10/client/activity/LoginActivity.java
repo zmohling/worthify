@@ -2,6 +2,7 @@ package team_10.client.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.service.autofill.RegexValidator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -20,6 +21,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import team_10.client.constant.URLs;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.VolleySingleton;
@@ -78,15 +82,18 @@ public class LoginActivity extends AppCompatActivity {
         final String email = editTextEmail.getText().toString();
         final String password = editTextPassword.getText().toString();
 
+        Pattern emailRegex = Pattern.compile("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])");
+        Matcher m = emailRegex.matcher(editTextEmail.getText());
+
         //validating inputs
-        if (TextUtils.isEmpty(email)) {
-            editTextEmail.setError("Please enter your email");
+        if (TextUtils.isEmpty(email) || !m.matches()) {
+            editTextEmail.setError("Invalid or Missing Email");
             editTextEmail.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Please enter your password");
+            editTextPassword.setError("Invalid or Missing Password");
             editTextPassword.requestFocus();
             return;
         }

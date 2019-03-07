@@ -20,6 +20,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import team_10.client.constant.URLs;
 import team_10.client.settings.SharedPreferencesManager;
@@ -42,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         //if the user is already logged in we will directly start the profile activity
         if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             finish();
-            startActivity(new Intent(this, ProfileActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
             return;
         }
 
@@ -84,34 +86,30 @@ public class RegisterActivity extends AppCompatActivity {
         final String email = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
 
-        //first we will do the validations
+        Pattern emailRegex = Pattern.compile("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])");
+        Matcher m = emailRegex.matcher(editTextEmail.getText());
 
+        //first we will do the validations
         if (TextUtils.isEmpty(firstName)) {
-            editTextFirstName.setError("Please enter first name");
+            editTextFirstName.setError("Invalid or Missing First Name");
             editTextFirstName.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(lastName)) {
-            editTextLastName.setError("Please enter last name");
+            editTextLastName.setError("Invalid or Missing Last Name");
             editTextLastName.requestFocus();
             return;
         }
 
-        if (TextUtils.isEmpty(email)) {
-            editTextEmail.setError("Please enter your email");
-            editTextEmail.requestFocus();
-            return;
-        }
-
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            editTextEmail.setError("Enter a valid email");
+        if (TextUtils.isEmpty(email) || !m.matches()) {
+            editTextEmail.setError("Invalid or Missing Email");
             editTextEmail.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Enter a password");
+            editTextPassword.setError("Invalid or Missing Password");
             editTextPassword.requestFocus();
             return;
         }
@@ -154,7 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 //starting the profile activity
                                 finish();
-                                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             } else {
                                 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
                             }

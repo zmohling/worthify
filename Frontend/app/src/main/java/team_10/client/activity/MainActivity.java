@@ -8,13 +8,14 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.support.v4.app.Fragment;
-import android.view.View;
 
 import team_10.client.R;
 import team_10.client.fragment.DashboardFragment;
+import team_10.client.fragment.NewsFragment;
+import team_10.client.fragment.TransactionsFragment;
 import team_10.client.settings.SharedPreferencesManager;
 
-public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, TransactionsFragment.OnFragmentInteractionListener {
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -25,12 +26,14 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 
             switch (item.getItemId()) {
                 case R.id.navigation_news:
-                    return true;
+                    f = new NewsFragment();
+                    break;
                 case R.id.navigation_dashboard:
                     f = new DashboardFragment();
-                    return true;
+                    break;
                 case R.id.navigation_transactions:
-                    return true;
+                    f = new TransactionsFragment();
+                    break;
             }
 
             return loadFragment(f);

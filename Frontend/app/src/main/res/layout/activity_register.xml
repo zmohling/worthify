@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#16A085"
-    tools:context=".RegisterActivity">
+    android:background="@color/background"
+    tools:context="activity.RegisterActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,9 +21,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/edit_text_color"
             android:hint="First Name"
             android:inputType="text"
-            android:textColor="#EDE8D6" />
+            android:textColor="@color/text"
+            android:textColorHint="@color/text" />
 
         <EditText
             android:id="@+id/editTextLastName"
@@ -33,7 +35,9 @@
             android:layout_marginBottom="8dp"
             android:hint="Last Name"
             android:inputType="text"
-            android:textColor="#EDE8D6" />
+            android:textColor="@color/text"
+            android:textColorHint="@color/text"
+            android:backgroundTint="@color/edit_text_color" />
 
         <EditText
             android:id="@+id/editTextEmail"
@@ -43,7 +47,9 @@
             android:layout_marginBottom="8dp"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            android:textColor="#EDE8D6" />
+            android:textColor="@color/text"
+            android:textColorHint="@color/text"
+            android:backgroundTint="@color/edit_text_color" />
 
         <EditText
             android:id="@+id/editTextPassword"
@@ -54,7 +60,9 @@
             android:fontFamily="sans-serif"
             android:hint="Password"
             android:inputType="textPassword"
-            android:textColor="#EDE8D6" />
+            android:textColor="@color/text"
+            android:textColorHint="@color/text"
+            android:backgroundTint="@color/edit_text_color" />
 
         <Button
             android:id="@+id/buttonRegister"
