@@ -51,7 +51,7 @@
             android:layout_marginRight="100dp"
             android:background="@drawable/card_bg"
             android:text="Login"
-            android:textColor="#EDE8D6" />
+            android:textColor="@color/text" />
 
         <TextView
             android:id="@+id/textViewRegister"
@@ -62,7 +62,7 @@
             android:text="Dont' have an account?\nRegister Here"
             android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="#EDE8D6" />
+            android:textColor="@color/text" />
 
     </LinearLayout>
 

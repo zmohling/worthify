@@ -2,7 +2,6 @@ package team_10.client.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.service.autofill.RegexValidator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
