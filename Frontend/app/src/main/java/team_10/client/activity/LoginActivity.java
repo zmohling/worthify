@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             finish();
-            startActivity(new Intent(this, ProfileActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
             return;
         }
 
@@ -109,7 +109,6 @@ public class LoginActivity extends AppCompatActivity {
 
                             //if no error in response
                             if (!obj.getBoolean("error")) {
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
 
                                 //getting the user from the response
                                 JSONObject userJson = obj.getJSONObject("user");
@@ -128,11 +127,13 @@ public class LoginActivity extends AppCompatActivity {
 
                                 //starting the profile activity
                                 finish();
-                                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             } else {
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Unsuccessful Login: " + obj.getString("message"), Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
+                            Toast.makeText(getApplicationContext(), "Unsuccessful Login", Toast.LENGTH_SHORT).show();
+                            editTextPassword.setText("");
                             e.printStackTrace();
                         }
                     }
@@ -140,7 +141,10 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),
+                                (error.getMessage() == null) ? "Unsuccessful Login" : "Unsuccessful Login: " + error.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                        editTextPassword.setText("");
                     }
                 }) {
             @Override
