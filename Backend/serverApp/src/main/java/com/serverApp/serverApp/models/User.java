@@ -15,19 +15,19 @@ public class User implements Serializable {
       @Column(name = "lastName")
       private String lastName;
 
-      @Column(name = "firstName")
+      @Column(name = "firstName", nullable = false)
       private String firstName;
 
-      @Column(name = "email")
+      @Column(name = "email", nullable = false)
       private String email;
 
       @Column(name = "salt")
       private byte[] salt;
 
-      @Column(name = "password")
+      @Column(name = "password", nullable = false)
       private String password;
 
-      @Column(name = "type")
+      @Column(name = "type", nullable = false)
       private int type;
 
       public static long getSerialVersionUID() {

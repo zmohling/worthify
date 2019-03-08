@@ -41,7 +41,7 @@ public class hashingFunction
         catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        System.out.println("The length of this password is: " + generatedPassword.length());
+        //System.out.println("The length of this password is: " + generatedPassword.length());
         return generatedPassword;
     }
 }

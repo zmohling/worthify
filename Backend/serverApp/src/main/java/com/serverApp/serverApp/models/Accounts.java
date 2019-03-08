@@ -3,61 +3,71 @@ package com.serverApp.serverApp.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Blob;
 
 
 @Entity
 @Table(name = "accounts")
 public class Accounts implements Serializable{
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = 4L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private String id;
 
-    @Id
-    @Column(name = "userId")
-    private long userId;
+    @Column(name = "label")
+    private String label;
 
     @Column(name = "type")
-    private int type;
+    private String type;
 
-    @Column(name = "actionLsit")
-    private String actionList;
+    @Column(name = "isActive")
+    private int isActive;
+
+    @Column(name = "transactions")
+    private Blob transactions;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public String getActionList() {
-        return actionList;
+    public String getLabel() {
+        return label;
     }
 
-    public void setActionList(String actionList) {
-        this.actionList = actionList;
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public int getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
+    }
+
+    public Blob getTransactions() {
+        return transactions;
+    }
+
+    public void setTransaction(Blob transactions) {
+        this.transactions = transactions;
     }
 }
 
