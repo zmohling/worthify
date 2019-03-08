@@ -88,12 +88,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         view.findViewById(R.id.button_add_account).setOnClickListener(this);
 
         accounts = User.getAccounts();
-
         lv = view.findViewById(R.id.list);
         customAdapter = new CustomListAdapter(view.getContext(), R.layout.item_account_list_item, accounts);
         lv.setAdapter(customAdapter);
 
-        setListViewHeightBasedOnChildren(lv);
+        if ((accounts.size() != 0)) {
+            setListViewHeightBasedOnChildren(lv);
+        }
+
         return view;
     }
 
@@ -158,13 +160,13 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         listView.requestLayout();
     }
 
-    static int numAccounts = 3;
+    static int numAccounts = 0;
 
     public void createRandomAccount() {
 
         Loan l = new Loan();
         l.setLabel("Loan " + numAccounts);
-        l.setId("00000001" + String.format("%04d", (numAccounts++)));
+        l.setId(String.format("%08d", User.getId()) + String.format("%04d", (++numAccounts)));
 
         Random rand = new Random();
         int i, numTransactions = rand.nextInt(4) + 1;

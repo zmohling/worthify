@@ -4,7 +4,7 @@
     android:id="@+id/account_list_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@null"
+    android:background="@drawable/card_bg"
     tools:context="team_10.client.activity.MainActivity">
 
     <TextView
