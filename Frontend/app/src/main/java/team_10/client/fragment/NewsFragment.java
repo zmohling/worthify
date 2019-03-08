@@ -4,17 +4,28 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import team_10.client.R;
 import team_10.client.article.Article;
 import team_10.client.article.ArticlesAdapter;
+import team_10.client.utility.VolleySingleton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,9 +35,13 @@ import team_10.client.article.ArticlesAdapter;
  * Use the {@link NewsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
 public class NewsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    ArrayList<Article> articles;
+    ArticlesAdapter adapter;
+    RecyclerView recyclerView;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -58,6 +73,56 @@ public class NewsFragment extends Fragment {
         return fragment;
     }
 
+    public void editArticles()
+    {
+        String urlArticles = "http://cs309-jr-1.misc.iastate.edu:8080/article/getAll";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlArticles,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject returned = new JSONObject(response);
+                            int numArticles = returned.getInt("numArticles");
+                            String[] articleURLS = new String[numArticles];
+                            int i;
+                            for (i = 0; i < numArticles; i++)
+                            {
+                                try {
+                                    JSONObject userJson = returned.getJSONObject("article"+ i);
+                                    articleURLS[i] = userJson.getString("url");
+                                    articles.add(new Article(userJson.getString("url")));
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            //ArticlesAdapter replacement = new ArticlesAdapter(articles);
+                            //recyclerView.setAdapter(replacement);
+                            adapter.notifyDataSetChanged();
+                            //adapter.notifyDataSetChanged();
+                            //(RecyclerView) getView().findViewById(R.id.rvArticles)
+                            //.swapAdapter(new ArticlesAdapter(articles));
+                            // Create adapter passing in the sample user data
+                            //ArticlesAdapter adapter = new ArticlesAdapter(articles);
+                            // Attach the adapter to the recyclerview to populate items
+                            //rvArticles.setAdapter(adapter);
+                            // Set layout manager to position the items
+                            //rvArticles.setLayoutManager(new LinearLayoutManager(getContext()));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        System.out.println(error.getMessage());
+                    }
+                });
+        VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,29 +130,44 @@ public class NewsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        //editArticles();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View rootView = inflater.inflate(R.layout.fragment_news, container, false);
+        //View rootView = inflater.inflate(R.layout.fragment_news, container, false);
 
-        RecyclerView list = rootView.findViewById(R.id.rvArticles);
-        ArrayList<Article> articles;
+        //RecyclerView list = rootView.findViewById(R.id.rvArticles);
 
-        RecyclerView rvArticles = (RecyclerView) rootView.findViewById(R.id.rvArticles);
+        //RecyclerView rvArticles = (RecyclerView) rootView.findViewById(R.id.rvArticles);
 
         // Initialize contacts
-        articles = Article.createArticlesList(getActivity(), getContext());
-        // Create adapter passing in the sample user data
-        ArticlesAdapter adapter = new ArticlesAdapter(articles);
-        // Attach the adapter to the recyclerview to populate items
-        rvArticles.setAdapter(adapter);
-        // Set layout manager to position the items
-        rvArticles.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        return rootView;
+        //Article.createArticlesList(getActivity(), getContext(), articles);
+
+        // Create adapter passing in the sample user data
+        //ArticlesAdapter adapter = new ArticlesAdapter(articles);
+        // Attach the adapter to the recyclerview to populate items
+        //rvArticles.setAdapter(adapter);
+        // Set layout manager to position the items
+        //rvArticles.setLayoutManager(new LinearLayoutManager(getContext()));
+        //Bundle args = getArguments();
+        //int tabPosition = args.getInt("tab_position");
+
+        View view = inflater.inflate(R.layout.fragment_news , container ,false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.rvArticles);
+
+        articles = new ArrayList<Article>();
+        adapter = new ArticlesAdapter(articles);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        editArticles();
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

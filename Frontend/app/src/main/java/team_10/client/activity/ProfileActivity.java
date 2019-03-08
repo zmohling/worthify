@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,10 +25,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import team_10.client.account.*;
-import team_10.client.settings.*;
-import team_10.client.utility.*;
 import team_10.client.R;
+import team_10.client.account.Account;
+import team_10.client.account.AccountsWrapper;
+import team_10.client.account.Loan;
+import team_10.client.settings.SharedPreferencesManager;
+import team_10.client.utility.AbstractAccountAdapter;
+import team_10.client.utility.VolleySingleton;
 
 
 public class ProfileActivity extends AppCompatActivity {

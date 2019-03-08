@@ -31,9 +31,11 @@ public class Article {
 
     private static int lastContactId = 0;
 
-    public static ArrayList<Article> createArticlesList(final Activity activity, Context context) {
-        final ArrayList<Article> articles = new ArrayList<Article>();
+    public static ArrayList<Article> returnArticlesList(final ArrayList<Article> articles) {
+        return articles;
+    }
 
+    public static void createArticlesList(final Activity activity, Context context, final ArrayList<Article> articles) {
         String urlArticles = "http://cs309-jr-1.misc.iastate.edu:8080/article/getAll";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlArticles,
                 new Response.Listener<String>() {
@@ -68,7 +70,6 @@ public class Article {
                     }
                 });
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
-
-        return articles;
     }
+
 }
