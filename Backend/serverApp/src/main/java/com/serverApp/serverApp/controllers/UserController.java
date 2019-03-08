@@ -1,6 +1,6 @@
 package com.serverApp.serverApp.controllers;
 
-import com.serverApp.serverApp.hashingFunction;
+import com.serverApp.serverApp.other.hashingFunction;
 import com.serverApp.serverApp.models.User;
 import com.serverApp.serverApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,5 +66,22 @@ public class UserController{
             System.out.println("Password Unsuccessful!");
             return "";
         }
+    }
+
+    @RequestMapping("/adminlogin")
+    public String adminLogin(@RequestBody User user){
+        User retrievedUser = userRepo.getAdmin(user.getEmail(), user.getPassword());
+
+        String rString =
+                "{\"error\":\"false\","
+                        + "\"message\":\"login success\","
+                        +  "\"user\":{"
+                        + "\"id\":\"" + retrievedUser.getId() + "\"," +
+                        "\"lastName\":\"" + retrievedUser.getLastName() + "\"," +
+                        "\"firstName\":\"" + retrievedUser.getFirstName() + "\"," +
+                        "\"email\":\"" + retrievedUser.getEmail() + "\"," +
+                        "\"type\":\"" + retrievedUser.getType() + "\"}}";
+        System.out.println("Admin Login: " + retrievedUser.getEmail() + ", " + retrievedUser.getPassword());
+        return rString;
     }
 }

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import team_10.client.activity.MainActivity;
+import team_10.client.activity.LoginActivity;
 import team_10.client.activity.User;
 
 public class SharedPreferencesManager {
@@ -67,6 +67,6 @@ public class SharedPreferencesManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
-        mCtx.startActivity(new Intent(mCtx, MainActivity.class));
+        mCtx.startActivity(new Intent(mCtx, LoginActivity.class));
     }
 }
