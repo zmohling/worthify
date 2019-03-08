@@ -3,6 +3,7 @@ package com.serverApp.serverApp.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Blob;
 
 
 @Entity
@@ -11,7 +12,7 @@ public class Accounts implements Serializable{
     private static final long serialVersionUID = 4L;
 
     @Id
-    private long id;
+    private String id;
 
     @Column(name = "label")
     private String label;
@@ -19,16 +20,21 @@ public class Accounts implements Serializable{
     @Column(name = "type")
     private String type;
 
+    @Column(name = "isActive")
+    private int isActive;
+
+    @Column(name = "transactions")
+    private Blob transactions;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -48,5 +54,20 @@ public class Accounts implements Serializable{
         this.label = label;
     }
 
+    public int getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
+    }
+
+    public Blob getTransactions() {
+        return transactions;
+    }
+
+    public void setTransaction(Blob transactions) {
+        this.transactions = transactions;
+    }
 }
 
