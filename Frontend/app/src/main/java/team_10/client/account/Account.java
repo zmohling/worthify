@@ -10,7 +10,7 @@ import java.util.TreeMap;
  */
 public abstract class Account implements Serializable
 {
-    protected int id;
+    protected String id;
     protected String label;
     protected TreeMap<LocalDate, team_10.client.account.Transaction> transactions;
 
@@ -18,7 +18,7 @@ public abstract class Account implements Serializable
         transactions = new TreeMap<>();
     }
 
-    public Account(int id, String label) {
+    public Account(String id, String label) {
         this.id = id;
         this.label = label;
 
@@ -34,8 +34,8 @@ public abstract class Account implements Serializable
         return (Transaction) transactions.remove(d);
     }
 
-    public int getId() { return this.id; }
-    public void setId(int id) { this.id = id; }
+    public String getId() { return this.id; }
+    public void setId(String id) { this.id = id; }
     public String getLabel() { return this.label; }
     public void setLabel(String label) { this.label = label; }
 

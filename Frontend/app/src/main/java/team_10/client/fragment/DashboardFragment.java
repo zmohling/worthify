@@ -7,10 +7,21 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Random;
 
 import team_10.client.R;
+import team_10.client.account.Account;
+import team_10.client.account.Loan;
+import team_10.client.activity.User;
 import team_10.client.settings.SharedPreferencesManager;
+import team_10.client.utility.CustomListAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +42,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     private String mParam2;
 
     View view;
+    CustomListAdapter customAdapter;
+    List<Account> accounts;
+    ListView lv;
 
     private OnFragmentInteractionListener mListener;
 
@@ -71,6 +85,16 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         view.findViewById(R.id.buttonLogout).setOnClickListener(this);
+        view.findViewById(R.id.button_add_account).setOnClickListener(this);
+
+        accounts = User.getAccounts();
+        lv = view.findViewById(R.id.list);
+        customAdapter = new CustomListAdapter(view.getContext(), R.layout.item_account_list_item, accounts);
+        lv.setAdapter(customAdapter);
+
+        if ((accounts.size() != 0)) {
+            setListViewHeightBasedOnChildren(lv);
+        }
 
         return view;
     }
@@ -108,7 +132,52 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 SharedPreferencesManager.getInstance(parent.getApplicationContext()).logout();
                 parent.finish();
                 break;
+            case R.id.button_add_account:
+                createRandomAccount();
+                customAdapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren(lv);
+                break;
         }
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(), MeasureSpec.AT_MOST);
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + listView.getPaddingBottom();
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+    static int numAccounts = 0;
+
+    public void createRandomAccount() {
+
+        Loan l = new Loan();
+        l.setLabel("Loan " + numAccounts);
+        l.setId(String.format("%08d", User.getId()) + String.format("%04d", (++numAccounts)));
+
+        Random rand = new Random();
+        int i, numTransactions = rand.nextInt(4) + 1;
+
+        LocalDate now = LocalDate.now();
+
+        for(i = 0; i < numTransactions; i++) {
+            l.addTransaction(now = now.plusMonths(rand.nextInt(3)), rand.nextDouble() % 700 + 300, rand.nextDouble() % 4);
+        }
+
+        User.addAccount(l);
     }
 
     /**

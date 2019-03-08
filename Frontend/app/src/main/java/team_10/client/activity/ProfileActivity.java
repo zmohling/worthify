@@ -229,14 +229,14 @@ public class ProfileActivity extends AppCompatActivity {
         final User user = SharedPreferencesManager.getInstance(this).getUser();
 
         Loan carloan = new Loan();
-        carloan.setId(1234);
+        carloan.setId("000000010001");
         carloan.addTransaction(LocalDate.now(), 100, 0.04);
         carloan.addTransaction(LocalDate.now().plusYears(1), 1000, 0.08);
 
         user.addAccount(carloan);
 
         Loan mortgage = new Loan();
-        mortgage.setId(1235);
+        mortgage.setId("000000010002");
         mortgage.addTransaction(LocalDate.now().plusMonths(3), 233000, 0.03);
 
         user.addAccount(mortgage);

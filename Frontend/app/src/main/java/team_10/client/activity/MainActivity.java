@@ -5,9 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.support.v4.app.Fragment;
 
 import team_10.client.R;
 import team_10.client.fragment.DashboardFragment;
@@ -16,6 +16,8 @@ import team_10.client.fragment.TransactionsFragment;
 import team_10.client.settings.SharedPreferencesManager;
 
 public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, TransactionsFragment.OnFragmentInteractionListener {
+
+    public static User user;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -49,11 +51,12 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         if (!SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
+        } else {
+             user = SharedPreferencesManager.getInstance(this).getUser();
         }
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
         navigation.setSelectedItemId(R.id.navigation_dashboard);
         loadFragment(new DashboardFragment());
     }
