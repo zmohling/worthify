@@ -83,14 +83,12 @@ public class NewsFragment extends Fragment {
                         try {
                             JSONObject returned = new JSONObject(response);
                             int numArticles = returned.getInt("numArticles");
-                            String[] articleURLS = new String[numArticles];
                             int i;
                             for (i = 0; i < numArticles; i++)
                             {
                                 try {
                                     JSONObject userJson = returned.getJSONObject("article"+ i);
-                                    articleURLS[i] = userJson.getString("url");
-                                    articles.add(new Article(userJson.getString("url")));
+                                    articles.add(new Article(userJson.getString("title"), userJson.getString("description"), userJson.getString("pictureUrl"), userJson.getString("url")));
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();

@@ -5,7 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -20,6 +23,9 @@ public class ArticlesAdapter extends
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView nameTextView;
+        public TextView titleTextView;
+        public TextView descriptionTextView;
+        public ImageView imageView;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -29,6 +35,9 @@ public class ArticlesAdapter extends
             super(itemView);
 
             nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
+            titleTextView = (TextView) itemView.findViewById(R.id.contact_title);
+            descriptionTextView = (TextView) itemView.findViewById(R.id.contact_description);
+            imageView = (ImageView) itemView.findViewById(R.id.contact_picture);
         }
     }
 
@@ -62,6 +71,18 @@ public class ArticlesAdapter extends
             // Set item views based on your views and data model
             TextView textView = viewHolder.nameTextView;
             textView.setText(article.getUrl());
+            viewHolder.titleTextView.setText(article.getTitle());
+            viewHolder.descriptionTextView.setText(article.getDescription());
+
+            ImageView imageViewHolder = viewHolder.imageView;
+
+            if (!article.getPictureUrl().equals("null")) {
+                Picasso.get().load(article.getPictureUrl()).into(imageViewHolder);
+            }
+            else
+            {
+                imageViewHolder.setVisibility(View.GONE);
+            }
         }
 
         // Returns the total count of items in the list
