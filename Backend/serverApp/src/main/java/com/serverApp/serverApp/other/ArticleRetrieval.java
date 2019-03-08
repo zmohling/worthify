@@ -32,7 +32,7 @@ public class ArticleRetrieval {
             while(scan.hasNextLine()){
                 builtJSON += scan.nextLine();
             }
-            System.out.println(builtJSON);
+            //System.out.println(builtJSON);
 
             Gson g = new Gson();
             JSONObject o = new JSONObject(builtJSON);

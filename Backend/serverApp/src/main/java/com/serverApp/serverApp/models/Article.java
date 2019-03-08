@@ -1,6 +1,7 @@
 package com.serverApp.serverApp.models;
 
 import net.bytebuddy.implementation.bind.annotation.Default;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,7 +31,7 @@ public class Article implements Serializable {
     @Column(name = "userId")
     private long userId;
 
-    @Column(name = "url")
+    @Column(name = "url", columnDefinition = "text")
     private String url;
 
     @Column(name = "title")
@@ -39,11 +40,14 @@ public class Article implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "urlToImage")
+    @Column(name = "urlToImage", columnDefinition="text")
     private String urlToImage;
 
     @Column(name = "isActive")
     private int isActive;
+
+    @Column(name = "keyword")
+    private String keyword;
 
 
     public static long getSerialVersionUID() {
@@ -136,5 +140,13 @@ public class Article implements Serializable {
 
     public void setIsActive(int isActive) {
         this.isActive = isActive;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 }

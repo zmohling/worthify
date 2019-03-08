@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-<<<<<<< HEAD
+ HEAD
     <list default="true" id="e45e236e-4a23-4a94-a6db-815ebff7e570" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
-=======
+
     <list default="true" id="591e77ee-dd3a-4b5b-9ad8-597ef297007c" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Source.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/ArticleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/ArticleController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Article.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Article.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/other/ArticleRetrieval.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/other/ArticleRetrieval.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/ArticleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/ArticleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/UserRepository.java" afterDir="false" />
     </list>
->>>>>>> 5f1434880a241bfa282bd19ebb4cb19476265e7b
+
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -210,8 +206,8 @@
       <file leaf-file-name="ArticleRetrieval.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/other/ArticleRetrieval.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="631">
-              <caret line="42" column="67" selection-start-line="42" selection-start-column="67" selection-end-line="42" selection-end-column="67" />
+            <state relative-caret-position="427">
+              <caret line="34" column="14" selection-start-line="34" selection-start-column="14" selection-end-line="34" selection-end-column="14" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -222,16 +218,16 @@
       <file leaf-file-name="Article.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Article.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" selection-start-line="15" selection-end-line="15" />
+            <state relative-caret-position="782">
+              <caret line="46" column="25" lean-forward="true" selection-start-line="46" selection-start-column="25" selection-end-line="46" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#933#934#0" expanded="true" />
-                <element signature="e#972#973#0" expanded="true" />
-                <element signature="e#999#1000#0" expanded="true" />
-                <element signature="e#1024#1025#0" expanded="true" />
-                <element signature="e#1058#1059#0" expanded="true" />
-                <element signature="e#1086#1087#0" expanded="true" />
+                <element signature="e#1106#1107#0" expanded="true" />
+                <element signature="e#1145#1146#0" expanded="true" />
+                <element signature="e#1172#1173#0" expanded="true" />
+                <element signature="e#1197#1198#0" expanded="true" />
+                <element signature="e#1231#1232#0" expanded="true" />
+                <element signature="e#1259#1260#0" expanded="true" />
                 <element signature="e#1119#1120#0" expanded="true" />
                 <element signature="e#1148#1149#0" expanded="true" />
                 <element signature="e#1192#1193#0" expanded="true" />
@@ -272,16 +268,32 @@
                 <element signature="e#2489#2490#0" expanded="true" />
                 <element signature="e#2534#2535#0" expanded="true" />
                 <element signature="e#2574#2575#0" expanded="true" />
+                <element signature="e#2715#2716#0" expanded="true" />
+                <element signature="e#2745#2746#0" expanded="true" />
+                <element signature="e#2791#2792#0" expanded="true" />
+                <element signature="e#2829#2830#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ArticleController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ArticleRepository.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/ArticleRepository.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ArticleController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/ArticleController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="801">
-              <caret line="108" column="39" selection-start-line="108" selection-start-column="39" selection-end-line="108" selection-end-column="39" />
+            <state relative-caret-position="359">
+              <caret line="59" column="24" selection-start-line="59" selection-start-column="24" selection-end-line="59" selection-end-column="24" />
+              <folding>
+                <element signature="method#getAll#0;class#ArticleController#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -299,15 +311,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UserController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/UserController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="19" column="49" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="User.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/User.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -320,7 +323,7 @@
       <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="427">
+            <state relative-caret-position="561">
               <caret line="33" column="36" selection-start-line="33" selection-start-column="36" selection-end-line="33" selection-end-column="36" />
             </state>
           </provider>
@@ -670,6 +673,7 @@
     <option name="CHANGED_PATHS">
       <list>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/ArticleRepository.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Article.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/ArticleController.java" />
@@ -679,6 +683,8 @@
 >>>>>>> 5f1434880a241bfa282bd19ebb4cb19476265e7b
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/UserRepository.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/User.java" />
+=======
+>>>>>>> server_articleKeywords
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/UserController.java" />
 <<<<<<< HEAD
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/hashingFunction.java" />
@@ -694,19 +700,26 @@
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/AccountsController.java" />
 =======
         <option value="$PROJECT_DIR$/src/main/resources/application.properties" />
-        <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Article.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Source.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/other/keywords.txt" />
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/other/ArticleRetrieval.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Article.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/UserRepository.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/ArticleController.java" />
+<<<<<<< HEAD
 >>>>>>> 5f1434880a241bfa282bd19ebb4cb19476265e7b
+=======
+        <option value="$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/ArticleRepository.java" />
+>>>>>>> server_articleKeywords
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="-7" />
-    <option name="width" value="974" />
-    <option name="height" value="1047" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -929,26 +942,31 @@
 =======
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="3" />
+      <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info id="Image Layers" order="2" />
-      <window_info anchor="right" id="Capture Analysis" order="3" />
-      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="right" id="Maven Projects" order="3" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="right" id="Maven Projects" order="7" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.03812636" />
-      <window_info id="Capture Tool" order="2" />
-      <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.10341151" />
-      <window_info anchor="bottom" id="Build" order="7" weight="0.15141612" />
-      <window_info active="true" anchor="right" id="Gradle" order="3" visible="true" weight="0.32995737" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info id="Designer" order="3" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27132195" />
+      <window_info anchor="bottom" id="Build" order="9" weight="0.15141612" />
+      <window_info anchor="right" id="Gradle" order="5" weight="0.32995737" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+<<<<<<< HEAD
       <window_info id="UI Designer" order="2" />
       <window_info anchor="right" id="Theme Preview" order="3" />
 >>>>>>> 5f1434880a241bfa282bd19ebb4cb19476265e7b
+=======
+      <window_info id="UI Designer" order="4" />
+      <window_info anchor="right" id="Theme Preview" order="6" />
+>>>>>>> server_articleKeywords
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
 <<<<<<< HEAD
@@ -998,6 +1016,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
           <caret line="31" column="22" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
+          <folding>
+            <element signature="method#getAll#0;class#ArticleController#0" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1272,13 +1293,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/UserRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/other/hashingFunction.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -1321,16 +1335,22 @@
     <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/User.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/UserController.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="102">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
 >>>>>>> 5f1434880a241bfa282bd19ebb4cb19476265e7b
+=======
+        <state relative-caret-position="187">
+          <caret line="19" column="49" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="49" />
+>>>>>>> server_articleKeywords
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/UserController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/other/keywords.txt">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
 <<<<<<< HEAD
         <state relative-caret-position="986">
           <caret line="66" column="22" selection-start-line="56" selection-start-column="33" selection-end-line="66" selection-end-column="22" />
@@ -1347,6 +1367,10 @@
 =======
         <state relative-caret-position="187">
           <caret line="19" column="49" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="49" />
+=======
+        <state relative-caret-position="17">
+          <caret line="1" column="33" selection-start-line="1" selection-start-column="33" selection-end-line="1" selection-end-column="33" />
+>>>>>>> server_articleKeywords
         </state>
       </provider>
     </entry>
@@ -1361,36 +1385,65 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/User.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
+        <state relative-caret-position="561">
           <caret line="33" column="36" selection-start-line="33" selection-start-column="36" selection-end-line="33" selection-end-column="36" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/other/ArticleRetrieval.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="631">
           <caret line="42" column="67" selection-start-line="42" selection-start-column="67" selection-end-line="42" selection-end-column="67" />
 >>>>>>> 5f1434880a241bfa282bd19ebb4cb19476265e7b
+=======
+        <state relative-caret-position="427">
+          <caret line="34" column="14" selection-start-line="34" selection-start-column="14" selection-end-line="34" selection-end-column="14" />
+>>>>>>> server_articleKeywords
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/UserRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/ArticleController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359">
+          <caret line="59" column="24" selection-start-line="59" selection-start-column="24" selection-end-line="59" selection-end-column="24" />
+          <folding>
+            <element signature="method#getAll#0;class#ArticleController#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/models/Article.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        <state relative-caret-position="782">
+          <caret line="46" column="25" lean-forward="true" selection-start-line="46" selection-start-column="25" selection-end-line="46" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#933#934#0" expanded="true" />
-            <element signature="e#972#973#0" expanded="true" />
-            <element signature="e#999#1000#0" expanded="true" />
-            <element signature="e#1024#1025#0" expanded="true" />
-            <element signature="e#1058#1059#0" expanded="true" />
-            <element signature="e#1086#1087#0" expanded="true" />
+            <element signature="e#1106#1107#0" expanded="true" />
+            <element signature="e#1145#1146#0" expanded="true" />
+            <element signature="e#1172#1173#0" expanded="true" />
+            <element signature="e#1197#1198#0" expanded="true" />
+            <element signature="e#1231#1232#0" expanded="true" />
+            <element signature="e#1259#1260#0" expanded="true" />
             <element signature="e#1119#1120#0" expanded="true" />
             <element signature="e#1148#1149#0" expanded="true" />
             <element signature="e#1192#1193#0" expanded="true" />
@@ -1431,14 +1484,18 @@
             <element signature="e#2489#2490#0" expanded="true" />
             <element signature="e#2534#2535#0" expanded="true" />
             <element signature="e#2574#2575#0" expanded="true" />
+            <element signature="e#2715#2716#0" expanded="true" />
+            <element signature="e#2745#2746#0" expanded="true" />
+            <element signature="e#2791#2792#0" expanded="true" />
+            <element signature="e#2829#2830#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/controllers/ArticleController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/serverApp/serverApp/repositories/ArticleRepository.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="801">
-          <caret line="108" column="39" selection-start-line="108" selection-start-column="39" selection-end-line="108" selection-end-column="39" />
+        <state relative-caret-position="289">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
         </state>
       </provider>
     </entry>
