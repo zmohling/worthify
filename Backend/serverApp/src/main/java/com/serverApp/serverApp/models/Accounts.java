@@ -12,7 +12,11 @@ public class Accounts implements Serializable{
     private static final long serialVersionUID = 4L;
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(name = "accountId")
+    private String accountId;
 
     @Column(name = "label")
     private String label;
@@ -24,18 +28,30 @@ public class Accounts implements Serializable{
     private int isActive;
 
     @Column(name = "transactions")
-    private Blob transactions;
+    private String transactions;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public void setTransactions(String transactions) {
+        this.transactions = transactions;
     }
 
     public String getType() {
@@ -62,11 +78,11 @@ public class Accounts implements Serializable{
         this.isActive = isActive;
     }
 
-    public Blob getTransactions() {
+    public String getTransactions() {
         return transactions;
     }
 
-    public void setTransaction(Blob transactions) {
+    public void setTransaction(String transactions) {
         this.transactions = transactions;
     }
 }

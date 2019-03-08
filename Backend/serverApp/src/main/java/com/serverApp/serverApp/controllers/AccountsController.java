@@ -115,18 +115,18 @@ public class AccountsController {
         JSONObject obj = new JSONObject(string);
         JSONArray accountsArr = obj.getJSONArray("accounts");
         Type accountType = new TypeToken<ArrayList<Accounts>>(){}.getType();
+        Type isActiveType = new TypeToken<ArrayList<Integer>>(){}.getType();
         Gson g = new Gson();
-        //ArrayList<Accounts> accountsList = g.fromJson(accountsArr.toString(), accountType);
-
-        for(int i = 0; i < 1; i++) {
-            JSONObject elem = accountsArr.getJSONObject(i).getJSONObject("transactions");
-            System.out.println(elem.toString());
+        ArrayList<Accounts> accountsList = g.fromJson(accountsArr.toString(), accountType);
+        //for(int i = 0; i < 1; i++) {
+            //JSONObject elem = accountsArr.getJSONObject(i).getJSONObject("transactions");
+            //System.out.println(elem.toString());
             //System.out.println(accountsList.get(i).getId());
             ///System.out.println(accountsList.get(i).getLabel());
             //System.out.println(accountsList.get(i).getType());
             //System.out.println(accountsList.get(i).getIsActive());
-            //System.out.println(accountsList.get(i).getTransactions().toString());
-        }
+            //System.out.println(accountsList.get(i).getTransactions());
+        //}
         return "";
     }
 
