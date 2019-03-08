@@ -5,7 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -26,6 +28,8 @@ public class ArticlesAdapter extends
         public TextView titleTextView;
         public TextView descriptionTextView;
         public ImageView imageView;
+        public WebView webView;
+        public LinearLayout linearLayout;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -38,6 +42,8 @@ public class ArticlesAdapter extends
             titleTextView = (TextView) itemView.findViewById(R.id.contact_title);
             descriptionTextView = (TextView) itemView.findViewById(R.id.contact_description);
             imageView = (ImageView) itemView.findViewById(R.id.contact_picture);
+            webView = (WebView) itemView.findViewById(R.id.webview);
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
         }
     }
 
@@ -64,9 +70,9 @@ public class ArticlesAdapter extends
 
         // Involves populating data into the item through holder
         @Override
-        public void onBindViewHolder(ArticlesAdapter.ViewHolder viewHolder, int position) {
+        public void onBindViewHolder(final ArticlesAdapter.ViewHolder viewHolder, int position) {
             // Get the data model based on position
-            Article article = mArticles.get(position);
+            final Article article = mArticles.get(position);
 
             // Set item views based on your views and data model
             TextView textView = viewHolder.nameTextView;
@@ -83,6 +89,14 @@ public class ArticlesAdapter extends
             {
                 imageViewHolder.setVisibility(View.GONE);
             }
+
+            viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    viewHolder.webView.loadUrl(article.getUrl());
+                    viewHolder.webView.setVisibility(View.VISIBLE);
+                }
+            });
         }
 
         // Returns the total count of items in the list
