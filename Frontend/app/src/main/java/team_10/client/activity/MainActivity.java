@@ -5,11 +5,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.support.v4.app.Fragment;
+
+import java.time.LocalDate;
 
 import team_10.client.R;
+import team_10.client.account.Loan;
 import team_10.client.fragment.DashboardFragment;
 import team_10.client.fragment.NewsFragment;
 import team_10.client.fragment.TransactionsFragment;
@@ -53,6 +56,27 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        // Accounts Testing
+        //==================================================
+        final User user = SharedPreferencesManager.getInstance(this).getUser();
+
+        Loan carloan = new Loan();
+        carloan.setId("000000010001");
+        carloan.addTransaction(LocalDate.now(), 100, 0.04);
+        carloan.addTransaction(LocalDate.now().plusYears(1), 1000, 0.08);
+        carloan.setLabel("Car Loan");
+
+        user.addAccount(carloan);
+
+        Loan mortgage = new Loan();
+        mortgage.setId("000000010002");
+        mortgage.addTransaction(LocalDate.now().plusMonths(3), 233000, 0.03);
+        mortgage.setLabel("Mortgage");
+
+        user.addAccount(mortgage);
+
+        //==================================================
 
         navigation.setSelectedItemId(R.id.navigation_dashboard);
         loadFragment(new DashboardFragment());

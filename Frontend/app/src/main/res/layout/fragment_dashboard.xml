@@ -38,14 +38,19 @@
                 android:background="@drawable/ic_add_black_24dp"
                 android:backgroundTint="@color/primary_accent" />
 
-            <TextView
-                android:id="@+id/test"
+            <ListView
+                android:id="@+id/list"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/button_add_account"
-                android:gravity="center"
-                android:textColor="@color/text" />
+                android:background="@drawable/card_bg"
+                android:layout_marginHorizontal="5dp"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="false" >
+
+
+            </ListView>
 
             <Button
                 android:id="@+id/buttonLogout"
@@ -54,8 +59,7 @@
                 android:layout_marginLeft="100dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="100dp"
-                android:layout_alignBottom="@+id/test"
-                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/list"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/greenbtn_bg"
                 android:text="Logout"
