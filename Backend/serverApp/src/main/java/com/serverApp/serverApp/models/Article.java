@@ -31,7 +31,7 @@ public class Article implements Serializable {
     @Column(name = "userId")
     private long userId;
 
-    @Column(name = "url")
+    @Column(name = "url", columnDefinition = "text")
     private String url;
 
     @Column(name = "title")
@@ -40,7 +40,7 @@ public class Article implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "urlToImage")
+    @Column(name = "urlToImage", columnDefinition="text")
     private String urlToImage;
 
     @Column(name = "isActive")

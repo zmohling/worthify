@@ -56,7 +56,9 @@ public class ArticleController {
                     if (articles.get(j).getDescription().length() > 150) {
                         articles.get(j).setDescription(articles.get(j).getDescription().substring(0, 147) + "...");
                     }
-                    articleRepo.save(articles.get(j));
+                    if (articleRepo.getDuplicates(articles.get(j).getTitle()) == 0) {
+                        articleRepo.save(articles.get(j));
+                    }
                 }
                 articles = null;
             }catch(Exception e){
