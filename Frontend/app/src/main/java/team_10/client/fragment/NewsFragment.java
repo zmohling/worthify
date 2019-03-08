@@ -96,18 +96,7 @@ public class NewsFragment extends Fragment {
                                     e.printStackTrace();
                                 }
                             }
-                            //ArticlesAdapter replacement = new ArticlesAdapter(articles);
-                            //recyclerView.setAdapter(replacement);
                             adapter.notifyDataSetChanged();
-                            //adapter.notifyDataSetChanged();
-                            //(RecyclerView) getView().findViewById(R.id.rvArticles)
-                            //.swapAdapter(new ArticlesAdapter(articles));
-                            // Create adapter passing in the sample user data
-                            //ArticlesAdapter adapter = new ArticlesAdapter(articles);
-                            // Attach the adapter to the recyclerview to populate items
-                            //rvArticles.setAdapter(adapter);
-                            // Set layout manager to position the items
-                            //rvArticles.setLayoutManager(new LinearLayoutManager(getContext()));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -130,31 +119,11 @@ public class NewsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        //editArticles();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        //View rootView = inflater.inflate(R.layout.fragment_news, container, false);
-
-        //RecyclerView list = rootView.findViewById(R.id.rvArticles);
-
-        //RecyclerView rvArticles = (RecyclerView) rootView.findViewById(R.id.rvArticles);
-
-        // Initialize contacts
-
-        //Article.createArticlesList(getActivity(), getContext(), articles);
-
-        // Create adapter passing in the sample user data
-        //ArticlesAdapter adapter = new ArticlesAdapter(articles);
-        // Attach the adapter to the recyclerview to populate items
-        //rvArticles.setAdapter(adapter);
-        // Set layout manager to position the items
-        //rvArticles.setLayoutManager(new LinearLayoutManager(getContext()));
-        //Bundle args = getArguments();
-        //int tabPosition = args.getInt("tab_position");
 
         View view = inflater.inflate(R.layout.fragment_news , container ,false);
         recyclerView = (RecyclerView) view.findViewById(R.id.rvArticles);
