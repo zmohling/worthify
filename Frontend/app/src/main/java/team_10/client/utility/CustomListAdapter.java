@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import team_10.client.R;
-import team_10.client.account.Account;
+import team_10.client.object.account.Account;
 
 public class CustomListAdapter extends ArrayAdapter {
 

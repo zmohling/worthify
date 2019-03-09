@@ -1,4 +1,4 @@
-package team_10.client.account;
+package team_10.client.object.account;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -11,21 +11,19 @@ import java.util.TreeMap;
 public abstract class Account implements Serializable
 {
     protected String accountID, label;
-    protected TreeMap<LocalDate, team_10.client.account.Transaction> transactions;
+    protected TreeMap<LocalDate, team_10.client.object.account.Transaction> transactions;
 
     public Account() {
         transactions = new TreeMap<>();
     }
 
-    public Account(String accountID, String label) {
-        this.accountID = accountID;
-        this.label = label;
-
-        transactions = new TreeMap<>();
+    public void addTransaction(LocalDate d, double value) {
+        Transaction t = new Transaction(value, transactions.size());
+        transactions.put(d, t);
     }
 
-    public void addTransaction(LocalDate d, double value) {
-        Transaction t = new Transaction(value);
+    public void addTransaction(LocalDate d, double value, int transactionID) {
+        Transaction t = new Transaction(value, transactionID);
         transactions.put(d, t);
     }
 
@@ -43,8 +41,10 @@ public abstract class Account implements Serializable
 
 
 
-    private class Transaction extends team_10.client.account.Transaction {
-        private Transaction(double value) { super(value); }
+    private class Transaction extends team_10.client.object.account.Transaction {
+        private Transaction(double value, int transactionID) {
+            super(value, transactionID);
+        }
     }
 }
 

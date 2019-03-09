@@ -24,6 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import team_10.client.constant.URLs;
+import team_10.client.object.User;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.VolleySingleton;
 

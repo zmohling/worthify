@@ -1,8 +1,10 @@
-package team_10.client.account;
+package team_10.client.object.account;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Vector;
+
+import team_10.client.utility.General;
 
 /**
  * Loan Account Type. Add transactions of absolute interest
@@ -20,7 +22,13 @@ public class Loan extends Account {
      */
     public void addTransaction(LocalDate d, double value, double interestRate)
     {
-        Transaction t = new Transaction(value, interestRate);
+        Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactions.size());
+        transactions.put(d, t);
+    }
+
+    public void addTransaction(LocalDate d, double value, double interestRate, int transactionID)
+    {
+        Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactionID);
         transactions.put(d, t);
     }
 
@@ -59,7 +67,7 @@ public class Loan extends Account {
             }
         }
 
-        return (double)Math.round(total * 100d) / 100d; // round to nearest cent
+        return General.round(total, 2); // round to nearest cent
     }
 
 
@@ -70,14 +78,15 @@ public class Loan extends Account {
     /**
      * Loan specific Transaction object.
      */
-    private class Transaction extends team_10.client.account.Transaction {
+    private class Transaction extends team_10.client.object.account.Transaction {
 
         double interestRate;
 
-        Transaction(double value, double interestRate)
+        Transaction(double value, double interestRate, int transactionID)
         {
             this.value = value;
             this.interestRate = interestRate;
+            this.transactionID = transactionID;
         }
 
         public double getInterestRate() { return this.interestRate; }

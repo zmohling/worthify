@@ -1,11 +1,13 @@
-package team_10.client.activity;
+package team_10.client.object;
 
 import java.util.ArrayList;
 import java.util.List;
-import team_10.client.account.*;
+
+import team_10.client.object.account.Account;
+import team_10.client.object.account.AccountsWrapper;
 
 public class User {
-    private static int userID, type;
+    private static int userID, type, numAccounts = 0;
     private static String lastName, firstName, email; //Password doesn't need to be in user
 
     private static List<Account> accounts;
@@ -30,6 +32,8 @@ public class User {
 
     public static List<Account> getAccounts() { return accounts; }
 
+    public static void setAccounts(List<Account> aList) { accounts = aList; }
+
     public static AccountsWrapper getAccountsWrapper() {
         AccountsWrapper a = new AccountsWrapper();
         a.setAccounts(accounts);
@@ -38,13 +42,9 @@ public class User {
     }
 
     public static void addAccount(Account a) {
+        a.setID(String.format("%08d", userID) + String.format("%04d", (numAccounts++)));
         accounts.add(a);
     }
-
-
-    //public String getUsername() {
-     //   return username;
-    //}
 
     public static String getEmail() {
         return email;

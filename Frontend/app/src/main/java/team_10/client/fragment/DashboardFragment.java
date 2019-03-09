@@ -12,17 +12,18 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
 import team_10.client.R;
-import team_10.client.account.Account;
-import team_10.client.account.Loan;
-import team_10.client.activity.User;
+import team_10.client.object.account.Account;
+import team_10.client.object.account.Loan;
+import team_10.client.object.User;
 import team_10.client.settings.SharedPreferencesManager;
+import team_10.client.utility.AbstractAccountAdapter;
 import team_10.client.utility.CustomListAdapter;
 
 /**
@@ -162,13 +163,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         listView.requestLayout();
     }
 
-    static int numAccounts = 0;
-
     public void createRandomAccount() {
 
         Loan l = new Loan();
-        l.setLabel("Loan " + numAccounts);
-        l.setID(String.format("%08d", User.getID()) + String.format("%04d", (++numAccounts)));
+        l.setLabel("Loan " + User.getAccounts().size());
 
         Random rand = new Random();
         int i, numTransactions = rand.nextInt(4) + 1;
@@ -176,11 +174,16 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         LocalDate now = LocalDate.now();
 
         for(i = 0; i < numTransactions; i++) {
-            l.addTransaction(now = now.plusMonths(rand.nextInt(3)), (rand.nextDouble() % 700 + 300) * ((rand.nextInt() % 4 == 0) ? -1 : 1), rand.nextDouble() % 4);
+            l.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1), ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300), (rand.nextDouble() % 0.02 + 0.02));
         }
 
         User.addAccount(l);
-        System.out.println(new Gson().toJson(User.getAccountsWrapper()));
+
+        GsonBuilder b = new GsonBuilder();
+        //b.setPrettyPrinting();
+        b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
+
+        System.out.println(b.create().toJson(User.getAccountsWrapper()));
     }
 
     /**
