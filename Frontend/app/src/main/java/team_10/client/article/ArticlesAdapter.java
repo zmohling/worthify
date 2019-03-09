@@ -42,7 +42,7 @@ public class ArticlesAdapter extends
             titleTextView = (TextView) itemView.findViewById(R.id.contact_title);
             descriptionTextView = (TextView) itemView.findViewById(R.id.contact_description);
             imageView = (ImageView) itemView.findViewById(R.id.contact_picture);
-            webView = (WebView) itemView.findViewById(R.id.webview);
+            webView = (WebView) itemView.findViewById(R.id.webviewHome);
             linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
         }
     }
