@@ -15,12 +15,12 @@ public class Loan extends Account {
     /**
      * Overloaded addTransaction method for Loan.
      * @param d Date of transaction.
-     * @param amount Amount of transaction, aka change of principal amount. (negative or positive)
+     * @param value Value of transaction, aka change of principal value. (negative or positive)
      * @param interestRate Interest rate at the time of the transaction.
      */
-    public void addTransaction(LocalDate d, double amount, double interestRate)
+    public void addTransaction(LocalDate d, double value, double interestRate)
     {
-        Transaction t = new Transaction(amount, interestRate);
+        Transaction t = new Transaction(value, interestRate);
         transactions.put(d, t);
     }
 
@@ -50,7 +50,7 @@ public class Loan extends Account {
                 }
 
                 //A = P(1 + r/n)^nt -> Daily Compound Interest
-                double principle = total + ((Transaction) transactions.get(fromDate)).getAmount();
+                double principle = total + ((Transaction) transactions.get(fromDate)).getValue();
                 double rate = ((Transaction) transactions.get(fromDate)).getInterestRate();
                 long n = fromDate.until(toDate, ChronoUnit.DAYS); //number of compounding periods (DAYS) per unit t
                 double t = n / (double) fromDate.lengthOfYear();
@@ -74,17 +74,12 @@ public class Loan extends Account {
 
         double interestRate;
 
-        protected Transaction() { }
-        Transaction(double amount, double interestRate)
+        Transaction(double value, double interestRate)
         {
-            this.amount = amount;
+            this.value = value;
             this.interestRate = interestRate;
         }
 
-        public double getAmount() {
-            return this.amount;
-        }
-        public void setAmount(double amount) { this.amount = amount; }
         public double getInterestRate() { return this.interestRate; }
         public void setInterestRate(double interestRate) { this.interestRate = interestRate; }
     }

@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
@@ -166,7 +168,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         Loan l = new Loan();
         l.setLabel("Loan " + numAccounts);
-        l.setId(String.format("%08d", User.getId()) + String.format("%04d", (++numAccounts)));
+        l.setID(String.format("%08d", User.getID()) + String.format("%04d", (++numAccounts)));
 
         Random rand = new Random();
         int i, numTransactions = rand.nextInt(4) + 1;
@@ -174,10 +176,11 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         LocalDate now = LocalDate.now();
 
         for(i = 0; i < numTransactions; i++) {
-            l.addTransaction(now = now.plusMonths(rand.nextInt(3)), rand.nextDouble() % 700 + 300, rand.nextDouble() % 4);
+            l.addTransaction(now = now.plusMonths(rand.nextInt(3)), (rand.nextDouble() % 700 + 300) * ((rand.nextInt() % 4 == 0) ? -1 : 1), rand.nextDouble() % 4);
         }
 
         User.addAccount(l);
+        System.out.println(new Gson().toJson(User.getAccountsWrapper()));
     }
 
     /**

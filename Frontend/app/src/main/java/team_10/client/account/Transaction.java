@@ -1,15 +1,18 @@
 package team_10.client.account;
 
 public abstract class Transaction {
-    double amount;
+    double value;
+    String transactionID;
 
     public Transaction() {}
+    public Transaction(double value) { this.value = value; }
 
-    public double getAmount() {
-        return this.amount;
+    public double getValue() {
+        return this.value;
     }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setValue(double value) {
+        this.value = value;
     }
+    public String getID() { return transactionID; }
+    public void setValue(String transactionID) { this.transactionID = transactionID; }
 }

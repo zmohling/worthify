@@ -5,13 +5,13 @@ import java.util.List;
 import team_10.client.account.*;
 
 public class User {
-    private static int id, type;
+    private static int userID, type;
     private static String lastName, firstName, email; //Password doesn't need to be in user
 
     private static List<Account> accounts;
 
-    public User(int id, String lastName, String firstName, String email, int type) {
-        this.id = id;
+    public User(int userID, String lastName, String firstName, String email, int type) {
+        this.userID = userID;
         this.lastName = lastName;
         this.firstName = firstName;
         this.email = email;
@@ -20,8 +20,8 @@ public class User {
         accounts = new ArrayList<>();
     }
 
-    public static int getId() {
-        return id;
+    public static int getID() {
+        return userID;
     }
 
     public static String getLastName() {return lastName;}
@@ -29,6 +29,13 @@ public class User {
     public static String getFirstName() {return firstName;}
 
     public static List<Account> getAccounts() { return accounts; }
+
+    public static AccountsWrapper getAccountsWrapper() {
+        AccountsWrapper a = new AccountsWrapper();
+        a.setAccounts(accounts);
+
+        return a;
+    }
 
     public static void addAccount(Account a) {
         accounts.add(a);

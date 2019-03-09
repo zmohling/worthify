@@ -44,7 +44,7 @@ public class CustomListAdapter extends ArrayAdapter {
 
             if (tt1 != null) {
                 tt1.setText("Type: " + a.getClass().getSimpleName() +
-                        ", ID: " + a.getId() + ", Today's Value: " +
+                        ", ID: " + a.getID() + ", Today's Value: " +
                         a.getValue(LocalDate.now().plusMonths(18)));
             }
 
