@@ -53,7 +53,7 @@ public class ArticleController {
                         //truncate description if too long
                         articles.get(j).setDescription(articles.get(j).getDescription().substring(0, 147) + "...");
                     }
-                    if (articleRepo.getDuplicates(articles.get(j).getTitle()) == 0) {
+                    if (articleRepo.getDuplicates(articles.get(j).getUrl()) == 0) {
                         articleRepo.save(articles.get(j));
                         insertCount ++;
                     }
@@ -134,7 +134,6 @@ public class ArticleController {
     public String getPersonal(@PathVariable long id){
         Accounts[] accounts = accountRepo.getAccountsById(id);
         System.out.println("Number of accounts: " + accounts.length);
-        System.out.println("Type: " + accounts[0].getType());
         ArrayList<String> keywords = new ArrayList<>();
         for(int i = 0; i < accounts.length; i ++){
             switch(accounts[i].getType()){
@@ -152,7 +151,6 @@ public class ArticleController {
                     break;
             }
         }
-
 
         ArrayList<Article> articles = new ArrayList<>();
         for (int i = 0; i < keywords.size(); i++) {

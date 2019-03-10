@@ -15,6 +15,8 @@
 
 ### IntelliJ IDEA ###
 .idea
+*.xml
+*.jar
 *.iws
 *.iml
 *.ipr
