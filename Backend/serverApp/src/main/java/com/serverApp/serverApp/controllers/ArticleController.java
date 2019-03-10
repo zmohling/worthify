@@ -135,16 +135,26 @@ public class ArticleController {
         Accounts[] accounts = accountRepo.getAccountsById(id);
         System.out.println("Number of accounts: " + accounts.length);
         ArrayList<String> keywords = new ArrayList<>();
+        boolean loansRetrieved = false, savingsAccountsRetrieved = false, CDsRetrieved = false;
         for(int i = 0; i < accounts.length; i ++){
             switch(accounts[i].getType()){
                 case "Loan":
-                    keywords.addAll(Arrays.asList(loanKeywords));
+                    if (!loansRetrieved) {
+                        keywords.addAll(Arrays.asList(loanKeywords));
+                        loansRetrieved = true;
+                    }
                     break;
                 case "SavingsAccount":
-                    keywords.addAll(Arrays.asList(savingsAccountKeywords));
-                    break;
+                    if (!savingsAccountsRetrieved) {
+                        keywords.addAll(Arrays.asList(savingsAccountKeywords));
+                        savingsAccountsRetrieved = true;
+                    }
+                        break;
                 case "CertificateOfDeposit":
-                    keywords.addAll(Arrays.asList(certificateOfDepositKeywords));
+                    if (!CDsRetrieved) {
+                        keywords.addAll(Arrays.asList(certificateOfDepositKeywords));
+                        CDsRetrieved = true;
+                    }
                     break;
                 default:
                     //do nothing, account has no type or no keywords
