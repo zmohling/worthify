@@ -65,9 +65,7 @@ public class AccountsController {
             accountsRepo.save(accountsList.get(i));
         }
         String rString =
-                "{\"error\":\"false\","
-                        + "\"message\":\"account addition success\"" +
-                        ",\"accounts\":[";
+                "{\"accounts\":[";
         Iterator<Accounts> iterator = accountsList.iterator();
         while((iterator).hasNext()) {
             Accounts accounts = iterator.next();
