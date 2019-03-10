@@ -2,33 +2,28 @@ package com.serverApp.serverApp.controllers;
 
 import com.google.gson.reflect.TypeToken;
 import com.serverApp.serverApp.models.Accounts;
-import com.serverApp.serverApp.models.LoanTransaction;
 import com.serverApp.serverApp.models.User;
-import com.serverApp.serverApp.models.Vehicle;
+import com.serverApp.serverApp.models.CertificateOfDeposit;
 import com.serverApp.serverApp.repositories.AccountsRepository;
-import com.serverApp.serverApp.repositories.UserRepository;
-import com.serverApp.serverApp.repositories.LoanTransactionRepository;
-import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
-import org.hibernate.annotations.Target;
+import com.serverApp.serverApp.repositories.CertificateOfDepositRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.*;
 
-import java.awt.*;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
-import java.sql.Blob;
+import java.sql.Date;
 import java.util.*;
 
 @RestController
 public class AccountsController {
     @Autowired
     AccountsRepository accountsRepo;
+    @Autowired
+    CertificateOfDepositRepository certRepo;
 
     @RequestMapping("/getAccounts")
     public String getAccounts(@RequestBody User user) {
@@ -66,6 +61,7 @@ public class AccountsController {
         for(int i = 0; i < accountsArr.length(); i++) {
             accountsList.get(i).setTransactions(transactionArr.get(i));
             accountsList.get(i).setIsActive(1);
+            System.out.println(accountsList.get(i).getType());
             accountsRepo.save(accountsList.get(i));
         }
         String rString =
@@ -76,9 +72,9 @@ public class AccountsController {
         while((iterator).hasNext()) {
             Accounts accounts = iterator.next();
             rString = rString +
-                    ",\"accountID\":\"" + accounts.getAccountId() + "\"," +
+                    "{\"accountID\":\"" + accounts.getAccountId() + "\"," +
                     "\"label\":\"" + accounts.getLabel() + "\"," +
-                    "\"transactions\":\"" + accounts.getTransactions() + "\"," +
+                    "\"transactions\":" + accounts.getTransactions() + "," +
                     "\"type\":\"" + accounts.getType() + "\"}";
             if(iterator.hasNext()) rString = rString + ",";
         }
