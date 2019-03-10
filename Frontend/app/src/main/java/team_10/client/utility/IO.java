@@ -1,10 +1,8 @@
 package team_10.client.utility;
 
 import android.content.Context;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;

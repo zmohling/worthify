@@ -44,4 +44,3 @@ public class User {
 
     public static int getType() {return type;}
 }
-// id, last name, first name, email, password, type (int)

@@ -5,4 +5,6 @@ public class URLs {
 
     public static final String URL_REGISTER = ROOT_URL + "register"; //RECHANGE BACK!!!
     public static final String URL_LOGIN= ROOT_URL + "login";
+    public static final String URL_ADD_ACOUNTS = ROOT_URL + "/accounts/add";
+    //public static final String URL_GET_ACOUNTS = ROOT_URL + "/accounts/get";
 }
