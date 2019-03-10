@@ -3,23 +3,35 @@ package team_10.client.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.Spinner;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
 import team_10.client.R;
+import team_10.client.constant.TYPE;
 import team_10.client.object.User;
 import team_10.client.object.account.Account;
+import team_10.client.object.account.CertificateOfDeposit;
 import team_10.client.object.account.Loan;
+import team_10.client.object.account.SavingsAccount;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.CustomListAdapter;
 import team_10.client.utility.IO;
@@ -136,14 +148,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 parent.finish();
                 break;
             case R.id.button_add_account:
-                createRandomAccount();
+                startModal();
+
+                //createRandomAccount();
 
                 /* Update ListView */
-                customAdapter.notifyDataSetChanged();
-                setListViewHeightBasedOnChildren(lv);
 
-                /* Write to file */
-                IO.writeAccountsToFile(IO.serializeAccounts(accounts), getContext());
                 break;
         }
     }
@@ -168,21 +178,99 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         listView.requestLayout();
     }
 
-    public void createRandomAccount() {
+    public void startModal() {
+        final String label;
+        final Class[] c = new Class[1];
 
-        Loan l = new Loan();
-        l.setLabel("Loan " + User.getAccounts().size());
 
-        Random rand = new Random();
-        int i, numTransactions = rand.nextInt(4) + 1;
+        // inflate the layout of the popup window
+        LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
+        View popupView = inflater.inflate(R.layout.modal_add_account, null);
 
-        LocalDate now = LocalDate.now();
-
-        for(i = 0; i < numTransactions; i++) {
-            l.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1), ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300), (rand.nextDouble() % 0.02 + 0.02));
+        // create the popup window
+        int width = LinearLayout.LayoutParams.MATCH_PARENT;
+        int height = LinearLayout.LayoutParams.MATCH_PARENT;
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            popupWindow.setElevation(100);
         }
 
-        User.addAccount(l);
+        final EditText editTextLabel = (EditText) popupView.findViewById(R.id.modal_account_label);
+        Spinner spinner = (Spinner) popupView.findViewById(R.id.modal_account_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.account_types, R.layout.item_spinner_item);
+        adapter.setDropDownViewResource(R.layout.item_spinner_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String s = parent.getItemAtPosition(position).toString();
+                TYPE t = TYPE.firstMatch(s);
+                if (t != null) {
+                    c[0] = t.getTypeClass();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        ((Button) popupView.findViewById(R.id.modal_account_cancel)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+
+        ((Button) popupView.findViewById(R.id.modal_account_add)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Random rand = new Random();
+                int i = rand.nextInt(4) + 1;
+
+                LocalDate now = LocalDate.now();
+
+                switch (c[0].getSimpleName()) {
+                    case "Loan":
+                        Loan l = new Loan();
+                        l.setLabel(editTextLabel.getText().toString());
+                        l.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
+                                ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
+                                (rand.nextDouble() % 0.02 + 0.02));
+                        User.addAccount(l);
+                        break;
+
+                    case "SavingsAccount":
+                        SavingsAccount sA = new SavingsAccount();
+                        sA.setLabel(editTextLabel.getText().toString());
+                        sA.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
+                                ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
+                                (rand.nextDouble() % 0.02 + 0.02));
+                        User.addAccount(sA);
+                        break;
+
+                    case "CertificateOfDeposit":
+                        CertificateOfDeposit CoD = new CertificateOfDeposit();
+                        CoD.setLabel(editTextLabel.getText().toString());
+                        CoD.setMaturityDate(LocalDate.now().plusMonths(18));
+                        CoD.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
+                                ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
+                                (rand.nextDouble() % 0.02 + 0.02));
+                        User.addAccount(CoD);
+                        break;
+                }
+
+                customAdapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren(lv);
+                popupWindow.dismiss();
+
+                System.out.println(IO.serializeAccounts(User.getAccounts()));
+            }
+        });
+
     }
 
     /**

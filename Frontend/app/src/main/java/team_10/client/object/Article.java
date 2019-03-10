@@ -1,4 +1,4 @@
-package team_10.client.article;
+package team_10.client.object;
 
 public class Article {
     private String url;

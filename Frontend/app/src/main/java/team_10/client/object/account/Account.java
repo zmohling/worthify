@@ -8,8 +8,7 @@ import java.util.TreeMap;
  * Abstract Account class for all account types. All transactions for all types that extend
  * this class are put in the transactions TreeMap.
  */
-public abstract class Account implements Serializable
-{
+public abstract class Account implements Serializable {
     protected String accountID, label;
     protected TreeMap<LocalDate, team_10.client.object.account.Transaction> transactions;
 
@@ -31,14 +30,23 @@ public abstract class Account implements Serializable
         return (Transaction) transactions.remove(d);
     }
 
-    public String getID() { return this.accountID; }
-    public void setID(String accountID) { this.accountID = accountID; }
-    public String getLabel() { return this.label; }
-    public void setLabel(String label) { this.label = label; }
+    public String getID() {
+        return this.accountID;
+    }
+
+    public void setID(String accountID) {
+        this.accountID = accountID;
+    }
+
+    public String getLabel() {
+        return this.label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
     public abstract double getValue(LocalDate d);
-
-
 
 
     private class Transaction extends team_10.client.object.account.Transaction {

@@ -1,8 +1,10 @@
 package team_10.client.utility;
 
 import android.content.Context;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,20 +39,20 @@ public class IO {
     public static String readAccountsFromFile(Context context) {
         StringBuffer accounts = new StringBuffer();
         try {
-            FileInputStream stream = context.openFileInput (filename) ;
-            InputStreamReader streamReader = new InputStreamReader (stream) ;
-            BufferedReader bufferReader = new BufferedReader (streamReader) ;
+            FileInputStream stream = context.openFileInput(filename);
+            InputStreamReader streamReader = new InputStreamReader(stream);
+            BufferedReader bufferReader = new BufferedReader(streamReader);
 
-            String readString = bufferReader.readLine () ;
+            String readString = bufferReader.readLine();
             while (readString != null) {
                 accounts.append(readString);
-                readString = bufferReader.readLine () ;
+                readString = bufferReader.readLine();
             }
 
-            streamReader.close () ;
+            streamReader.close();
         } catch (Exception e) {
-            e.printStackTrace () ;
-            if(e instanceof FileNotFoundException) {
+            e.printStackTrace();
+            if (e instanceof FileNotFoundException) {
                 File directory = context.getFilesDir();
                 File file = new File(directory, filename);
             }

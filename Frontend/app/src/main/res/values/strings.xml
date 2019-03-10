@@ -4,19 +4,9 @@
     <string name="title_news">News</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_transactions">Transactions</string>
-    <string-array name="accounts_placeholder">
-        <item>Mortgage</item>
-        <item>2014 Ford Focus</item>
-        <item>Student Loans</item>
-        <item>Edward Jones Retirement Fund</item>
-        <item>Beach House</item>
+    <string-array name="account_types">
+        <item>Loan</item>
         <item>Savings Account</item>
-        <item>Nationwide Insurance Policy</item>
-        <item>Apple Shares</item>
-        <item>Da Vinci Painting</item>
-        <item>Gold, 60oz</item>
+        <item>Certificate of Deposit</item>
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

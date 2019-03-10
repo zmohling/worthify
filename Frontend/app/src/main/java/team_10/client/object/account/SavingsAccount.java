@@ -6,29 +6,25 @@ import java.util.Vector;
 
 import team_10.client.utility.General;
 
-/**
- * Loan Account Type. Add transactions of absolute interest
- * rate or change in principal. Interest compounds daily.
- */
-public class Loan extends Account {
+public class SavingsAccount extends Account {
 
-    public Loan() {
+    public SavingsAccount() {
     }
 
     /**
      * Overloaded addTransaction method for Loan.
      *
-     * @param d            Date of transaction.
-     * @param value        Value of transaction, aka change of principal value. (negative or positive)
-     * @param interestRate Interest rate at the time of the transaction.
+     * @param d                   Date of transaction.
+     * @param value               Value of transaction, aka change of principal value. (negative or positive)
+     * @param annualPercentReturn Interest rate at the time of the transaction.
      */
-    public void addTransaction(LocalDate d, double value, double interestRate) {
-        Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactions.size());
+    public void addTransaction(LocalDate d, double value, double annualPercentReturn) {
+        Transaction t = new Transaction(General.round(value, 2), General.round(annualPercentReturn, 3), transactions.size());
         transactions.put(d, t);
     }
 
-    public void addTransaction(LocalDate d, double value, double interestRate, int transactionID) {
-        Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactionID);
+    public void addTransaction(LocalDate d, double value, double annualPercentReturn, int transactionID) {
+        Transaction t = new Transaction(General.round(value, 2), General.round(annualPercentReturn, 3), transactionID);
         transactions.put(d, t);
     }
 
@@ -60,7 +56,7 @@ public class Loan extends Account {
 
                 //A = P(1 + r/n)^nt -> Daily Compound Interest
                 double principle = total + ((Transaction) transactions.get(fromDate)).getValue();
-                double rate = ((Transaction) transactions.get(fromDate)).getInterestRate();
+                double rate = ((Transaction) transactions.get(fromDate)).getAnnualPercentReturn();
                 long n = fromDate.until(toDate, ChronoUnit.DAYS); //number of compounding periods (DAYS) per unit t
                 double t = n / (double) fromDate.lengthOfYear();
 
@@ -77,20 +73,20 @@ public class Loan extends Account {
      */
     private class Transaction extends team_10.client.object.account.Transaction {
 
-        double interestRate;
+        double annualPercentReturn;
 
-        Transaction(double value, double interestRate, int transactionID) {
+        Transaction(double value, double annualPercentReturn, int transactionID) {
             this.value = value;
-            this.interestRate = interestRate;
+            this.annualPercentReturn = annualPercentReturn;
             this.transactionID = transactionID;
         }
 
-        public double getInterestRate() {
-            return this.interestRate;
+        public double getAnnualPercentReturn() {
+            return this.annualPercentReturn;
         }
 
-        public void setInterestRate(double interestRate) {
-            this.interestRate = interestRate;
+        public void setAnnualPercentReturn(double interestRate) {
+            this.annualPercentReturn = interestRate;
         }
     }
 }

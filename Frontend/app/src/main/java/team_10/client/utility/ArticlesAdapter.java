@@ -1,4 +1,4 @@
-package team_10.client.article;
+package team_10.client.utility;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import team_10.client.R;
+import team_10.client.object.Article;
 import team_10.client.fragment.NewsArticle;
 
 public class ArticlesAdapter extends
