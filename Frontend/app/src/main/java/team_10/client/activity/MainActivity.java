@@ -11,11 +11,12 @@ import android.view.MenuItem;
 
 import team_10.client.R;
 import team_10.client.fragment.DashboardFragment;
+import team_10.client.fragment.NewsArticle;
 import team_10.client.fragment.NewsFragment;
 import team_10.client.fragment.TransactionsFragment;
 import team_10.client.settings.SharedPreferencesManager;
 
-public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, TransactionsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, TransactionsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener {
 
     public static User user;
 

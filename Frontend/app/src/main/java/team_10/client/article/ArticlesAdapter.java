@@ -1,11 +1,12 @@
 package team_10.client.article;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import team_10.client.R;
+import team_10.client.fragment.NewsArticle;
 
 public class ArticlesAdapter extends
         RecyclerView.Adapter<ArticlesAdapter.ViewHolder> {
@@ -28,7 +30,7 @@ public class ArticlesAdapter extends
         public TextView titleTextView;
         public TextView descriptionTextView;
         public ImageView imageView;
-        public WebView webView;
+
         public LinearLayout linearLayout;
 
         // We also create a constructor that accepts the entire item row
@@ -42,17 +44,19 @@ public class ArticlesAdapter extends
             titleTextView = (TextView) itemView.findViewById(R.id.contact_title);
             descriptionTextView = (TextView) itemView.findViewById(R.id.contact_description);
             imageView = (ImageView) itemView.findViewById(R.id.contact_picture);
-            webView = (WebView) itemView.findViewById(R.id.webviewHome);
+
             linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
         }
     }
 
         // Store a member variable for the contacts
         private List<Article> mArticles;
+        private FragmentManager fragmentManager;
 
         // Pass in the contact array into the constructor
-        public ArticlesAdapter(List<Article> articles) {
+        public ArticlesAdapter(List<Article> articles, FragmentManager fragmentManagers) {
             mArticles = articles;
+            fragmentManager = fragmentManagers;
         }
 
         @Override
@@ -93,8 +97,13 @@ public class ArticlesAdapter extends
             viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    viewHolder.webView.loadUrl(article.getUrl());
-                    viewHolder.webView.setVisibility(View.VISIBLE);
+                    NewsArticle newsArticle = new NewsArticle().newInstance(article.getUrl());
+                    //Bundle args = new Bundle();
+                    //args.putString("url", article.getUrl());
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.fragment_container, newsArticle);
+                    transaction.commitNow();
+
                 }
             });
         }
