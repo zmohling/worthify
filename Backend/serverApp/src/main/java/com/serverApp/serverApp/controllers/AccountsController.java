@@ -25,7 +25,7 @@ public class AccountsController {
     @Autowired
     CertificateOfDepositRepository certRepo;
 
-    @RequestMapping("/getAccounts")
+    @RequestMapping("/accounts/get")
     public String getAccounts(@RequestBody User user) {
         Collection<Accounts> allAccounts = accountsRepo.getAccounts(user.getId());
         Iterator<Accounts> iterator = allAccounts.iterator();
@@ -36,9 +36,9 @@ public class AccountsController {
         while((iterator).hasNext()) {
             Accounts accounts = iterator.next();
             rString = rString +
-                    ",\"accountID\":\"" + accounts.getAccountId() + "\"," +
+                    "{\"accountID\":\"" + accounts.getAccountId() + "\"," +
                     "\"label\":\"" + accounts.getLabel() + "\"," +
-                    "\"transactions\":\"" + accounts.getTransactions() + "\"," +
+                    "\"transactions\":" + accounts.getTransactions() + "," +
                     "\"type\":\"" + accounts.getType() + "\"}";
             if(iterator.hasNext()) rString = rString + ",";
         }
@@ -46,7 +46,7 @@ public class AccountsController {
         return rString;
     }
 
-    @RequestMapping("/addAccount")
+    @RequestMapping("/accounts/add")
     public String addAccounts(@RequestBody String string) {
         JSONObject obj = new JSONObject(string);
         JSONArray accountsArr = obj.getJSONArray("accounts");
