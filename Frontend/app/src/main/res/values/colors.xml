@@ -5,4 +5,5 @@
     <color name="primary_accent">#16A085</color>
     <color name="secondary_accent">#FF3232</color>
     <color name="text">#EDE8D6</color>
+    <color name="primary_transparent">#AB383C4A</color>
 </resources>

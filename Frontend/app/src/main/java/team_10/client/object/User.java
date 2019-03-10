@@ -25,13 +25,21 @@ public class User {
         return userID;
     }
 
-    public static String getLastName() {return lastName;}
+    public static String getLastName() {
+        return lastName;
+    }
 
-    public static String getFirstName() {return firstName;}
+    public static String getFirstName() {
+        return firstName;
+    }
 
-    public static List<Account> getAccounts() { return accounts; }
+    public static List<Account> getAccounts() {
+        return accounts;
+    }
 
-    public static void setAccounts(List<Account> aList) { accounts = aList; }
+    public static void setAccounts(List<Account> aList) {
+        accounts = aList;
+    }
 
     public static void addAccount(Account a) {
         a.setID(String.format("%08d", userID) + String.format("%04d", (numAccounts++)));
@@ -42,5 +50,7 @@ public class User {
         return email;
     }
 
-    public static int getType() {return type;}
+    public static int getType() {
+        return type;
+    }
 }

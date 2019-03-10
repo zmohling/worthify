@@ -18,6 +18,6 @@
         android:layout_weight="1"
         android:editable="false"
         android:textColor="@color/text"
-        android:text="Hello"/>
+        android:text="Hello" />
 
 </LinearLayout>

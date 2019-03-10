@@ -23,7 +23,9 @@ public class AbstractAccountAdapter implements JsonSerializer<Account>, JsonDese
     @Override
     public JsonElement serialize(Account src, Type typeOfSrc,
                                  JsonSerializationContext context) {
-        Gson gson = new Gson();
+        GsonBuilder b = new GsonBuilder();
+        b.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
+        Gson gson = b.create();
         String className = src.getClass().getSimpleName();
         JsonElement elem = gson.toJsonTree(src, src.getClass());
         JsonObject retValue = elem.getAsJsonObject();

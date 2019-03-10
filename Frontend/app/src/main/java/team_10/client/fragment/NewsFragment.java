@@ -23,8 +23,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import team_10.client.R;
-import team_10.client.article.Article;
-import team_10.client.article.ArticlesAdapter;
+import team_10.client.object.Article;
+import team_10.client.utility.ArticlesAdapter;
 import team_10.client.utility.VolleySingleton;
 
 /**

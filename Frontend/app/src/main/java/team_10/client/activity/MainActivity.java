@@ -70,10 +70,10 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         } else {
-             user = SharedPreferencesManager.getInstance(this).getUser();
-             List<Account> aFromFile = IO.deserializeAccounts(IO.readAccountsFromFile(getApplicationContext()));
-             if (aFromFile != null)
-                 user.setAccounts(aFromFile);
+            user = SharedPreferencesManager.getInstance(this).getUser();
+            List<Account> aFromFile = IO.deserializeAccounts(IO.readAccountsFromFile(getApplicationContext()));
+            if (aFromFile != null)
+                user.setAccounts(aFromFile);
         }
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);

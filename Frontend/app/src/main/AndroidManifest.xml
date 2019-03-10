@@ -14,6 +14,7 @@
         android:theme="@style/WorthifyTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:windowSoftInputMode="adjustNothing"
             android:name=".activity.MainActivity"
             android:label="@string/title_activity_main">
             <intent-filter>

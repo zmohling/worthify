@@ -4,7 +4,9 @@ public abstract class Transaction {
     double value;
     int transactionID;
 
-    public Transaction() {}
+    public Transaction() {
+    }
+
     public Transaction(double value, int transactionID) {
         this.value = value;
         this.transactionID = transactionID;
@@ -13,7 +15,16 @@ public abstract class Transaction {
     public double getValue() {
         return this.value;
     }
-    public void setValue(double value) { this.value = value; }
-    public int getID() { return transactionID; }
-    public void setValue(int transactionID) { this.transactionID = transactionID; }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public int getID() {
+        return transactionID;
+    }
+
+    public void setValue(int transactionID) {
+        this.transactionID = transactionID;
+    }
 }
