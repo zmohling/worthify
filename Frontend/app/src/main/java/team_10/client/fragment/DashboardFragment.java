@@ -149,11 +149,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 break;
             case R.id.button_add_account:
                 startModal();
-
-                //createRandomAccount();
-
-                /* Update ListView */
-
                 break;
         }
     }
@@ -241,6 +236,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                                 ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
                                 (rand.nextDouble() % 0.02 + 0.02));
                         User.addAccount(l);
+                        IO.sendAccountToRemote(l, getContext());
                         break;
 
                     case "SavingsAccount":
@@ -250,6 +246,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                                 ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
                                 (rand.nextDouble() % 0.02 + 0.02));
                         User.addAccount(sA);
+                        IO.sendAccountToRemote(sA, getContext());
                         break;
 
                     case "CertificateOfDeposit":
@@ -260,6 +257,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                                 ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
                                 (rand.nextDouble() % 0.02 + 0.02));
                         User.addAccount(CoD);
+                        IO.sendAccountToRemote(CoD, getContext());
                         break;
                 }
 

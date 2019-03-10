@@ -28,7 +28,7 @@ import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.ArticlesAdapter;
 import team_10.client.utility.VolleySingleton;
 
-import static team_10.client.constant.URLs.ROOT_URL;
+import static team_10.client.constant.URL.ROOT_URL;
 
 /**
  * A simple {@link Fragment} subclass.

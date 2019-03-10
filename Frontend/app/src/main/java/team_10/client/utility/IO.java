@@ -1,18 +1,30 @@
 package team_10.client.utility;
 
 import android.content.Context;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
+import team_10.client.constant.URL;
+import team_10.client.object.User;
 import team_10.client.object.account.Account;
 import team_10.client.object.account.AccountsWrapper;
 
@@ -88,5 +100,108 @@ public class IO {
         } else {
             return (a.getAccounts());
         }
+    }
+
+    public static void sendAccountToRemote(final Account account, final Context context) {
+        String requestBody = null;
+        try {
+            ArrayList<Account> accountsList = new ArrayList<>();
+            accountsList.add(account);
+            requestBody = serializeAccounts(accountsList);
+            System.out.println(requestBody);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        final String finalRequestBody = requestBody;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_ADD_ACOUNTS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context,
+                                (error.getMessage() == null) ? "Error Syncing with Server" : "Error Syncing with Server: " + error.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+
+            @Override
+            public String getBodyContentType() {
+                return String.format("application/json; charset=utf-8");
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return finalRequestBody == null ? null : finalRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                            finalRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+    }
+
+    public static void getAccountsFromRemote(final User user, final Context context) {
+        String requestBody = null;
+        try {
+            JSONObject userAccountsRequest = new JSONObject();
+            userAccountsRequest.put("id", user.getID());
+            requestBody = userAccountsRequest.toString();
+            System.out.println(requestBody);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        final String finalRequestBody = requestBody;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL.URL_GET_ACOUNTS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            user.setAccounts(deserializeAccounts(response));
+                            System.out.println("Accounts Retrieval Successful");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            // gson catch exceptions
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context,
+                                (error.getMessage() == null) ? "Error Syncing with Server" : "Error Syncing with Server: " + error.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+
+            @Override
+            public String getBodyContentType() {
+                return String.format("application/json; charset=utf-8");
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return finalRequestBody == null ? null : finalRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                            finalRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 }

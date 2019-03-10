@@ -74,11 +74,12 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
             List<Account> aFromFile = IO.deserializeAccounts(IO.readAccountsFromFile(getApplicationContext()));
             if (aFromFile != null)
                 user.setAccounts(aFromFile);
+            else
+                IO.getAccountsFromRemote(user, getApplicationContext());
         }
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNav = navigation;
-        //hidelayout = findViewById(R.id.layout_hide);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_dashboard);
         loadFragment(new DashboardFragment());

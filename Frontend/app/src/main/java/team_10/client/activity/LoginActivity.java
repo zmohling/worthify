@@ -23,7 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import team_10.client.constant.URLs;
+import team_10.client.constant.URL;
 import team_10.client.object.User;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.VolleySingleton;
@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         final String requestBody = json.toString();
 
         //if everything is fine
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.URL_LOGIN,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_LOGIN,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
