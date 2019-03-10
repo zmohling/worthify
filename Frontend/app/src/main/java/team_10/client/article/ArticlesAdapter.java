@@ -1,11 +1,14 @@
 package team_10.client.article;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -13,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import team_10.client.R;
+import team_10.client.fragment.NewsArticle;
 
 public class ArticlesAdapter extends
         RecyclerView.Adapter<ArticlesAdapter.ViewHolder> {
@@ -27,6 +31,8 @@ public class ArticlesAdapter extends
         public TextView descriptionTextView;
         public ImageView imageView;
 
+        public LinearLayout linearLayout;
+
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
@@ -38,15 +44,19 @@ public class ArticlesAdapter extends
             titleTextView = (TextView) itemView.findViewById(R.id.contact_title);
             descriptionTextView = (TextView) itemView.findViewById(R.id.contact_description);
             imageView = (ImageView) itemView.findViewById(R.id.contact_picture);
+
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
         }
     }
 
         // Store a member variable for the contacts
         private List<Article> mArticles;
+        private FragmentManager fragmentManager;
 
         // Pass in the contact array into the constructor
-        public ArticlesAdapter(List<Article> articles) {
+        public ArticlesAdapter(List<Article> articles, FragmentManager fragmentManagers) {
             mArticles = articles;
+            fragmentManager = fragmentManagers;
         }
 
         @Override
@@ -64,9 +74,9 @@ public class ArticlesAdapter extends
 
         // Involves populating data into the item through holder
         @Override
-        public void onBindViewHolder(ArticlesAdapter.ViewHolder viewHolder, int position) {
+        public void onBindViewHolder(final ArticlesAdapter.ViewHolder viewHolder, int position) {
             // Get the data model based on position
-            Article article = mArticles.get(position);
+            final Article article = mArticles.get(position);
 
             // Set item views based on your views and data model
             TextView textView = viewHolder.nameTextView;
@@ -83,6 +93,21 @@ public class ArticlesAdapter extends
             {
                 imageViewHolder.setVisibility(View.GONE);
             }
+
+            viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    NewsArticle newsArticle = new NewsArticle().newInstance(article.getUrl());
+
+                    //Bundle args = new Bundle();
+                    //args.putString("url", article.getUrl());
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.add(R.id.fragment_container, newsArticle);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+
+                }
+            });
         }
 
         // Returns the total count of items in the list
