@@ -18,8 +18,6 @@ public class ArticleRetrieval {
     private HttpURLConnection conn;
 
     public ArrayList<Article> getFromURL(URL url){
-
-
         try{
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
