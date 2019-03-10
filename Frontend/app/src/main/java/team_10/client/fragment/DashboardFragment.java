@@ -183,8 +183,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         }
 
         User.addAccount(l);
-
-        System.out.println(IO.serializeAccounts(User.getAccounts()));
     }
 
     /**
