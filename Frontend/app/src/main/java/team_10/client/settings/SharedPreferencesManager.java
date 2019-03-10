@@ -50,7 +50,7 @@ public class SharedPreferencesManager {
     }
 
     //this method will give the logged in user
-    public User getUser() {
+    public static User getUser() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return new User(
                 sharedPreferences.getInt(KEY_ID, -1),

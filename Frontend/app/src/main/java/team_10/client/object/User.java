@@ -6,7 +6,7 @@ import java.util.List;
 import team_10.client.object.account.Account;
 
 public class User {
-    private static int userID, type, numAccounts = 0;
+    private static int userID, type, numAccounts;
     private static String lastName, firstName, email; //Password doesn't need to be in user
 
     private static List<Account> accounts;

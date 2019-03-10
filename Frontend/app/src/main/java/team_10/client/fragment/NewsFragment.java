@@ -24,8 +24,11 @@ import java.util.ArrayList;
 
 import team_10.client.R;
 import team_10.client.object.Article;
+import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.ArticlesAdapter;
 import team_10.client.utility.VolleySingleton;
+
+import static team_10.client.constant.URLs.ROOT_URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,7 +78,7 @@ public class NewsFragment extends Fragment {
 
     public void editArticles()
     {
-        String urlArticles = "http://cs309-jr-1.misc.iastate.edu:8080/article/getAll";
+        String urlArticles = ROOT_URL + "article/getPersonal/" + SharedPreferencesManager.getUser().getID();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlArticles,
                 new Response.Listener<String>() {
                     @Override
