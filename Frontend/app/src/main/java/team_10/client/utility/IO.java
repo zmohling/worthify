@@ -17,8 +17,9 @@ import team_10.client.object.account.Account;
 import team_10.client.object.account.AccountsWrapper;
 
 public class IO {
+    public static String filename = "accounts_store";
+
     public static int writeAccountsToFile(String accounts, Context context) {
-        String filename = "accounts_store";
         String fileContents = accounts;
         FileOutputStream outputStream;
 
@@ -36,7 +37,6 @@ public class IO {
     }
 
     public static String readAccountsFromFile(Context context) {
-        String filename = "accounts_store";
         StringBuffer accounts = new StringBuffer();
         try {
             FileInputStream stream = context.openFileInput (filename) ;
@@ -59,6 +59,10 @@ public class IO {
         }
 
         return accounts.toString();
+    }
+
+    public static void deleteAccountsFile(Context context) {
+        context.deleteFile(filename);
     }
 
     public static String serializeAccounts(List<Account> accounts) {

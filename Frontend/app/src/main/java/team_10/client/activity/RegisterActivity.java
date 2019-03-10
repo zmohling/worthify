@@ -141,7 +141,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 //creating a new user object
                                 User user = new User(
-                                        userJson.getInt("userID"),
+                                        userJson.getInt("id"),
                                         userJson.getString("lastName"),
                                         userJson.getString("firstName"),
                                         userJson.getString("email"),

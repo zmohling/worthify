@@ -130,6 +130,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         switch (v.getId()) {
             case R.id.buttonLogout:
+                IO.deleteAccountsFile(parent.getApplicationContext());
+                User.setAccounts(null); // TODO: Find a better solution after demo 3
                 SharedPreferencesManager.getInstance(parent.getApplicationContext()).logout();
                 parent.finish();
                 break;
