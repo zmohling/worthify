@@ -12,19 +12,17 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.google.gson.GsonBuilder;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
 import team_10.client.R;
+import team_10.client.object.User;
 import team_10.client.object.account.Account;
 import team_10.client.object.account.Loan;
-import team_10.client.object.User;
 import team_10.client.settings.SharedPreferencesManager;
-import team_10.client.utility.AbstractAccountAdapter;
 import team_10.client.utility.CustomListAdapter;
+import team_10.client.utility.IO;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -137,8 +135,13 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 break;
             case R.id.button_add_account:
                 createRandomAccount();
+
+                /* Update ListView */
                 customAdapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren(lv);
+
+                /* Write to file */
+                IO.writeAccountsToFile(IO.serializeAccounts(accounts), getContext());
                 break;
         }
     }
@@ -179,11 +182,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         User.addAccount(l);
 
-        GsonBuilder b = new GsonBuilder();
-        //b.setPrettyPrinting();
-        b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
-
-        System.out.println(b.create().toJson(User.getAccountsWrapper()));
+        System.out.println(IO.serializeAccounts(User.getAccounts()));
     }
 
     /**

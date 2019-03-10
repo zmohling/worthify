@@ -18,7 +18,7 @@ import team_10.client.object.account.Transaction;
 
 public class AbstractAccountAdapter implements JsonSerializer<Account>, JsonDeserializer<Account> {
 
-    private static final String PACKAGE = "team_10.client.account";
+    private static final String PACKAGE = "team_10.client.object.account";
 
     @Override
     public JsonElement serialize(Account src, Type typeOfSrc,

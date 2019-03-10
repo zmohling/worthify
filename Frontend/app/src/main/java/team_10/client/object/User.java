@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import team_10.client.object.account.Account;
-import team_10.client.object.account.AccountsWrapper;
 
 public class User {
     private static int userID, type, numAccounts = 0;
@@ -33,13 +32,6 @@ public class User {
     public static List<Account> getAccounts() { return accounts; }
 
     public static void setAccounts(List<Account> aList) { accounts = aList; }
-
-    public static AccountsWrapper getAccountsWrapper() {
-        AccountsWrapper a = new AccountsWrapper();
-        a.setAccounts(accounts);
-
-        return a;
-    }
 
     public static void addAccount(Account a) {
         a.setID(String.format("%08d", userID) + String.format("%04d", (numAccounts++)));
