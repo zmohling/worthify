@@ -10,7 +10,11 @@ import java.util.Collection;
 @Repository
 public interface AccountsRepository extends JpaRepository<Accounts, Long> {
 
+    //I'm pretty sure this will fail
     @Query(value = "SELECT * FROM accounts WHERE userId = ?1", nativeQuery = true)
     Collection<Accounts> getAccounts(long userId);
+
+    @Query(value = "SELECT * FROM accounts WHERE CAST(SUBSTRING(account_id, 1, 8) as unsigned) = 1;", nativeQuery = true)
+    Accounts[] getAccountsById(long userId);
 
 }

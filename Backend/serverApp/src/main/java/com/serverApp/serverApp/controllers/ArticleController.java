@@ -1,9 +1,11 @@
 package com.serverApp.serverApp.controllers;
 
 import com.google.gson.Gson;
+import com.serverApp.serverApp.models.Accounts;
 import com.serverApp.serverApp.models.Article;
 import com.serverApp.serverApp.models.User;
 import com.serverApp.serverApp.other.ArticleRetrieval;
+import com.serverApp.serverApp.repositories.AccountsRepository;
 import com.serverApp.serverApp.repositories.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @RestController
 public class ArticleController {
@@ -24,6 +27,9 @@ public class ArticleController {
 
     @Autowired
     ArticleRepository articleRepo;
+
+    @Autowired
+    AccountsRepository accountRepo;
 
     @RequestMapping("/article")
     public String article(@RequestBody Article article) {
@@ -134,7 +140,87 @@ public class ArticleController {
 
     @GetMapping("/article/getPersonal/{id}")
     public String getPersonal(@PathVariable long id){
+        Accounts[] accounts = accountRepo.getAccountsById(id);
+        System.out.println("Number of accounts: " + accounts.length);
+        System.out.println("Type: " + accounts[0].getType());
+        ArrayList<String> keywords = new ArrayList<>();
+        for(int i = 0; i < accounts.length; i ++){
+            switch(accounts[i].getType()){
+                case "Loan":
+                    keywords.addAll(Arrays.asList(loanKeywords));
+                    break;
+                case "SavingsAccount":
+                    keywords.addAll(Arrays.asList(savingsAccountKeywords));
+                    break;
+                case "CertificateOfDeposit":
+                    keywords.addAll(Arrays.asList(certificateOfDepositKeywords));
+                    break;
+                default:
+                    //do nothing, account has no type or no keywords
+                    break;
+            }
+        }
 
-        return null;
+
+        ArrayList<Article> articles = new ArrayList<>();
+        for (int i = 0; i < keywords.size(); i++) {
+            articles.addAll(Arrays.asList(articleRepo.getAllArticlesWithKeyword(keywords.get(i))));
+        }
+
+        String rString = "{";
+        rString += "\"numArticles\":\"" + articles.size() +"\",";
+
+        for(int i = 0; i < articles.size(); i ++){
+            if(i == articles.size() - 1){
+                rString =
+                        rString
+                                + "\"article"
+                                + i
+                                + "\": {"
+                                + "\"id\":\""
+                                + articles.get(i).getId()
+                                + "\","
+                                + "\"title\":\""
+                                + articles.get(i).getTitle()
+                                + "\","
+                                + "\"description\":\""
+                                + articles.get(i).getDescription()
+                                + "\","
+                                + "\"pictureUrl\":\""
+                                + articles.get(i).getUrlToImage()
+                                + "\","
+                                + "\"url\":\""
+                                + articles.get(i).getUrl()
+                                + "\","
+                                + "\"isActive\":\""
+                                + articles.get(i).getIsActive()
+                                + "\"}";
+            } else {
+                rString =
+                        rString + "\"article"
+                                + i
+                                + "\": {"
+                                + "\"id\":\""
+                                + articles.get(i).getId()
+                                + "\","
+                                + "\"title\":\""
+                                + articles.get(i).getTitle()
+                                + "\","
+                                + "\"description\":\""
+                                + articles.get(i).getDescription()
+                                + "\","
+                                + "\"pictureUrl\":\""
+                                + articles.get(i).getUrlToImage()
+                                + "\","
+                                + "\"url\":\""
+                                + articles.get(i).getUrl()
+                                + "\","
+                                + "\"isActive\":\""
+                                + articles.get(i).getIsActive()
+                                + "\"},";
+            }
+        }
+        rString += "}";
+        return rString;
     }
 }
