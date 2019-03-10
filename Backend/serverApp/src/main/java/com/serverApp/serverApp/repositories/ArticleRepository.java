@@ -17,4 +17,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @Query(value = "SELECT count(*) FROM articles WHERE title = ?1", nativeQuery= true)
     int getDuplicates(String title);
+
+    @Query(value = "SELECT * FROM articles WHERE keyword = ?1 AND is_active = 1", nativeQuery = true)
+    Article[] getAllArticlesWithKeyword(String keyword);
 }
