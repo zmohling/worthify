@@ -23,8 +23,10 @@ public class UserController{
         byte[] salt = hashingFunction.getSalt();
         user.setSalt(salt);
         user.setPassword(hashingFunction.hashingFunction(user.getPassword(), salt));
-        System.out.println(userRepo.checkEmail(user.getEmail()));
+        System.out.println("registering new user...");
         if(userRepo.checkEmail(user.getEmail()) == 0) {
+            user = userRepo.save(user);
+            userRepo.flush();
             String rString =
                     "{\"error\":\"false\","
                             + "\"message\":\"user login success\","
@@ -34,8 +36,7 @@ public class UserController{
                             "\"firstName\":\"" + user.getFirstName() + "\"," +
                             "\"email\":\"" + user.getEmail() + "\"," +
                             "\"type\":\"" + user.getType() + "\"}}";
-            System.out.println("Registered Successfully");
-            userRepo.save(user);
+            System.out.println("Inserting user: " + rString);
             return rString;
         } else {
             System.out.println("Registration Failed!");
