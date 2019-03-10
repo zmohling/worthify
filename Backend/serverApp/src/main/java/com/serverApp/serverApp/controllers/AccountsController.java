@@ -30,9 +30,7 @@ public class AccountsController {
         Collection<Accounts> allAccounts = accountsRepo.getAccounts(user.getId());
         Iterator<Accounts> iterator = allAccounts.iterator();
         String rString =
-                "{\"error\":\"false\","
-                        + "\"message\":\"account retrieval success\"" +
-                        ",\"accounts\":[";
+                "{\"accounts\":[";
         while((iterator).hasNext()) {
             Accounts accounts = iterator.next();
             rString = rString +
