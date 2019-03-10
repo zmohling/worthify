@@ -1,6 +1,8 @@
 package com.serverApp.serverApp.models;
 
 
+import org.hibernate.type.BlobType;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Blob;
@@ -15,8 +17,8 @@ public class Accounts implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "accountId")
-    private String accountId;
+    @Column(name = "accountID")
+    private String accountID;
 
     @Column(name = "label")
     private String label;
@@ -43,11 +45,11 @@ public class Accounts implements Serializable{
     }
 
     public String getAccountId() {
-        return accountId;
+        return accountID;
     }
 
     public void setAccountId(String accountId) {
-        this.accountId = accountId;
+        this.accountID = accountId;
     }
 
     public void setTransactions(String transactions) {
@@ -81,9 +83,4 @@ public class Accounts implements Serializable{
     public String getTransactions() {
         return transactions;
     }
-
-    public void setTransaction(String transactions) {
-        this.transactions = transactions;
-    }
 }
-
