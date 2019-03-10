@@ -8,6 +8,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 import team_10.client.R;
 import team_10.client.fragment.DashboardFragment;
@@ -19,6 +20,9 @@ import team_10.client.settings.SharedPreferencesManager;
 public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, TransactionsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener {
 
     public static User user;
+    private static BottomNavigationView bottomNav;
+    //private static LinearLayout hidelayout;
+    //public BottomNavigationView bottomNav;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -43,6 +47,14 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         }
     };
 
+    public static void hideBottomNavigationView() {
+        bottomNav.setVisibility(View.GONE);
+    }
+
+    public static void showBottomNavigationView() {
+        bottomNav.setVisibility(View.VISIBLE);
+    }
+
     /* USE THIS FOR LOGIN / MAIN SCREEN FLOW AND INITS */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         }
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        bottomNav = navigation;
+        //hidelayout = findViewById(R.id.layout_hide);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_dashboard);
         loadFragment(new DashboardFragment());

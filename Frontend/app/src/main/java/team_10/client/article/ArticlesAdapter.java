@@ -98,11 +98,13 @@ public class ArticlesAdapter extends
                 @Override
                 public void onClick(View view) {
                     NewsArticle newsArticle = new NewsArticle().newInstance(article.getUrl());
+
                     //Bundle args = new Bundle();
                     //args.putString("url", article.getUrl());
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragment_container, newsArticle);
-                    transaction.commitNow();
+                    transaction.add(R.id.fragment_container, newsArticle);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
 
                 }
             });

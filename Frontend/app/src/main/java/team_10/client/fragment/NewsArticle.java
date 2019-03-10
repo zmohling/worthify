@@ -15,6 +15,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import team_10.client.R;
+import team_10.client.activity.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,6 +73,8 @@ public class NewsArticle extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_news_article , container ,false);
+        //MainActivity.hideBottomNavigationView();
+        //view.findViewById(R.id.navigation).setVisibility(View.GONE);
         webView = (WebView) view.findViewById(R.id.webview);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -86,6 +89,11 @@ public class NewsArticle extends Fragment {
                 {
                     webView.goBack();
                     return true;
+                }
+                if ((keyCode == KeyEvent.KEYCODE_BACK) && (event.getAction() == MotionEvent.ACTION_UP) && !webView.canGoBack() && getFragmentManager().getBackStackEntryCount() > 0)
+                {
+                    //MainActivity.showBottomNavigationView();
+                    getFragmentManager().popBackStack();
                 }
                 return false;
             }
@@ -109,12 +117,14 @@ public class NewsArticle extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        MainActivity.hideBottomNavigationView();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        MainActivity.showBottomNavigationView();
     }
 
     /**
