@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import team_10.client.R;
-import team_10.client.account.Account;
+import team_10.client.object.account.Account;
 
 public class CustomListAdapter extends ArrayAdapter {
 
@@ -43,8 +43,8 @@ public class CustomListAdapter extends ArrayAdapter {
 //            TextView tt3 = (TextView) v.findViewById(R.id.description);
 
             if (tt1 != null) {
-                tt1.setText("Type: " + a.getClass().getSimpleName() +
-                        ", ID: " + a.getId() + ", Today's Value: " +
+                tt1.setText("Label: " + a.getLabel() +
+                        ", Type: " + a.getClass().getSimpleName() + ", Today's Value: " +
                         a.getValue(LocalDate.now().plusMonths(18)));
             }
 

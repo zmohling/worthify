@@ -1,14 +1,24 @@
 package team_10.client.utility;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 
-import team_10.client.account.*;
+import team_10.client.object.account.Account;
+import team_10.client.object.account.Transaction;
 
 public class AbstractAccountAdapter implements JsonSerializer<Account>, JsonDeserializer<Account> {
 
-    private static final String PACKAGE = "team_10.client.account";
+    private static final String PACKAGE = "team_10.client.object.account";
 
     @Override
     public JsonElement serialize(Account src, Type typeOfSrc,

@@ -17,11 +17,12 @@ import java.util.List;
 import java.util.Random;
 
 import team_10.client.R;
-import team_10.client.account.Account;
-import team_10.client.account.Loan;
-import team_10.client.activity.User;
+import team_10.client.object.User;
+import team_10.client.object.account.Account;
+import team_10.client.object.account.Loan;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.CustomListAdapter;
+import team_10.client.utility.IO;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -129,13 +130,20 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         switch (v.getId()) {
             case R.id.buttonLogout:
+                IO.deleteAccountsFile(parent.getApplicationContext());
+                User.setAccounts(null); // TODO: Find a better solution after demo 3
                 SharedPreferencesManager.getInstance(parent.getApplicationContext()).logout();
                 parent.finish();
                 break;
             case R.id.button_add_account:
                 createRandomAccount();
+
+                /* Update ListView */
                 customAdapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren(lv);
+
+                /* Write to file */
+                IO.writeAccountsToFile(IO.serializeAccounts(accounts), getContext());
                 break;
         }
     }
@@ -160,13 +168,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         listView.requestLayout();
     }
 
-    static int numAccounts = 0;
-
     public void createRandomAccount() {
 
         Loan l = new Loan();
-        l.setLabel("Loan " + numAccounts);
-        l.setId(String.format("%08d", User.getId()) + String.format("%04d", (++numAccounts)));
+        l.setLabel("Loan " + User.getAccounts().size());
 
         Random rand = new Random();
         int i, numTransactions = rand.nextInt(4) + 1;
@@ -174,10 +179,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         LocalDate now = LocalDate.now();
 
         for(i = 0; i < numTransactions; i++) {
-            l.addTransaction(now = now.plusMonths(rand.nextInt(3)), rand.nextDouble() % 700 + 300, rand.nextDouble() % 4);
+            l.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1), ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300), (rand.nextDouble() % 0.02 + 0.02));
         }
 
         User.addAccount(l);
+
+        System.out.println(IO.serializeAccounts(User.getAccounts()));
     }
 
     /**

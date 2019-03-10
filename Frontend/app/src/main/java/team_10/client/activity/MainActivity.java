@@ -9,11 +9,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import java.util.List;
+
 import team_10.client.R;
 import team_10.client.fragment.DashboardFragment;
 import team_10.client.fragment.NewsFragment;
 import team_10.client.fragment.TransactionsFragment;
+import team_10.client.object.User;
+import team_10.client.object.account.Account;
 import team_10.client.settings.SharedPreferencesManager;
+import team_10.client.utility.IO;
 
 public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, TransactionsFragment.OnFragmentInteractionListener {
 
@@ -53,12 +58,23 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
             finish();
         } else {
              user = SharedPreferencesManager.getInstance(this).getUser();
+             List<Account> aFromFile = IO.deserializeAccounts(IO.readAccountsFromFile(getApplicationContext()));
+             if (aFromFile != null)
+                 user.setAccounts(aFromFile);
         }
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_dashboard);
         loadFragment(new DashboardFragment());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        /* Write to file */
+        IO.writeAccountsToFile(IO.serializeAccounts(user.getAccounts()), getApplicationContext());
     }
 
     private boolean loadFragment(Fragment fragment) {

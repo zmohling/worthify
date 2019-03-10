@@ -1,4 +1,4 @@
-package team_10.client.account;
+package team_10.client.object.account;
 
 import java.util.List;
 

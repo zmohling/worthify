@@ -1,8 +1,10 @@
-package team_10.client.account;
+package team_10.client.object.account;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Vector;
+
+import team_10.client.utility.General;
 
 /**
  * Loan Account Type. Add transactions of absolute interest
@@ -15,12 +17,18 @@ public class Loan extends Account {
     /**
      * Overloaded addTransaction method for Loan.
      * @param d Date of transaction.
-     * @param amount Amount of transaction, aka change of principal amount. (negative or positive)
+     * @param value Value of transaction, aka change of principal value. (negative or positive)
      * @param interestRate Interest rate at the time of the transaction.
      */
-    public void addTransaction(LocalDate d, double amount, double interestRate)
+    public void addTransaction(LocalDate d, double value, double interestRate)
     {
-        Transaction t = new Transaction(amount, interestRate);
+        Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactions.size());
+        transactions.put(d, t);
+    }
+
+    public void addTransaction(LocalDate d, double value, double interestRate, int transactionID)
+    {
+        Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactionID);
         transactions.put(d, t);
     }
 
@@ -50,7 +58,7 @@ public class Loan extends Account {
                 }
 
                 //A = P(1 + r/n)^nt -> Daily Compound Interest
-                double principle = total + ((Transaction) transactions.get(fromDate)).getAmount();
+                double principle = total + ((Transaction) transactions.get(fromDate)).getValue();
                 double rate = ((Transaction) transactions.get(fromDate)).getInterestRate();
                 long n = fromDate.until(toDate, ChronoUnit.DAYS); //number of compounding periods (DAYS) per unit t
                 double t = n / (double) fromDate.lengthOfYear();
@@ -59,7 +67,7 @@ public class Loan extends Account {
             }
         }
 
-        return (double)Math.round(total * 100d) / 100d; // round to nearest cent
+        return General.round(total, 2); // round to nearest cent
     }
 
 
@@ -70,21 +78,17 @@ public class Loan extends Account {
     /**
      * Loan specific Transaction object.
      */
-    private class Transaction extends team_10.client.account.Transaction {
+    private class Transaction extends team_10.client.object.account.Transaction {
 
         double interestRate;
 
-        protected Transaction() { }
-        Transaction(double amount, double interestRate)
+        Transaction(double value, double interestRate, int transactionID)
         {
-            this.amount = amount;
+            this.value = value;
             this.interestRate = interestRate;
+            this.transactionID = transactionID;
         }
 
-        public double getAmount() {
-            return this.amount;
-        }
-        public void setAmount(double amount) { this.amount = amount; }
         public double getInterestRate() { return this.interestRate; }
         public void setInterestRate(double interestRate) { this.interestRate = interestRate; }
     }

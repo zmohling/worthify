@@ -26,9 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import team_10.client.R;
-import team_10.client.account.Account;
-import team_10.client.account.AccountsWrapper;
-import team_10.client.account.Loan;
+import team_10.client.object.account.Account;
+import team_10.client.object.account.AccountsWrapper;
+import team_10.client.object.account.Loan;
+import team_10.client.object.User;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.AbstractAccountAdapter;
 import team_10.client.utility.VolleySingleton;
@@ -60,7 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
         final User user = SharedPreferencesManager.getInstance(this).getUser();
 
         //setting the values to the textviews
-        textViewId.setText(String.valueOf(user.getId()));
+        textViewId.setText(String.valueOf(user.getID()));
         textViewFullName.setText(user.getFirstName() + " " + user.getLastName());
         textViewEmail.setText(user.getEmail());
 
@@ -160,7 +161,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 row.setLayoutParams(lp);
                                 TextView tv = new TextView(getApplicationContext());
                                 tv.setText("Type: " + a.getClass().getSimpleName() +
-                                        ", ID: " + a.getId() + ", Today's Value: " +
+                                        ", ID: " + a.getID() + ", Today's Value: " +
                                         a.getValue(LocalDate.now().plusMonths(18)));
                                 tv.setPadding(10, 5, 10, 5);
                                 tv.setTextColor(Color.parseColor("#EDE8D6"));
@@ -229,14 +230,14 @@ public class ProfileActivity extends AppCompatActivity {
         final User user = SharedPreferencesManager.getInstance(this).getUser();
 
         Loan carloan = new Loan();
-        carloan.setId("000000010001");
+        carloan.setID("000000010001");
         carloan.addTransaction(LocalDate.now(), 100, 0.04);
         carloan.addTransaction(LocalDate.now().plusYears(1), 1000, 0.08);
 
         user.addAccount(carloan);
 
         Loan mortgage = new Loan();
-        mortgage.setId("000000010002");
+        mortgage.setID("000000010002");
         mortgage.addTransaction(LocalDate.now().plusMonths(3), 233000, 0.03);
 
         user.addAccount(mortgage);
@@ -271,7 +272,7 @@ public class ProfileActivity extends AppCompatActivity {
                 row.setLayoutParams(lp);
                 TextView tv = new TextView(getApplicationContext());
                 tv.setText("Type: " + a.getClass().getSimpleName() +
-                        ", ID: " + a.getId() + ", Today's Value: " +
+                        ", ID: " + a.getID() + ", Today's Value: " +
                         a.getValue(LocalDate.now().plusMonths(18)));
                 tv.setPadding(10, 5, 10, 5);
                 tv.setTextColor(Color.parseColor("#EDE8D6"));
