@@ -8,6 +8,7 @@ import com.serverApp.serverApp.other.ArticleRetrieval;
 import com.serverApp.serverApp.repositories.AccountsRepository;
 import com.serverApp.serverApp.repositories.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.MalformedURLException;
@@ -31,14 +32,9 @@ public class ArticleController {
     @Autowired
     AccountsRepository accountRepo;
 
-    @RequestMapping("/article")
-    public String article(@RequestBody Article article) {
-        System.out.println("Revieved article object");
-        return "";
-    }
-
     @RequestMapping("/article/updateDB")
-    public String listTitles(){
+    @Scheduled(fixedRate = 18000000)//5 hours
+    public String fetchNewArticles(){
         //API key is b46a1992ed6c457bb31e58178813a3cd
         ArticleRetrieval r = new ArticleRetrieval();
         ArrayList<Article> articles;
@@ -223,4 +219,5 @@ public class ArticleController {
         rString += "}";
         return rString;
     }
+
 }
