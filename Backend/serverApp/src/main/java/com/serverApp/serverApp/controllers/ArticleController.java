@@ -168,7 +168,11 @@ public class ArticleController {
         }
 
         String rString = "{";
-        rString += "\"numArticles\":\"" + articles.size() +"\",";
+        if (articles.size() > 0) {
+            rString += "\"numArticles\":\"" + articles.size() + "\",";
+        }else{
+            rString += "\"numArticles\":\"" + articles.size() + "\"";
+        }
 
         for(int i = 0; i < articles.size(); i ++){
             if(i == articles.size() - 1){
