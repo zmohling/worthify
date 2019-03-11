@@ -15,16 +15,19 @@ public class User implements Serializable {
       @Column(name = "lastName")
       private String lastName;
 
-      @Column(name = "firstName")
+      @Column(name = "firstName", nullable = false)
       private String firstName;
 
-      @Column(name = "email")
+      @Column(name = "email", nullable = false)
       private String email;
 
-      @Column(name = "password")
+      @Column(name = "salt")
+      private byte[] salt;
+
+      @Column(name = "password", nullable = false)
       private String password;
 
-      @Column(name = "type")
+      @Column(name = "type", nullable = false)
       private int type;
 
       public static long getSerialVersionUID() {
@@ -55,15 +58,23 @@ public class User implements Serializable {
         this.firstName = firstName;
       }
 
-      public String getEmail() {
+    public String getEmail() {
         return email;
-      }
+    }
 
-      public void setEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
-      }
+    }
 
-      public String getPassword() {
+    public byte[] getSalt() {
+        return salt;
+    }
+
+    public void setSalt(byte[] salt) {
+        this.salt = salt;
+    }
+
+    public String getPassword() {
         return password;
       }
 
