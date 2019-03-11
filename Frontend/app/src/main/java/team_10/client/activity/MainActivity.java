@@ -24,7 +24,6 @@ import team_10.client.utility.IO;
 
 public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, TransactionsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener {
 
-    public static User user;
     private static BottomNavigationView bottomNav;
     //private static LinearLayout hidelayout;
     //public BottomNavigationView bottomNav;
@@ -70,12 +69,12 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         } else {
-            user = SharedPreferencesManager.getInstance(this).getUser();
             List<Account> aFromFile = IO.deserializeAccounts(IO.readAccountsFromFile(getApplicationContext()));
             if (aFromFile != null)
-                user.setAccounts(aFromFile);
+                User.setAccounts(aFromFile);
             else
-                IO.getAccountsFromRemote(user, getApplicationContext());
+                IO.getAccountsFromRemote(getApplicationContext());
+            System.out.println(IO.serializeAccounts(User.getAccounts()));
         }
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         super.onPause();
 
         /* Write to file */
-        IO.writeAccountsToFile(IO.serializeAccounts(user.getAccounts()), getApplicationContext());
+        IO.writeAccountsToFile(IO.serializeAccounts(User.getAccounts()), getApplicationContext());
     }
 
     private boolean loadFragment(Fragment fragment) {

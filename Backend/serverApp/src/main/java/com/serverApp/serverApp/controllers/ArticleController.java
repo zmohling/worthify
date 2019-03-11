@@ -133,7 +133,7 @@ public class ArticleController {
     @GetMapping("/article/getPersonal/{id}")
     public String getPersonal(@PathVariable long id){
         Accounts[] accounts = accountRepo.getAccountsById(id);
-        System.out.println("Number of accounts: " + accounts.length);
+        //System.out.println("Number of accounts: " + accounts.length);
         ArrayList<String> keywords = new ArrayList<>();
         boolean loansRetrieved = false, savingsAccountsRetrieved = false, CDsRetrieved = false;
         for(int i = 0; i < accounts.length; i ++){
@@ -168,7 +168,11 @@ public class ArticleController {
         }
 
         String rString = "{";
-        rString += "\"numArticles\":\"" + articles.size() +"\",";
+        if (articles.size() > 0) {
+            rString += "\"numArticles\":\"" + articles.size() + "\",";
+        }else{
+            rString += "\"numArticles\":\"" + articles.size() + "\"";
+        }
 
         for(int i = 0; i < articles.size(); i ++){
             if(i == articles.size() - 1){

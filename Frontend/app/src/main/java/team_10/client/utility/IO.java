@@ -11,8 +11,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import team_10.client.constant.URL;
+import team_10.client.fragment.DashboardFragment;
 import team_10.client.object.User;
 import team_10.client.object.account.Account;
 import team_10.client.object.account.AccountsWrapper;
+import team_10.client.settings.SharedPreferencesManager;
 
 public class IO {
     public static String filename = "accounts_store";
@@ -114,7 +116,7 @@ public class IO {
         }
 
         final String finalRequestBody = requestBody;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_ADD_ACOUNTS,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_ADD_ACCOUNTS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -150,25 +152,38 @@ public class IO {
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 
-    public static void getAccountsFromRemote(final User user, final Context context) {
+    public static void getAccountsFromRemote(final Context context) {
+        List<Account> returnVal = new ArrayList<>();
         String requestBody = null;
         try {
-            JSONObject userAccountsRequest = new JSONObject();
-            userAccountsRequest.put("id", user.getID());
+            JsonObject userAccountsRequest = new JsonObject();
+            userAccountsRequest.addProperty("id", Integer.toString(SharedPreferencesManager.getUser().getID()));
             requestBody = userAccountsRequest.toString();
-            System.out.println(requestBody);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         final String finalRequestBody = requestBody;
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL.URL_GET_ACOUNTS,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_GET_ACCOUNTS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            user.setAccounts(deserializeAccounts(response));
-                            System.out.println("Accounts Retrieval Successful");
+                            if (response.contains("\"accounts\":")) {
+                                List<Account> l = deserializeAccounts(response);
+
+                                for (int i = 0; i < l.size(); i++)
+                                    User.addAccount(l.get(i));
+
+                                DashboardFragment.customAdapter.notifyDataSetChanged();
+                                DashboardFragment.setListViewHeightBasedOnChildren(
+                                        DashboardFragment.lv
+                                );
+
+                                System.out.println("Accounts Retrieval Successful");
+                            } else {
+                                System.out.println("Accounts Retrieval Unsuccessful");
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                             // gson catch exceptions
@@ -182,12 +197,14 @@ public class IO {
                         Toast.makeText(context,
                                 (error.getMessage() == null) ? "Error Syncing with Server" : "Error Syncing with Server: " + error.getMessage(),
                                 Toast.LENGTH_SHORT).show();
+                        System.out.println(error.toString());
+                        error.printStackTrace();
                     }
                 }) {
 
             @Override
             public String getBodyContentType() {
-                return String.format("application/json; charset=utf-8");
+                return String.format("text/plain;charset=UTF-8");
             }
 
             @Override
@@ -203,5 +220,6 @@ public class IO {
         };
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+        User.setAccounts(returnVal);
     }
 }

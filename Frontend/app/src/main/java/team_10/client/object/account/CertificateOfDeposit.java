@@ -11,6 +11,7 @@ public class CertificateOfDeposit extends Account {
     LocalDate maturityDate;
 
     public CertificateOfDeposit() {
+        maturityDate = LocalDate.now().plusMonths(12);
     }
 
     /**
