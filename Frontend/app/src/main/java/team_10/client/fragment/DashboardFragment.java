@@ -22,13 +22,11 @@ import android.widget.PopupWindow;
 import android.widget.Spinner;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Random;
 
 import team_10.client.R;
 import team_10.client.constant.TYPE;
 import team_10.client.object.User;
-import team_10.client.object.account.Account;
 import team_10.client.object.account.CertificateOfDeposit;
 import team_10.client.object.account.Loan;
 import team_10.client.object.account.SavingsAccount;
@@ -55,11 +53,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     private String mParam2;
 
     View view;
-    CustomListAdapter customAdapter;
-    List<Account> accounts;
-    ListView lv;
+    public static CustomListAdapter customAdapter;
+    public static ListView lv;
 
     private OnFragmentInteractionListener mListener;
+
+
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -100,14 +99,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         view.findViewById(R.id.buttonLogout).setOnClickListener(this);
         view.findViewById(R.id.button_add_account).setOnClickListener(this);
 
-        accounts = User.getAccounts();
         lv = view.findViewById(R.id.list);
-        customAdapter = new CustomListAdapter(view.getContext(), R.layout.item_account_list_item, accounts);
+        customAdapter = new CustomListAdapter(view.getContext(), R.layout.item_account_list_item, User.getAccounts());
         lv.setAdapter(customAdapter);
 
-        if ((accounts.size() != 0)) {
-            setListViewHeightBasedOnChildren(lv);
-        }
+        customAdapter.notifyDataSetChanged();
+        setListViewHeightBasedOnChildren(lv);
+
+        System.out.println(IO.serializeAccounts(User.getAccounts()));
 
         return view;
     }
@@ -143,7 +142,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.buttonLogout:
                 IO.deleteAccountsFile(parent.getApplicationContext());
-                User.setAccounts(null); // TODO: Find a better solution after demo 3
+                User.setAccounts(null);
                 SharedPreferencesManager.getInstance(parent.getApplicationContext()).logout();
                 parent.finish();
                 break;
@@ -265,7 +264,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 setListViewHeightBasedOnChildren(lv);
                 popupWindow.dismiss();
 
-                System.out.println(IO.serializeAccounts(User.getAccounts()));
+                //System.out.println(IO.serializeAccounts(MainActivity.user.getAccounts()));
             }
         });
 
