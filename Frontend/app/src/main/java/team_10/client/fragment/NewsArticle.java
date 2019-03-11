@@ -94,6 +94,7 @@ public class NewsArticle extends Fragment {
                 {
                     //MainActivity.showBottomNavigationView();
                     getFragmentManager().popBackStack();
+                    return true;
                 }
                 return false;
             }
