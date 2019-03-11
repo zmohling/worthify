@@ -26,13 +26,14 @@ public class AccountsController {
     CertificateOfDepositRepository certRepo;
 
     @RequestMapping("/accounts/get")
-    public String getAccounts(@RequestBody User user) {
-        Collection<Accounts> allAccounts = accountsRepo.getAccounts(user.getId());
+    public String getAccounts(@RequestBody String string) {
+        System.out.println(string);
+        JSONObject obj = new JSONObject(string);
+        long user = Long.parseLong(obj.get("id").toString());
+        Collection<Accounts> allAccounts = accountsRepo.getAccounts(user);
         Iterator<Accounts> iterator = allAccounts.iterator();
         String rString =
-                "{\"error\":\"false\","
-                        + "\"message\":\"account retrieval success\"" +
-                        ",\"accounts\":[";
+                "{\"accounts\":[";
         while((iterator).hasNext()) {
             Accounts accounts = iterator.next();
             rString = rString +
@@ -61,7 +62,7 @@ public class AccountsController {
         for(int i = 0; i < accountsArr.length(); i++) {
             accountsList.get(i).setTransactions(transactionArr.get(i));
             accountsList.get(i).setIsActive(1);
-            System.out.println(accountsList.get(i).getType());
+            //System.out.println(accountsList.get(i).getType());
             accountsRepo.save(accountsList.get(i));
         }
         String rString =
