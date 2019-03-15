@@ -53,6 +53,8 @@ public class ArticleController {
                         //truncate description if too long
                         articles.get(j).setDescription(articles.get(j).getDescription().substring(0, 147) + "...");
                     }
+                    articles.get(j).setDescription(articles.get(j).getDescription().replaceAll("\"", "'"));
+                    articles.get(j).setTitle(articles.get(j).getTitle().replaceAll("\"", "'"));
                     if (articleRepo.getDuplicates(articles.get(j).getUrl()) == 0) {
                         articleRepo.save(articles.get(j));
                         insertCount ++;
