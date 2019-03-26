@@ -6,5 +6,125 @@
     </head>
 
     <header></header>
-    <body></body>
+    <body>
+        <div class="blocks">
+            <p style="font-size:24;margin:0;padding:25px"><b><u>Admin Account:</u></b>
+                <br>John Weinstangel
+            </p>
+        </div><div class="blocks">
+            <button>Log Out</button>
+        </div>
+
+        <div style="padding-left:25px;padding-right:25px;">
+            <div class="tab">
+                <button class="tablinks active" onclick="switchTable(event, 'Users')">Users</button>
+                <button class="tablinks" onclick="switchTable(event, 'Articles')">Articles</button>
+            </div>
+
+            <div id="Users" class="tabcontent">
+                <p style="font-size:24;margin:0;padding:15px;text-align: center;"><b><u>Users</u></p>
+
+                <table class="displayTable">
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Net Worth</th>
+                        <th>Assets</th>
+                        <th>Liabilities</th>
+                    </tr>
+                    <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>25</td>
+                        <td>1</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                            <td>John</td>
+                            <td>Doe</td>
+                            <td>25</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                                <td>John</td>
+                                <td>Doe</td>
+                                <td>25</td>
+                                <td>1</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                    <td>John</td>
+                                    <td>Doe</td>
+                                    <td>25</td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                </tr>
+                </table>
+            </div>
+            
+            <div id="Articles" class="tabcontent">
+                <p style="font-size:24;margin:0;padding:15px;text-align: center;"><b><u>Articles</u></p>
+                <table class="displayTable">
+                    <tr>
+                        <th>Title</th>
+                        <th>Url</th>
+                        <th>Active</th>
+                        <th>UserID (0 = automated)</th>
+                    </tr>   
+                    
+                    <tr>
+                        <td>Google Search</td>
+                        <td><a href="http://www.google.com" target="_blank">www.google.com</a></td>
+                        <td>Yes</td>
+                        <td>0</td>
+                    </tr>
+
+                    <tr>
+                            <td>Google Search</td>
+                            <td><a href="http://www.google.com" target="_blank">www.google.com</a></td>
+                            <td>Yes</td>
+                            <td>0</td>
+                        </tr>
+
+                        <tr>
+                                <td>Google Search</td>
+                                <td><a href="http://www.google.com" target="_blank">www.google.com</a></td>
+                                <td>Yes</td>
+                                <td>0</td>
+                            </tr>
+
+                            <tr>
+                                    <td>Google Search</td>
+                                    <td><a href="http://www.google.com" target="_blank">www.google.com</a></td>
+                                    <td>Yes</td>
+                                    <td>0</td>
+                                </tr>
+
+                                <tr>
+                                        <td>Google Search</td>
+                                        <td><a href="http://www.google.com" target="_blank">www.google.com</a></td>
+                                        <td>Yes</td>
+                                        <td>0</td>
+                                    </tr>
+
+                                    <tr>
+                                            <td>Google Search</td>
+                                            <td><a href="http://www.google.com" target="_blank">www.google.com</a></td>
+                                            <td>Yes</td>
+                                            <td>0</td>
+                                        </tr>
+
+                                        <tr>
+                                                <td>Google Search</td>
+                                                <td><a href="http://www.google.com" target="_blank">www.google.com</a></td>
+                                                <td>Yes</td>
+                                                <td>0</td>
+                                            </tr>
+                    
+                    
+                </table>
+            </div>
+        </div>
+    </body>
 </HTML>

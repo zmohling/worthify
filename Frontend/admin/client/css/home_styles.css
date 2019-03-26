@@ -1,0 +1,80 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin:0;
+}
+
+.blocks {
+    display:inline-block;
+    width:50%;
+}
+
+button {
+    float: right;
+    background-color: #16A085;
+    color: white;
+    padding: 14px 20px;
+    margin-right: 25px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.tab {
+    overflow: hidden;
+    /*border: 1px solid #ccc;*/
+    background-color: #16A085;
+}
+.tab button {
+    background-color: inherit;
+    color: white;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 6px 14px;
+    transition: 0.3s;
+    font-size: 17px;
+    margin:0px;
+}
+
+.tab button:hover {
+    background-color: #19b596;
+}
+
+.tab button.active {
+    background-color: #118972;
+}
+
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border-top: none;
+}
+
+.displayTable {
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    width: 80%;
+    margin-left:10%;
+    margin-right:10%;
+}
+
+.displayTable td, .displayTable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.displayTable tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+.displayTable th {  
+    padding: 5px;
+    text-align: left;
+    background-color: #16A085;
+    color: white;
+      
+}
