@@ -17,12 +17,12 @@ public abstract class Account implements Serializable {
     }
 
     public void addTransaction(LocalDate d, double value) {
-        Transaction t = new Transaction(value, transactions.size());
-        transactions.put(d, t);
+        addTransaction(d, value, transactions.size());
     }
 
     public void addTransaction(LocalDate d, double value, int transactionID) {
         Transaction t = new Transaction(value, transactionID);
+        t.setAccount(this);
         transactions.put(d, t);
     }
 

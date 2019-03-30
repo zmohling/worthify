@@ -3,6 +3,7 @@ package team_10.client.object.account;
 public abstract class Transaction {
     double value;
     int transactionID;
+    Account account;
 
     public Transaction() {
     }
@@ -26,5 +27,13 @@ public abstract class Transaction {
 
     public void setValue(int transactionID) {
         this.transactionID = transactionID;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

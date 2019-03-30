@@ -23,12 +23,12 @@ public class Loan extends Account {
      * @param interestRate Interest rate at the time of the transaction.
      */
     public void addTransaction(LocalDate d, double value, double interestRate) {
-        Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactions.size());
-        transactions.put(d, t);
+        addTransaction(d, value, interestRate, transactions.size());
     }
 
     public void addTransaction(LocalDate d, double value, double interestRate, int transactionID) {
         Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactionID);
+        t.setAccount(this);
         transactions.put(d, t);
     }
 
