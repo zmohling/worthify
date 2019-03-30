@@ -22,12 +22,12 @@ public class CertificateOfDeposit extends Account {
      * @param annualPercentReturn Interest rate at the time of the transaction.
      */
     public void addTransaction(LocalDate d, double value, double annualPercentReturn) {
-        Transaction t = new Transaction(General.round(value, 2), General.round(annualPercentReturn, 3), transactions.size());
-        transactions.put(d, t);
+        addTransaction(d, value, annualPercentReturn, transactions.size());
     }
 
     public void addTransaction(LocalDate d, double value, double annualPercentReturn, int transactionID) {
         Transaction t = new Transaction(General.round(value, 2), General.round(annualPercentReturn, 3), transactionID);
+        t.setAccount(this);
         transactions.put(d, t);
     }
 
