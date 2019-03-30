@@ -12,10 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import team_10.client.R;
+import team_10.client.object.account.Account;
 import team_10.client.object.account.Transaction;
 import team_10.client.utility.TransactionsAdapter;
+
+import static team_10.client.settings.SharedPreferencesManager.getUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,6 +66,15 @@ public class TransactionsFragment extends Fragment {
         return fragment;
     }
 
+    public void editTransactions()
+    {
+        List<Account> usersAccounts = getUser().getAccounts();
+        for (int i = 0; i < usersAccounts.size(); i++)
+        {
+            transactions.addAll(usersAccounts.get(i).getTransactions().values());
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,15 +89,15 @@ public class TransactionsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_transactions, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.rvArticles);
+        recyclerView = (RecyclerView) view.findViewById(R.id.rvTransactions);
 
         transactions = new ArrayList<Transaction>();
-        adapter = new TransactionsAdapter(transactions, getFragmentManager());
+        adapter = new TransactionsAdapter(transactions);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //editTransactions();
+        editTransactions();
 
         return view;
     }
