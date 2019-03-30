@@ -27,7 +27,7 @@ public class AccountsController {
     @Autowired
     CertificateOfDepositRepository certRepo;
 
-    @RequestMapping("/accounts/get")
+    @RequestMapping("/accounts/get/all")
     public String getAccounts(@RequestBody String string) {
         JSONObject obj = new JSONObject(string);
         long user = Long.parseLong(obj.get("id").toString());
@@ -77,6 +77,10 @@ public class AccountsController {
                 certificateOfDeposit.setMaturityDate(maturityDate);
                 certificateOfDeposit.setAccountsId(accountsList.get(i).getAccountId());
                 certRepo.save(certificateOfDeposit);
+            } else if(accountsList.get(i).getType().equals("RealEstate")) {
+                String address = accountsArr.getJSONObject(i).getString("address");
+                String city = accountsArr.getJSONObject(i).getString("city");
+                String state = accountsArr.getJSONObject(i).getString("state");
             }
         }
         String rString =
