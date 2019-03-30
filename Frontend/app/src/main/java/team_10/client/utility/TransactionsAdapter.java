@@ -49,12 +49,10 @@ public class TransactionsAdapter extends
 
     // Store a member variable for the contacts
     private List<Transaction> mArticles;
-    private FragmentManager fragmentManager;
 
     // Pass in the contact array into the constructor
-    public TransactionsAdapter(List<Transaction> articles, FragmentManager fragmentManagers) {
+    public TransactionsAdapter(List<Transaction> articles) {
         mArticles = articles;
-        fragmentManager = fragmentManagers;
     }
 
     @Override
@@ -77,35 +75,8 @@ public class TransactionsAdapter extends
         final Transaction article = mArticles.get(position);
 
         // Set item views based on your views and data model
-        TextView textView = viewHolder.nameTextView;
-        textView.setText(article.getUrl());
-        viewHolder.titleTextView.setText(article.getTitle());
-        viewHolder.descriptionTextView.setText(article.getDescription());
-
-        ImageView imageViewHolder = viewHolder.imageView;
-
-        if (!article.getPictureUrl().equals("null")) {
-            Picasso.get().load(article.getPictureUrl()).into(imageViewHolder);
-        }
-        else
-        {
-            imageViewHolder.setVisibility(View.GONE);
-        }
-
-        viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NewsArticle newsArticle = new NewsArticle().newInstance(article.getUrl());
-
-                //Bundle args = new Bundle();
-                //args.putString("url", article.getUrl());
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.add(R.id.fragment_container, newsArticle);
-                transaction.addToBackStack(null);
-                transaction.commit();
-
-            }
-        });
+        viewHolder.titleTextView.setText(article.getAccount().getLabel());
+        viewHolder.descriptionTextView.setText(article.getValue() + "");
     }
 
     // Returns the total count of items in the list
