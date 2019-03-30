@@ -29,7 +29,6 @@ public class AccountsController {
 
     @RequestMapping("/accounts/get")
     public String getAccounts(@RequestBody String string) {
-        System.out.println(string);
         JSONObject obj = new JSONObject(string);
         long user = Long.parseLong(obj.get("id").toString());
         Collection<Accounts> allAccounts = accountsRepo.getAccounts(user);
@@ -42,7 +41,12 @@ public class AccountsController {
                     "{\"accountID\":\"" + accounts.getAccountId() + "\"," +
                     "\"label\":\"" + accounts.getLabel() + "\"," +
                     "\"transactions\":" + accounts.getTransactions() + "," +
-                    "\"type\":\"" + accounts.getType() + "\"}";
+                    "\"type\":\"" + accounts.getType() + "\"";
+            if(accounts.getType().equals("CertificateOfDeposit")) {
+                rString = rString + ",\"maturityDate\":\"" + certRepo.getCertificateOfDeposite(accounts.getAccountId()).getMaturityDate() + "\"}";
+            } else {
+                rString = rString + "}";
+            }
             if(iterator.hasNext()) rString = rString + ",";
         }
         rString = rString + "]}";
@@ -61,11 +65,19 @@ public class AccountsController {
             accountsArr.getJSONObject(i).remove("transactions");
         }
         ArrayList<Accounts> accountsList = g.fromJson(accountsArr.toString(), accountType);
+        //storing the accounts into the Accounts table
         for(int i = 0; i < accountsArr.length(); i++) {
             accountsList.get(i).setTransactions(transactionArr.get(i));
             accountsList.get(i).setIsActive(1);
-            //System.out.println(accountsList.get(i).getType());
             accountsRepo.save(accountsList.get(i));
+            //when the account type is CertificateOfDeposit
+            if(accountsList.get(i).getType().equals("CertificateOfDeposit")) {
+                Date maturityDate = Date.valueOf(accountsArr.getJSONObject(i).getString("maturityDate"));
+                CertificateOfDeposit certificateOfDeposit = new CertificateOfDeposit();
+                certificateOfDeposit.setMaturityDate(maturityDate);
+                certificateOfDeposit.setAccountsId(accountsList.get(i).getAccountId());
+                certRepo.save(certificateOfDeposit);
+            }
         }
         String rString =
                 "{\"accounts\":[";
@@ -76,7 +88,12 @@ public class AccountsController {
                     "{\"accountID\":\"" + accounts.getAccountId() + "\"," +
                     "\"label\":\"" + accounts.getLabel() + "\"," +
                     "\"transactions\":" + accounts.getTransactions() + "," +
-                    "\"type\":\"" + accounts.getType() + "\"}";
+                    "\"type\":\"" + accounts.getType() + "\"";
+            if(accounts.getType().equals("CertificateOfDeposit")) {
+                rString = rString + ",\"maturityDate\":\"" + certRepo.getCertificateOfDeposite(accounts.getAccountId()).getMaturityDate() + "\"}";
+            } else {
+                rString = rString + "}";
+            }
             if(iterator.hasNext()) rString = rString + ",";
         }
         rString = rString + "]}";
