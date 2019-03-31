@@ -20,3 +20,7 @@ function switchTable(evt, tableName) {
     document.getElementById(tableName).style.display = "block";
     evt.currentTarget.className += " active";
 }
+
+function logout(){
+    window.location.href = "login.html";
+}
