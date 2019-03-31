@@ -13,6 +13,9 @@ public class RealEstate implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @Column(name = "accountsId")
+    private String accountId;
+
     @Column(name = "address")
     private String address;
 
@@ -32,6 +35,14 @@ public class RealEstate implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public String getAddress() {

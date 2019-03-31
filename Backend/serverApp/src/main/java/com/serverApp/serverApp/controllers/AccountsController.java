@@ -2,10 +2,12 @@ package com.serverApp.serverApp.controllers;
 
 import com.google.gson.reflect.TypeToken;
 import com.serverApp.serverApp.models.Accounts;
+import com.serverApp.serverApp.models.RealEstate;
 import com.serverApp.serverApp.models.User;
 import com.serverApp.serverApp.models.CertificateOfDeposit;
 import com.serverApp.serverApp.repositories.AccountsRepository;
 import com.serverApp.serverApp.repositories.CertificateOfDepositRepository;
+import com.serverApp.serverApp.repositories.RealEstateRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,15 @@ import com.google.gson.*;
 
 import com.serverApp.serverApp.repositories.AccountsRepository;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.sql.Date;
 import java.util.*;
 
@@ -26,7 +36,13 @@ public class AccountsController {
     AccountsRepository accountsRepo;
     @Autowired
     CertificateOfDepositRepository certRepo;
+    @Autowired
+    RealEstateRepository realEstateRepo;
 
+    enum needsAPI
+    {
+        RealEstate;
+    }
     @RequestMapping("/accounts/get/all")
     public String getAccounts(@RequestBody String string) {
         JSONObject obj = new JSONObject(string);
@@ -44,10 +60,67 @@ public class AccountsController {
                     "\"type\":\"" + accounts.getType() + "\"";
             if(accounts.getType().equals("CertificateOfDeposit")) {
                 rString = rString + ",\"maturityDate\":\"" + certRepo.getCertificateOfDeposite(accounts.getAccountId()).getMaturityDate() + "\"}";
+            } else if(accounts.getType().equals("RealEstate")) {
+                rString = rString + ",\"address\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getAddress() + "\"";
+                rString = rString + ",\"city\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getCity() + "\"";
+                rString = rString + ",\"state\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getState() + "\"}";
             } else {
                 rString = rString + "}";
             }
             if(iterator.hasNext()) rString = rString + ",";
+        }
+        rString = rString + "]}";
+        return rString;
+    }
+
+
+    @RequestMapping("/accounts/fetch")
+    public String fetchAccounts(@RequestBody String string) throws IOException {
+        JSONObject obj = new JSONObject(string);
+        JSONArray accountsArr = obj.getJSONArray("accounts");
+        Type accountType = new TypeToken<ArrayList<Integer>>(){}.getType();
+        Gson g = new Gson();
+        ArrayList<Accounts> accountsList = g.fromJson(accountsArr.toString(), accountType);
+        URL accountURL;
+        String rString = "{\"accounts\":[";
+        for(int i = 0; i < accountsArr.length(); i++) {
+            String id = Integer.toString(accountsArr.getInt(i));
+            while(id.length() < 12) {
+                id = "0" + id;
+            }
+            String type = accountsRepo.getAccountsByAccountId(id).getType();
+            if(type.equals("RealEstate")) {
+                RealEstate realEstate = new RealEstate();
+                realEstate.setAccountId(id);
+                realEstate.setState(realEstateRepo.getRealEstate(realEstate.getAccountId()).getState());
+                realEstate.setAddress(realEstateRepo.getRealEstate(realEstate.getAccountId()).getAddress());
+                realEstate.setCity(realEstateRepo.getRealEstate(realEstate.getAccountId()).getCity());
+                Scanner scanner = new Scanner(realEstate.getAddress());
+                accountURL = new URL("http://www.zillow.com/webservice/GetSearchResults.htm?zws-id=X1-ZWz1894b6xqbd7_a6mew&" +
+                            "address=" + scanner.next() + "+" + scanner.next() + "+" + scanner.next() + "&citystatezip=" + realEstate.getCity() + "%2C+" + realEstate.getState() + "\n");
+
+                HttpURLConnection con = (HttpURLConnection) accountURL.openConnection();
+                con.setRequestMethod("GET");
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer content = new StringBuffer();
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
+                in.close();
+                //parse the content
+                String[] output = content.toString().split("amount");
+                String val = "";
+                for(int j = 0; j < output[1].length(); j++) {
+                    if(Character.isDigit(output[1].charAt(j))) {
+                        val = val + output[1].charAt(j);
+                    }
+                }
+                System.out.println(val);
+                if(i != 0) rString = rString + ",";
+                rString = rString + "\"" + id + ":" + val + "\"";
+            }
         }
         rString = rString + "]}";
         return rString;
@@ -77,10 +150,16 @@ public class AccountsController {
                 certificateOfDeposit.setMaturityDate(maturityDate);
                 certificateOfDeposit.setAccountsId(accountsList.get(i).getAccountId());
                 certRepo.save(certificateOfDeposit);
-            } else if(accountsList.get(i).getType().equals("RealEstate")) {
+            } else if(accountsList.get(i).getType().equals("RealEstate")) { //when the type is RealEstate
                 String address = accountsArr.getJSONObject(i).getString("address");
                 String city = accountsArr.getJSONObject(i).getString("city");
                 String state = accountsArr.getJSONObject(i).getString("state");
+                RealEstate realEstate = new RealEstate();
+                realEstate.setAccountId(accountsList.get(i).getAccountId());
+                realEstate.setAddress(address);
+                realEstate.setCity(city);
+                realEstate.setState(state);
+                realEstateRepo.save(realEstate);
             }
         }
         String rString =
@@ -95,6 +174,10 @@ public class AccountsController {
                     "\"type\":\"" + accounts.getType() + "\"";
             if(accounts.getType().equals("CertificateOfDeposit")) {
                 rString = rString + ",\"maturityDate\":\"" + certRepo.getCertificateOfDeposite(accounts.getAccountId()).getMaturityDate() + "\"}";
+            } else if (accounts.getType().equals("RealEstate")) {
+                rString = rString + ",\"address\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getAddress() + "\"";
+                rString = rString + ",\"city\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getCity() + "\"";
+                rString = rString + ",\"state\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getState() + "\"}";
             } else {
                 rString = rString + "}";
             }
