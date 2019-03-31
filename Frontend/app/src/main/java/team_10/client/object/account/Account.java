@@ -30,6 +30,10 @@ public abstract class Account implements Serializable {
         return (Transaction) transactions.remove(d);
     }
 
+    public void setTransactions(TreeMap tempTransactions) { this.transactions = tempTransactions; }
+
+    public TreeMap getTransactions() { return this.transactions; }
+
     public String getID() {
         return this.accountID;
     }

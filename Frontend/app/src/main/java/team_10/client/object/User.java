@@ -38,7 +38,10 @@ public class User {
     }
 
     public static void addAccount(Account a) {
-        a.setID(String.format("%08d", userID) + String.format("%04d", (numAccounts++)));
+        if (a.getID() == null) {
+            a.setID(String.format("%08d", userID) + String.format("%04d", (numAccounts++)));
+        }
+
         accounts.add(a);
     }
 
