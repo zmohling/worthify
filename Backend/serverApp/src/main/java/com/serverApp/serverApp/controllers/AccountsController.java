@@ -77,17 +77,15 @@ public class AccountsController {
     @RequestMapping("/accounts/fetch")
     public String fetchAccounts(@RequestBody String string) throws IOException {
         JSONObject obj = new JSONObject(string);
-        JSONArray accountsArr = obj.getJSONArray("accounts");
-        Type accountType = new TypeToken<ArrayList<Integer>>(){}.getType();
+        JSONArray accountsArr = obj.getJSONArray("accountID");
+        Type accountType = new TypeToken<ArrayList<String>>(){}.getType();
         Gson g = new Gson();
         ArrayList<Accounts> accountsList = g.fromJson(accountsArr.toString(), accountType);
         URL accountURL;
-        String rString = "{\"accounts\":[";
+        String rString = "{";
         for(int i = 0; i < accountsArr.length(); i++) {
-            String id = Integer.toString(accountsArr.getInt(i));
-            while(id.length() < 12) {
-                id = "0" + id;
-            }
+            String id = accountsArr.get(i).toString();
+            System.out.println(id);
             String type = accountsRepo.getAccountsByAccountId(id).getType();
             if(type.equals("RealEstate")) {
                 RealEstate realEstate = new RealEstate();
@@ -119,10 +117,10 @@ public class AccountsController {
                 }
                 System.out.println(val);
                 if(i != 0) rString = rString + ",";
-                rString = rString + "\"" + id + ":" + val + "\"";
+                rString = rString + "\"" + id + "\" :" + val;
             }
         }
-        rString = rString + "]}";
+        rString = rString + "}";
         return rString;
     }
 
