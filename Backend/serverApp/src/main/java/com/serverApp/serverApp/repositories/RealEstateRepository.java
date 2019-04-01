@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RealEstateRepository extends JpaRepository<RealEstate, Long> {
 
-    @Query(value = "SELECT DISTINCT * FROM real_estate WHERE accounts_Id = ?1", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT * FROM real_estate WHERE accountID = ?1", nativeQuery = true)
     RealEstate getRealEstate(String userId);
 }

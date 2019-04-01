@@ -1,13 +1,8 @@
 package com.serverApp.serverApp.controllers;
 
 import com.google.gson.reflect.TypeToken;
-import com.serverApp.serverApp.models.Accounts;
-import com.serverApp.serverApp.models.RealEstate;
-import com.serverApp.serverApp.models.User;
-import com.serverApp.serverApp.models.CertificateOfDeposit;
-import com.serverApp.serverApp.repositories.AccountsRepository;
-import com.serverApp.serverApp.repositories.CertificateOfDepositRepository;
-import com.serverApp.serverApp.repositories.RealEstateRepository;
+import com.serverApp.serverApp.models.*;
+import com.serverApp.serverApp.repositories.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +33,8 @@ public class AccountsController {
     CertificateOfDepositRepository certRepo;
     @Autowired
     RealEstateRepository realEstateRepo;
+    @Autowired
+    StockRepository stockRepo;
 
     enum needsAPI
     {
@@ -64,6 +61,8 @@ public class AccountsController {
                 rString = rString + ",\"address\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getAddress() + "\"";
                 rString = rString + ",\"city\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getCity() + "\"";
                 rString = rString + ",\"state\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getState() + "\"}";
+            } else if(accounts.getType().equals("Stock")) {
+                rString = rString + ",\"ticker\":\"" + stockRepo.getStock(accounts.getAccountId()).getTicker() + "\"}";
             } else {
                 rString = rString + "}";
             }
@@ -85,7 +84,6 @@ public class AccountsController {
         String rString = "{";
         for(int i = 0; i < accountsArr.length(); i++) {
             String id = accountsArr.get(i).toString();
-            System.out.println(id);
             String type = accountsRepo.getAccountsByAccountId(id).getType();
             if(type.equals("RealEstate")) {
                 RealEstate realEstate = new RealEstate();
@@ -94,9 +92,14 @@ public class AccountsController {
                 realEstate.setAddress(realEstateRepo.getRealEstate(realEstate.getAccountId()).getAddress());
                 realEstate.setCity(realEstateRepo.getRealEstate(realEstate.getAccountId()).getCity());
                 Scanner scanner = new Scanner(realEstate.getAddress());
-                accountURL = new URL("http://www.zillow.com/webservice/GetSearchResults.htm?zws-id=X1-ZWz1894b6xqbd7_a6mew&" +
-                            "address=" + scanner.next() + "+" + scanner.next() + "+" + scanner.next() + "&citystatezip=" + realEstate.getCity() + "%2C+" + realEstate.getState() + "\n");
+                String url = "http://www.zillow.com/webservice/GetSearchResults.htm?zws-id=X1-ZWz1894b6xqbd7_a6mew&" +
+                        "address=" + scanner.next();
+                while(scanner.hasNext()) {
+                    url = url + "+" + scanner.next();
+                }
+                url = url + "&citystatezip=" + realEstate.getCity() + "%2C+" + realEstate.getState() + "\n";
 
+                accountURL = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) accountURL.openConnection();
                 con.setRequestMethod("GET");
                 BufferedReader in = new BufferedReader(
@@ -115,9 +118,27 @@ public class AccountsController {
                         val = val + output[1].charAt(j);
                     }
                 }
-                System.out.println(val);
                 if(i != 0) rString = rString + ",";
                 rString = rString + "\"" + id + "\" :" + val;
+            } else if (type.equals("Stock")) {
+                Stock stock = new Stock();
+                stock.setAccountID(id);
+                stock.setTicker(stockRepo.getStock(id).getTicker());
+                String url = "https://api.iextrading.com/1.0/stock/"
+                        + stock.getTicker() + "/price";
+                accountURL = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) accountURL.openConnection();
+                con.setRequestMethod("GET");
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer content = new StringBuffer();
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
+                in.close();
+                if(i != 0) rString = rString + ",";
+                rString = rString + "\"" + id + "\" :" + content.toString();
             }
         }
         rString = rString + "}";
@@ -152,12 +173,19 @@ public class AccountsController {
                 String address = accountsArr.getJSONObject(i).getString("address");
                 String city = accountsArr.getJSONObject(i).getString("city");
                 String state = accountsArr.getJSONObject(i).getString("state");
+                city = city.replace(' ', '-');
                 RealEstate realEstate = new RealEstate();
                 realEstate.setAccountId(accountsList.get(i).getAccountId());
                 realEstate.setAddress(address);
                 realEstate.setCity(city);
                 realEstate.setState(state);
                 realEstateRepo.save(realEstate);
+            } else if(accountsList.get(i).getType().equals("Stock")) { //when the type is Stock
+                String ticker = accountsArr.getJSONObject(i).getString("ticker");
+                Stock stock = new Stock();
+                stock.setAccountID(accountsList.get(i).getAccountId());
+                stock.setTicker(ticker);
+                stockRepo.save(stock);
             }
         }
         String rString =
@@ -176,6 +204,8 @@ public class AccountsController {
                 rString = rString + ",\"address\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getAddress() + "\"";
                 rString = rString + ",\"city\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getCity() + "\"";
                 rString = rString + ",\"state\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getState() + "\"}";
+            } else if (accounts.getType().equals("Stock")) {
+                rString = rString + ",\"ticker\":\"" + stockRepo.getStock(accounts.getAccountId()).getTicker() + "\"}";
             } else {
                 rString = rString + "}";
             }
