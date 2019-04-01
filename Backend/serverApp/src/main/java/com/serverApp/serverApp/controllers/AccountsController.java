@@ -85,7 +85,6 @@ public class AccountsController {
         String rString = "{";
         for(int i = 0; i < accountsArr.length(); i++) {
             String id = accountsArr.get(i).toString();
-            System.out.println(id);
             String type = accountsRepo.getAccountsByAccountId(id).getType();
             if(type.equals("RealEstate")) {
                 RealEstate realEstate = new RealEstate();
@@ -94,9 +93,14 @@ public class AccountsController {
                 realEstate.setAddress(realEstateRepo.getRealEstate(realEstate.getAccountId()).getAddress());
                 realEstate.setCity(realEstateRepo.getRealEstate(realEstate.getAccountId()).getCity());
                 Scanner scanner = new Scanner(realEstate.getAddress());
-                accountURL = new URL("http://www.zillow.com/webservice/GetSearchResults.htm?zws-id=X1-ZWz1894b6xqbd7_a6mew&" +
-                            "address=" + scanner.next() + "+" + scanner.next() + "+" + scanner.next() + "&citystatezip=" + realEstate.getCity() + "%2C+" + realEstate.getState() + "\n");
+                String url = "http://www.zillow.com/webservice/GetSearchResults.htm?zws-id=X1-ZWz1894b6xqbd7_a6mew&" +
+                        "address=" + scanner.next();
+                while(scanner.hasNext()) {
+                    url = url + "+" + scanner.next();
+                }
+                url = url + "&citystatezip=" + realEstate.getCity() + "%2C+" + realEstate.getState() + "\n";
 
+                accountURL = new URL(url);
                 HttpURLConnection con = (HttpURLConnection) accountURL.openConnection();
                 con.setRequestMethod("GET");
                 BufferedReader in = new BufferedReader(
@@ -115,7 +119,6 @@ public class AccountsController {
                         val = val + output[1].charAt(j);
                     }
                 }
-                System.out.println(val);
                 if(i != 0) rString = rString + ",";
                 rString = rString + "\"" + id + "\" :" + val;
             }
@@ -152,6 +155,7 @@ public class AccountsController {
                 String address = accountsArr.getJSONObject(i).getString("address");
                 String city = accountsArr.getJSONObject(i).getString("city");
                 String state = accountsArr.getJSONObject(i).getString("state");
+                city = city.replace(' ', '-');
                 RealEstate realEstate = new RealEstate();
                 realEstate.setAccountId(accountsList.get(i).getAccountId());
                 realEstate.setAddress(address);
