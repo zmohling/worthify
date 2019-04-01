@@ -1,9 +1,11 @@
 package team_10.client.object.account;
 
-public abstract class Transaction {
-    double value;
-    int transactionID;
-    Account account;
+import java.io.Serializable;
+
+public abstract class Transaction implements Serializable {
+    protected double value;
+    protected int transactionID;
+    protected transient Account account;
 
     public Transaction() {
     }
@@ -25,9 +27,7 @@ public abstract class Transaction {
         return transactionID;
     }
 
-    public void setValue(int transactionID) {
-        this.transactionID = transactionID;
-    }
+    public void setValue(int transactionID) { this.transactionID = transactionID; }
 
     public Account getAccount() {
         return account;

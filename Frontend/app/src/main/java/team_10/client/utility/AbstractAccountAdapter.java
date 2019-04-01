@@ -12,6 +12,9 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import team_10.client.object.account.Account;
 import team_10.client.object.account.Transaction;
@@ -77,6 +80,15 @@ public class AbstractAccountAdapter implements JsonSerializer<Account>, JsonDese
             Gson outerGson = outerBuilder.create();
 
             account = (Account) outerGson.fromJson(jsonObject, accountClass);
+
+            /* Add non-serialized and inferred data */
+            Set transactions = account.getTransactions().entrySet();
+            Iterator it = transactions.iterator();
+            while (it.hasNext()) {
+                Map.Entry entry = (Map.Entry) it.next();
+                Transaction t = (Transaction) entry.getValue();
+                t.setAccount(account);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
