@@ -61,6 +61,8 @@ public class AccountsController {
                 rString = rString + ",\"address\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getAddress() + "\"";
                 rString = rString + ",\"city\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getCity() + "\"";
                 rString = rString + ",\"state\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getState() + "\"}";
+            } else if(accounts.getType().equals("Stock")) {
+                rString = rString + ",\"ticker\":\"" + stockRepo.getStock(accounts.getAccountId()).getTicker() + "\"}";
             } else {
                 rString = rString + "}";
             }
@@ -118,6 +120,25 @@ public class AccountsController {
                 }
                 if(i != 0) rString = rString + ",";
                 rString = rString + "\"" + id + "\" :" + val;
+            } else if (type.equals("Stock")) {
+                Stock stock = new Stock();
+                stock.setAccountID(id);
+                stock.setTicker(stockRepo.getStock(id).getTicker());
+                String url = "https://api.iextrading.com/1.0/stock/"
+                        + stock.getTicker() + "/price";
+                accountURL = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) accountURL.openConnection();
+                con.setRequestMethod("GET");
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer content = new StringBuffer();
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
+                in.close();
+                if(i != 0) rString = rString + ",";
+                rString = rString + "\"" + id + "\" :" + content.toString();
             }
         }
         rString = rString + "}";
