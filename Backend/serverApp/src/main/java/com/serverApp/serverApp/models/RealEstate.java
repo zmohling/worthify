@@ -13,8 +13,8 @@ public class RealEstate implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "accountsId")
-    private String accountId;
+    @Column(name = "accountID")
+    private String accountID;
 
     @Column(name = "address")
     private String address;
@@ -38,11 +38,11 @@ public class RealEstate implements Serializable {
     }
 
     public String getAccountId() {
-        return accountId;
+        return accountID;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setAccountId(String accountID) {
+        this.accountID = accountID;
     }
 
     public String getAddress() {

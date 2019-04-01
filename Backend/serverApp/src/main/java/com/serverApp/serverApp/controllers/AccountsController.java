@@ -1,13 +1,8 @@
 package com.serverApp.serverApp.controllers;
 
 import com.google.gson.reflect.TypeToken;
-import com.serverApp.serverApp.models.Accounts;
-import com.serverApp.serverApp.models.RealEstate;
-import com.serverApp.serverApp.models.User;
-import com.serverApp.serverApp.models.CertificateOfDeposit;
-import com.serverApp.serverApp.repositories.AccountsRepository;
-import com.serverApp.serverApp.repositories.CertificateOfDepositRepository;
-import com.serverApp.serverApp.repositories.RealEstateRepository;
+import com.serverApp.serverApp.models.*;
+import com.serverApp.serverApp.repositories.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +33,8 @@ public class AccountsController {
     CertificateOfDepositRepository certRepo;
     @Autowired
     RealEstateRepository realEstateRepo;
+    @Autowired
+    StockRepository stockRepo;
 
     enum needsAPI
     {
@@ -162,6 +159,12 @@ public class AccountsController {
                 realEstate.setCity(city);
                 realEstate.setState(state);
                 realEstateRepo.save(realEstate);
+            } else if(accountsList.get(i).getType().equals("Stock")) { //when the type is Stock
+                String ticker = accountsArr.getJSONObject(i).getString("ticker");
+                Stock stock = new Stock();
+                stock.setAccountID(accountsList.get(i).getAccountId());
+                stock.setTicker(ticker);
+                stockRepo.save(stock);
             }
         }
         String rString =
@@ -180,6 +183,8 @@ public class AccountsController {
                 rString = rString + ",\"address\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getAddress() + "\"";
                 rString = rString + ",\"city\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getCity() + "\"";
                 rString = rString + ",\"state\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getState() + "\"}";
+            } else if (accounts.getType().equals("Stock")) {
+                rString = rString + ",\"ticker\":\"" + stockRepo.getStock(accounts.getAccountId()).getTicker() + "\"}";
             } else {
                 rString = rString + "}";
             }

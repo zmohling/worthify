@@ -14,8 +14,8 @@ public class CertificateOfDeposit implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "accountsId")
-    private String accountsId;
+    @Column(name = "accountID")
+    private String accountID;
 
     @Column(name = "maturityDate")
     private java.sql.Date maturityDate;
@@ -33,11 +33,11 @@ public class CertificateOfDeposit implements Serializable {
     }
 
     public String getAccountsId() {
-        return accountsId;
+        return accountID;
     }
 
-    public void setAccountsId(String accountsId) {
-        this.accountsId = accountsId;
+    public void setAccountsId(String accountID) {
+        this.accountID = accountID;
     }
 
     public Date getMaturityDate() {
