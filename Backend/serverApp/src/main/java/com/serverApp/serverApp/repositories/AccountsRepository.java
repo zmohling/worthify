@@ -13,6 +13,9 @@ public interface AccountsRepository extends JpaRepository<Accounts, Long> {
     @Query(value = "SELECT * FROM accounts WHERE CAST(SUBSTRING(accountID, 1, 8) as unsigned) = ?1", nativeQuery = true)
     Collection<Accounts> getAccounts(long userId);
 
+    @Query(value = "SELECT DISTINCT * FROM accounts WHERE accountID = ?1", nativeQuery = true)
+    Accounts getAccountsByAccountId(String userId);
+
     @Query(value = "SELECT * FROM accounts WHERE CAST(SUBSTRING(accountID, 1, 8) as unsigned) = ?1", nativeQuery = true)
     Accounts[] getAccountsById(long userId);
 
