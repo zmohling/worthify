@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_bg"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginLeft="5dp"
+    >
+
+    <TextView
+        android:id="@+id/contact_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="2.5dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_alignParentLeft="true"
+        android:layout_weight="1"
+        android:textColor="@color/text"
+        />
+
+    <TextView
+        android:id="@+id/contact_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="2.5dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_weight="1"
+        android:textColor="@color/text"
+        android:textAlignment="textEnd"
+        />
+
+</LinearLayout>
