@@ -3,12 +3,12 @@ package com.serverApp.serverApp.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
 
+//use IEX API
 @Entity
-@Table(name = "certificateOfDeposit")
-public class CertificateOfDeposit implements Serializable {
-    private static final long serialVersionUID = 5L;
+@Table(name = "stocks")
+public class Stock implements Serializable {
+    private static final long serialVersionUID = 4L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,8 +17,8 @@ public class CertificateOfDeposit implements Serializable {
     @Column(name = "accountID")
     private String accountID;
 
-    @Column(name = "maturityDate")
-    private java.sql.Date maturityDate;
+    @Column(name = "ticker")
+    private String ticker;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -32,20 +32,19 @@ public class CertificateOfDeposit implements Serializable {
         this.id = id;
     }
 
-    public String getAccountsId() {
+    public String getAccountID() {
         return accountID;
     }
 
-    public void setAccountsId(String accountID) {
+    public void setAccountID(String accountID) {
         this.accountID = accountID;
     }
 
-    public Date getMaturityDate() {
-        return maturityDate;
+    public String getTicker() {
+        return ticker;
     }
 
-    public void setMaturityDate(Date maturityDate) {
-        this.maturityDate = maturityDate;
+    public void setTicker(String ticker) {
+        this.ticker = ticker;
     }
 }
-

@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CertificateOfDepositRepository extends JpaRepository<CertificateOfDeposit, Long> {
 
-    @Query(value = "SELECT DISTINCT * FROM certificate_of_Deposit WHERE accounts_Id = ?1", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT * FROM certificate_of_Deposit WHERE accountID = ?1", nativeQuery = true)
     CertificateOfDeposit getCertificateOfDeposite(String userId);
 }
