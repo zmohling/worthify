@@ -1,14 +1,22 @@
 package team_10.client.utility;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -16,12 +24,15 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import team_10.client.R;
+import team_10.client.constant.TYPE;
 import team_10.client.fragment.NewsArticle;
 import team_10.client.object.Article;
 import team_10.client.object.account.Transaction;
 
 public class TransactionsAdapter extends
         RecyclerView.Adapter<TransactionsAdapter.ViewHolder> {
+
+    private Context parentContext;
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -58,6 +69,8 @@ public class TransactionsAdapter extends
     @Override
     public TransactionsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
+        parentContext = parent.getContext();
+
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
@@ -77,6 +90,33 @@ public class TransactionsAdapter extends
         // Set item views based on your views and data model
         viewHolder.titleTextView.setText(article.getAccount().getLabel());
         viewHolder.descriptionTextView.setText(article.getValue() + "");
+
+        viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LayoutInflater inflater = LayoutInflater.from(parentContext);
+                View popupView = inflater.inflate(R.layout.modal_edit_transaction, null);
+
+                int width = LinearLayout.LayoutParams.MATCH_PARENT;
+                int height = LinearLayout.LayoutParams.MATCH_PARENT;
+                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+                popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    popupWindow.setElevation(100);
+                }
+                TextView nameText = (TextView) popupView.findViewById(R.id.modal_transaction_name);
+                nameText.setText("Label: " + article.getAccount().getLabel());
+                TextView textView = (TextView) popupView.findViewById(R.id.modal_transaction_value);
+                textView.setText("Value of Transaction:  " + article.getValue());
+
+                ((Button) popupView.findViewById(R.id.modal_transaction_cancel)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popupWindow.dismiss();
+                    }
+                });
+            }
+        });
     }
 
     // Returns the total count of items in the list
