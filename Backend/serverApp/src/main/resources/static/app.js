@@ -13,12 +13,12 @@ function setConnected(connected) {
 }
 
 function connect() {
-    var socket = new SockJS('/ping');
+    var socket = new SockJS('http://localhost:8080/ping');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/echo', function (greeting) {
+        stompClient.subscribe('http://localhost:8080/topic/echo', function (greeting) {
             showGreeting(JSON.parse(greeting.body).content);
         });
     });
@@ -33,7 +33,7 @@ function disconnect() {
 }
 
 function sendName() {
-    stompClient.send("/ping", {}, JSON.stringify({'id': $("#name").val()}));
+    stompClient.send("http://localhost:8080/ping", {}, JSON.stringify({'id': $("#name").val()}));
 }
 
 function showGreeting(message) {

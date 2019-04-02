@@ -7,13 +7,14 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Controller
 public class WebSocketController {
 
-    @MessageMapping("/ping")
+    @MessageMapping(value = "/ping")
     @SendTo("/topic/echo")
-    public PingResponse echo(Ping ping) throws Exception {
+    public PingResponse echo(Ping ping) {
         System.out.println("Ping received");
         return new PingResponse(ping.getId());
     }

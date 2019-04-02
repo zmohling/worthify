@@ -1,4 +1,4 @@
-package com.serverApp.serverApp;
+package com.serverApp.serverApp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
