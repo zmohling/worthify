@@ -1,9 +1,32 @@
+var userDisplay;
+
 window.onload = function(){
     //load the users table by default
     var tabs = document.getElementById("Users");
     tabs.style.display = "block";
     
+    var onlineUsers = setInterval(updateOnlineUsers, 2500);
+    userDisplay = document.getElementById("userDisplay")
+    if(userDisplay == null){
+        console.log("online display not found...")
+    }
+}
 
+
+function updateOnlineUsers(){
+    $.ajax({dataType: 'json', type:'GET', url: 'http://cs309-jr-1.misc.iastate.edu:8080/users/numOnline',
+    success: function(json){
+        if(userDisplay != null){
+            userDisplay.innerHTML = "<b>Online: " + json.num + "";
+        }else{
+            console.log("Cannot update page.")
+            console.log("online: " + json.num);
+        }
+    },
+    error: function(){
+        //do nothing
+    }
+    });
 }
 
 function switchTable(evt, tableName) {
@@ -24,3 +47,6 @@ function switchTable(evt, tableName) {
 function logout(){
     window.location.href = "login.html";
 }
+
+
+
