@@ -51,6 +51,10 @@ public class UserController{
     @RequestMapping("/login")
     public String login(@RequestBody User user){
         User retrievedUser = userRepo.getUser(user.getEmail());
+        if(retrievedUser == null) {
+            System.out.println("User does not exist");
+            return "";
+        }
         String hashedPassword = hashingFunction.hashingFunction(user.getPassword(), retrievedUser.getSalt());
         if(retrievedUser.getPassword().equals(hashedPassword))
         {
