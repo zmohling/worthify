@@ -3,7 +3,9 @@ import com.serverApp.serverApp.other.hashingFunction;
 import com.serverApp.serverApp.models.User;
 import com.serverApp.serverApp.controllers.AccountsController;
 import com.serverApp.serverApp.repositories.UserRepository;
+import com.serverApp.serverApp.websocket.EchoServer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +14,8 @@ import java.security.NoSuchAlgorithmException;
 
 @RestController
 public class UserController{
+
+    EchoServer server = new EchoServer(0000, false);
 
     @Autowired
     UserRepository userRepo;
@@ -83,6 +87,12 @@ public class UserController{
                         "\"email\":\"" + retrievedUser.getEmail() + "\"," +
                         "\"type\":\"" + retrievedUser.getType() + "\"}}";
         System.out.println("Admin Login: " + retrievedUser.getEmail() + ", " + retrievedUser.getPassword());
+        return rString;
+    }
+
+    @GetMapping("/users/numOnline")
+    public String getNumOnline(){
+        String rString = "{\"num\":\"" + server.getNumOnlineUsers() +"\"}";
         return rString;
     }
 }

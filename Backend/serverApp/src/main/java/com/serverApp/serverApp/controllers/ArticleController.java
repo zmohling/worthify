@@ -43,7 +43,7 @@ public class ArticleController {
                 URL articlesURL = new URL("https://newsapi.org/v2/everything?" +
                     "q=" + URLEncoder.encode(keywords[i], "UTF-8") + "&" +
                     "apiKey=b46a1992ed6c457bb31e58178813a3cd");
-                System.out.println(articlesURL.toString());
+                //System.out.println(articlesURL.toString());
                 articles = r.getFromURL(articlesURL);
 
                 for(int j = 0; j < articles.size() && j < 5; j++) {
