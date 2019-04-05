@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,11 +25,11 @@ import team_10.client.object.account.Account;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.IO;
 
+import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
+
 public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, TransactionsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener {
 
     private static BottomNavigationView bottomNav;
-    //private static LinearLayout hidelayout;
-    //public BottomNavigationView bottomNav;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -36,20 +37,24 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment f = null;
+            boolean worked = false;
 
             switch (item.getItemId()) {
                 case R.id.navigation_news:
                     f = new NewsFragment();
+                    worked = loadFragment(f, "other");
                     break;
                 case R.id.navigation_dashboard:
                     f = new DashboardFragment();
+                    worked = loadFragment(f, "home");
                     break;
                 case R.id.navigation_transactions:
                     f = new TransactionsFragment();
+                    worked = loadFragment(f, "other");
                     break;
             }
 
-            return loadFragment(f);
+            return worked;
         }
     };
 
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         bottomNav = navigation;
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_dashboard);
-        //loadFragment(new DashboardFragment());
+        //loadFragment(new DashboardFragment(), "home");
     }
 
     @Override
@@ -94,82 +99,39 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         IO.writeAccountsToFile(IO.serializeAccounts(User.getAccounts()), getApplicationContext());
     }
 
-    private boolean loadFragment(Fragment fragment) {
+    private boolean loadFragment(Fragment fragment, String name) {
         //switching fragment
         //fragment.getId();
         if (fragment != null) {
-            String fragmentTag = fragment.getClass().getSimpleName();
-            FragmentManager fragmentManager= getSupportFragmentManager();
-
-            boolean fragmentPopped = fragmentManager
-                    .popBackStackImmediate(fragmentTag , 0);
-
-            if (!fragmentPopped && fragmentManager.findFragmentByTag(fragmentTag) == null) {
-
-                fragmentManager.beginTransaction()
-                        .addToBackStack(fragment.getClass().getSimpleName())
-                        .add(R.id.fragment_container, fragment)
-                        .commit();
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            // 1. Know how many fragments there are in the stack
+            final int count = fragmentManager.getBackStackEntryCount();
+            // 2. If the fragment is **not** "home type", save it to the stack
+            if( name.equals("other") ) {
+                fragmentTransaction.addToBackStack(name);
             }
-            if (fragmentTag.equals("DashboardFragment"))
-            {
-                //bottomNav.setSelectedItemId(R.id.navigation_dashboard);
-            }
-            else if (fragmentTag.equals("TransactionsFragment"))
-            {
-                //bottomNav.setSelectedItemId(R.id.navigation_transactions);
-            }
-            else if (fragmentTag.equals("NewsFragment"))
-            {
-                //bottomNav.setSelectedItemId(R.id.navigation_news);
-            }
+            // Commit !
+            fragmentTransaction.commit();
+            // 3. After the commit, if the fragment is not an "home type" the back stack is changed, triggering the
+            // OnBackStackChanged callback
+            fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+                @Override
+                public void onBackStackChanged() {
+                    // If the stack decreases it means I clicked the back button
+                    if( fragmentManager.getBackStackEntryCount() <= count){
+                        // pop all the fragment and remove the listener
+                        fragmentManager.popBackStack("other", POP_BACK_STACK_INCLUSIVE);
+                        fragmentManager.removeOnBackStackChangedListener(this);
+                        // set the home button selected
+                        bottomNav.getMenu().getItem(1).setChecked(true);
+                    }
+                }
+            });
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void onBackPressed() {
-
-        int count = getSupportFragmentManager().getBackStackEntryCount();
-
-        if (count == 0) {
-            super.onBackPressed();
-            //additional code
-        } else {
-            FragmentManager manager = getSupportFragmentManager();
-            manager.popBackStackImmediate();
-            Fragment fragment = (Fragment) manager.findFragmentById(R.id.fragment_container);
-            String fragmentTag = fragment.getClass().getSimpleName();
-            if (fragmentTag.equals("DashboardFragment"))
-            {
-                Menu menu = bottomNav.getMenu();
-
-                for (int i = 0, size = menu.size(); i < size; i++) {
-                    MenuItem item = menu.getItem(i);
-                    item.setChecked(item.getItemId() == 2131296397); //dashboard item id
-                }
-            }
-            else if (fragmentTag.equals("TransactionsFragment"))
-            {
-                Menu menu = bottomNav.getMenu();
-
-                for (int i = 0, size = menu.size(); i < size; i++) {
-                    MenuItem item = menu.getItem(i);
-                    item.setChecked(item.getItemId() == 2131296400);
-                }
-            }
-            else if (fragmentTag.equals("NewsFragment"))
-            {
-                Menu menu = bottomNav.getMenu();
-
-                for (int i = 0, size = menu.size(); i < size; i++) {
-                    MenuItem item = menu.getItem(i);
-                    int test = item.getItemId();
-                    item.setChecked(item.getItemId() == 2131296399); //news item id
-                }
-            }
-        }
     }
 
     @Override
