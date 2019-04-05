@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
             // 1. Know how many fragments there are in the stack
             final int count = fragmentManager.getBackStackEntryCount();
             // 2. If the fragment is **not** "home type", save it to the stack
-            if( name.equals("other") ) {
+            if( name.equals("other") && count == 0 ) {
                 fragmentTransaction.addToBackStack(name);
             }
             // Commit !
