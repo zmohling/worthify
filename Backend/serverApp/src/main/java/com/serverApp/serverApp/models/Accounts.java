@@ -32,6 +32,9 @@ public class Accounts implements Serializable{
     @Column(name = "transactions")
     private String transactions;
 
+    @Column(name = "recurring")
+    private int recurring;
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -82,5 +85,13 @@ public class Accounts implements Serializable{
 
     public String getTransactions() {
         return transactions;
+    }
+
+    public int getRecurring() {
+        return recurring;
+    }
+
+    public void setRecurring(int recurring) {
+        this.recurring = recurring;
     }
 }
