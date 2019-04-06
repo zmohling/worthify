@@ -5,6 +5,8 @@ import com.serverApp.serverApp.controllers.AccountsController;
 import com.serverApp.serverApp.repositories.UserRepository;
 import com.serverApp.serverApp.websocket.EchoServer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,11 +51,11 @@ public class UserController{
     }
 
     @RequestMapping("/login")
-    public String login(@RequestBody User user){
+    public ResponseEntity<String> login(@RequestBody User user){
         User retrievedUser = userRepo.getUser(user.getEmail());
         if(retrievedUser == null) {
             System.out.println("User does not exist");
-            return "";
+            return ResponseEntity.ok().body("");
         }
         String hashedPassword = hashingFunction.hashingFunction(user.getPassword(), retrievedUser.getSalt());
         if(retrievedUser.getPassword().equals(hashedPassword))
@@ -69,11 +71,13 @@ public class UserController{
                             "\"email\":\"" + retrievedUser.getEmail() + "\"," +
                             "\"type\":\"" + retrievedUser.getType() + "\"}}";
             System.out.println("Login: " + retrievedUser.getEmail() + ", " + "\n" + retrievedUser.getPassword());
-            return rString;
+            HttpHeaders responseHeader = new HttpHeaders();
+            responseHeader.set("Authorization", retrievedUser.getPassword());
+            return ResponseEntity.ok().headers(responseHeader).body(rString);
         }
         else {
             System.out.println("Password Unsuccessful!");
-            return "";
+            return ResponseEntity.ok().body("");
         }
     }
 

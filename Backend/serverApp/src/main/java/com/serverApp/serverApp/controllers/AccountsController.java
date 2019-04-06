@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.header.Header;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -77,8 +78,20 @@ public class AccountsController {
 
 
     @RequestMapping("/accounts/fetch")
-    public String fetchAccounts(@RequestBody String string, @RequestHeader("Authorization") HttpHeaders header) throws IOException {
-        System.out.println(header.get("user"));
+    public String fetchAccounts(@RequestBody String string,@RequestHeader ("host") String hostName,
+                                @RequestHeader ("Accept") String acceptType,
+                                @RequestHeader ("Accept-Language") String acceptLang,
+                                @RequestHeader ("Accept-Encoding") String acceptEnc,
+                                @RequestHeader ("Cache-Control") String cacheCon,
+                                @RequestHeader ("Cookie") String cookie,
+                                @RequestHeader ("User-Agent") String userAgent) throws IOException {
+        System.out.println("Host : " + hostName);
+        System.out.println("Accept : " + acceptType);
+        System.out.println("Accept Language : " + acceptLang);
+        System.out.println("Accept Encoding : " + acceptEnc);
+        System.out.println("Cache-Control : " + cacheCon);
+        System.out.println("Cookie : " + cookie);
+        System.out.println("User-Agent : " + userAgent);
         JSONObject obj = new JSONObject(string);
         JSONArray accountsArr = obj.getJSONArray("accountID");
         Type accountType = new TypeToken<ArrayList<String>>(){}.getType();
