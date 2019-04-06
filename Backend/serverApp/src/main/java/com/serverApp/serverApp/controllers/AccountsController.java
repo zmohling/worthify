@@ -6,7 +6,10 @@ import com.serverApp.serverApp.repositories.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.web.header.Header;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.*;
@@ -74,7 +77,8 @@ public class AccountsController {
 
 
     @RequestMapping("/accounts/fetch")
-    public String fetchAccounts(@RequestBody String string) throws IOException {
+    public String fetchAccounts(@RequestBody String string, @RequestHeader("Authorization") HttpHeaders header) throws IOException {
+        System.out.println(header.get("user"));
         JSONObject obj = new JSONObject(string);
         JSONArray accountsArr = obj.getJSONArray("accountID");
         Type accountType = new TypeToken<ArrayList<String>>(){}.getType();
