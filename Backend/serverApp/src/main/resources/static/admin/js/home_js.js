@@ -1,6 +1,10 @@
 var userDisplay;
+var auth;
 
 window.onload = function(){
+
+    auth = getQueryString("auth");
+    console.log(auth);
     //load the users table by default
     var tabs = document.getElementById("Users");
     tabs.style.display = "block";
@@ -12,9 +16,20 @@ window.onload = function(){
     }
 }
 
+var getQueryString = function ( field, url ) {
+    var href = url ? url : window.location.href;
+    var reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
+    var string = reg.exec(href);
+    return string ? string[1] : null;
+};
+
 
 function updateOnlineUsers(){
-    $.ajax({dataType: 'json', type:'GET', url: 'http://cs309-jr-1.misc.iastate.edu:8080/users/numOnline',
+
+    var url = 'http://cs309-jr-1.misc.iastate.edu:8080/users/numOnline';
+    url = 'http://localhost:8080/users/numOnline'
+
+    $.ajax({dataType: 'json', type:'GET', url: url,
     success: function(json){
         if(userDisplay != null){
             userDisplay.innerHTML = "<b>Online: " + json.num + "";
