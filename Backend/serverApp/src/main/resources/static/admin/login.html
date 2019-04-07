@@ -3,6 +3,7 @@
         <title>Networthr Admin Login Page</title>
         <link rel="stylesheet" type="text/css" href="./css/login_styles.css">
         <script src="./js/login_js.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
     </head>
 
     <body>
@@ -21,10 +22,10 @@
             <div class="modal-content animate">          
               <div class="container">
                 <label for="uname"><b>Email</b></label>
-                <input type="text" placeholder="Enter Email" name="uname" required>
+                <input id="email" type="text" placeholder="Enter Email" name="uname" required>
           
                 <label for="psw"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="psw" required>
+                <input id="pass" type="password" placeholder="Enter Password" name="psw" required>
                   
                 <button id="loginButton" onclick="login()" >Login</button>
                 <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
