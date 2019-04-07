@@ -6,15 +6,16 @@ import team_10.client.object.account.Account;
 
 public class User {
     private static int userID, type, numAccounts;
-    private static String lastName, firstName, email; //Password doesn't need to be in user
+    private static String lastName, firstName, email, token; //Password doesn't need to be in user
     private static List<Account> accounts;
 
-    public User(int userID, String lastName, String firstName, String email, int type) {
+    public User(int userID, String lastName, String firstName, String email, int type, String token) {
         this.userID = userID;
         this.lastName = lastName;
         this.firstName = firstName;
         this.email = email;
         this.type = type;
+        this.token = token;
     }
 
     public static int getID() {
@@ -52,4 +53,13 @@ public class User {
     public static int getType() {
         return type;
     }
+
+    public static String getToken() {
+        return token;
+    }
+
+    public static void setToken(String t) {
+        token = t;
+    }
+
 }
