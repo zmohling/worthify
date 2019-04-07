@@ -102,6 +102,7 @@ public class AccountsController {
             exists = userRepo.checkUserExists(header.get());
             if(exists == 0) {
                 System.out.println("Unauthorized, invalid key");
+                return "";
             } else {
                 ID = userRepo.getUserID(header.get());
                 System.out.println(ID + " matches the authentication key");
@@ -189,6 +190,7 @@ public class AccountsController {
             exists = userRepo.checkUserExists(header.get());
             if(exists == 0) {
                 System.out.println("Unauthorized, invalid key");
+                return "";
             } else {
                 id = userRepo.getUserID(header.get());
                 System.out.println(id + " matches the authentication key");
@@ -209,18 +211,19 @@ public class AccountsController {
         }
         ArrayList<Accounts> accountsList = g.fromJson(accountsArr.toString(), accountType);
         //storing the accounts into the Accounts table
-        for(int i = 0; i < accountsArr.length(); i++) {
+        for(int i = 0; i < accountsList.size(); i++) {
             String accountID = accountsList.get(i).getAccountId();
             long userID = Long.parseLong(accountID.substring(0, 8));
             boolean willBreak = false;
             System.out.println("UserID: " + userID + ", id: " + id);
             while(userID != id) {
                 i++;
-                if(i > accountsArr.length()) {
+                if(i > accountsList.size()) {
                     willBreak = true;
                     break;
+                } else {
+                    accountID = accountsList.get(i).getAccountId();
                 }
-                accountID = accountsList.get(i).getAccountId();
                 userID = Long.parseLong(accountID.substring(0, 8));
             }
             if(willBreak) break;
