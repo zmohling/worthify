@@ -58,4 +58,8 @@ public class User {
         return token;
     }
 
+    public static void setToken(String t) {
+        token = t;
+    }
+
 }

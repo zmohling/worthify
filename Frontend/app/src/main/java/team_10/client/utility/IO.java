@@ -154,7 +154,7 @@ public class IO {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String>  params = new HashMap<String, String>();
-                final String basicAuth = "Basic " + Base64.encodeToString("user:password".getBytes(), Base64.NO_WRAP);
+                final String basicAuth = User.getToken();
                 params.put("Authorization", basicAuth);
 
                 return params;
@@ -233,7 +233,7 @@ public class IO {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String>  params = new HashMap<String, String>();
-                final String basicAuth = "Basic " + Base64.encodeToString("user:password".getBytes(), Base64.NO_WRAP);
+                final String basicAuth = User.getToken();
                 params.put("Authorization", basicAuth);
 
                 return params;
