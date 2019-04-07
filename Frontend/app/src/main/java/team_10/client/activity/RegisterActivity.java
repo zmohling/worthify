@@ -150,7 +150,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         userJson.getString("lastName"),
                                         userJson.getString("firstName"),
                                         userJson.getString("email"),
-                                        userJson.getInt("type")
+                                        userJson.getInt("type"),
+                                        userJson.getString("authorization")
                                 );
 
                                 //storing the user in shared preferences

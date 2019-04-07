@@ -22,6 +22,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import android.util.Base64;
 
 import team_10.client.constant.URL;
 import team_10.client.fragment.DashboardFragment;
@@ -147,6 +150,15 @@ public class IO {
                     return null;
                 }
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                final String basicAuth = User.getToken();
+                params.put("Authorization", basicAuth);
+
+                return params;
+            }
         };
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
@@ -217,6 +229,17 @@ public class IO {
                     return null;
                 }
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                final String basicAuth = User.getToken();
+                params.put("Authorization", basicAuth);
+
+                return params;
+            }
+
+
         };
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
