@@ -34,6 +34,8 @@ public class AccountsController {
     @Autowired
     AccountsRepository accountsRepo;
     @Autowired
+    UserRepository userRepo;
+    @Autowired
     CertificateOfDepositRepository certRepo;
     @Autowired
     RealEstateRepository realEstateRepo;
@@ -45,7 +47,22 @@ public class AccountsController {
         RealEstate;
     }
     @RequestMapping("/accounts/get/all")
-    public String getAccounts(@RequestBody String string) {
+    public String getAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) {
+        int exists = -1;
+        long id = -1;
+        if(header.isPresent()) {
+            exists = userRepo.checkUserExists(header.get());
+            if(exists == 0) {
+                System.out.println("Unauthorized, invalid key");
+            } else {
+                id = userRepo.getUserID(header.get());
+                System.out.println(id + " matches the authentication key");
+            }
+        } else {
+            System.out.println("Unauthorized, no key");
+            return "";
+        }
+
         JSONObject obj = new JSONObject(string);
         long user = Long.parseLong(obj.get("id").toString());
         Collection<Accounts> allAccounts = accountsRepo.getAccounts(user);
@@ -78,30 +95,32 @@ public class AccountsController {
 
 
     @RequestMapping("/accounts/fetch")
-    public String fetchAccounts(@RequestBody String string,@RequestHeader ("host") String hostName,
-                                @RequestHeader ("Accept") String acceptType,
-                                @RequestHeader ("Accept-Language") String acceptLang,
-                                @RequestHeader ("Accept-Encoding") String acceptEnc,
-                                @RequestHeader ("Cache-Control") String cacheCon,
-                                @RequestHeader ("Cookie") String cookie,
-                                @RequestHeader ("User-Agent") String userAgent) throws IOException {
-        System.out.println("Host : " + hostName);
-        System.out.println("Accept : " + acceptType);
-        System.out.println("Accept Language : " + acceptLang);
-        System.out.println("Accept Encoding : " + acceptEnc);
-        System.out.println("Cache-Control : " + cacheCon);
-        System.out.println("Cookie : " + cookie);
-        System.out.println("User-Agent : " + userAgent);
+    public String fetchAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
+        int exists = -1;
+        long ID = -1;
+        if(header.isPresent()) {
+            exists = userRepo.checkUserExists(header.get());
+            if(exists == 0) {
+                System.out.println("Unauthorized, invalid key");
+            } else {
+                ID = userRepo.getUserID(header.get());
+                System.out.println(ID + " matches the authentication key");
+            }
+        } else {
+            System.out.println("Unauthorized, no key");
+            return "";
+        }
+
         JSONObject obj = new JSONObject(string);
         JSONArray accountsArr = obj.getJSONArray("accountID");
         Type accountType = new TypeToken<ArrayList<String>>(){}.getType();
         Gson g = new Gson();
-        ArrayList<Accounts> accountsList = g.fromJson(accountsArr.toString(), accountType);
         URL accountURL;
         String rString = "{";
         for(int i = 0; i < accountsArr.length(); i++) {
             String id = accountsArr.get(i).toString();
             String type = accountsRepo.getAccountsByAccountId(id).getType();
+
             if(type.equals("RealEstate")) {
                 RealEstate realEstate = new RealEstate();
                 realEstate.setAccountId(id);
@@ -163,7 +182,22 @@ public class AccountsController {
     }
 
     @RequestMapping("/accounts/add")
-    public String addAccounts(@RequestBody String string) {
+    public String addAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) {
+        int exists = -1;
+        long id = -1;
+        if(header.isPresent()) {
+            exists = userRepo.checkUserExists(header.get());
+            if(exists == 0) {
+                System.out.println("Unauthorized, invalid key");
+            } else {
+                id = userRepo.getUserID(header.get());
+                System.out.println(id + " matches the authentication key");
+            }
+        } else {
+            System.out.println("Unauthorized, no key");
+            return "";
+        }
+
         JSONObject obj = new JSONObject(string);
         JSONArray accountsArr = obj.getJSONArray("accounts");
         Type accountType = new TypeToken<ArrayList<Accounts>>(){}.getType();
@@ -176,9 +210,25 @@ public class AccountsController {
         ArrayList<Accounts> accountsList = g.fromJson(accountsArr.toString(), accountType);
         //storing the accounts into the Accounts table
         for(int i = 0; i < accountsArr.length(); i++) {
+            String accountID = accountsList.get(i).getAccountId();
+            long userID = Long.parseLong(accountID.substring(0, 8));
+            boolean willBreak = false;
+            System.out.println("UserID: " + userID + ", id: " + id);
+            while(userID != id) {
+                i++;
+                if(i > accountsArr.length()) {
+                    willBreak = true;
+                    break;
+                }
+                accountID = accountsList.get(i).getAccountId();
+                userID = Long.parseLong(accountID.substring(0, 8));
+            }
+            if(willBreak) break;
+
             accountsList.get(i).setTransactions(transactionArr.get(i));
             accountsList.get(i).setIsActive(1);
             accountsRepo.save(accountsList.get(i));
+
             //when the account type is CertificateOfDeposit
             if(accountsList.get(i).getType().equals("CertificateOfDeposit")) {
                 Date maturityDate = Date.valueOf(accountsArr.getJSONObject(i).getString("maturityDate"));
@@ -186,6 +236,7 @@ public class AccountsController {
                 certificateOfDeposit.setMaturityDate(maturityDate);
                 certificateOfDeposit.setAccountsId(accountsList.get(i).getAccountId());
                 certRepo.save(certificateOfDeposit);
+
             } else if(accountsList.get(i).getType().equals("RealEstate")) { //when the type is RealEstate
                 String address = accountsArr.getJSONObject(i).getString("address");
                 String city = accountsArr.getJSONObject(i).getString("city");
@@ -197,6 +248,7 @@ public class AccountsController {
                 realEstate.setCity(city);
                 realEstate.setState(state);
                 realEstateRepo.save(realEstate);
+
             } else if(accountsList.get(i).getType().equals("Stock")) { //when the type is Stock
                 String ticker = accountsArr.getJSONObject(i).getString("ticker");
                 Stock stock = new Stock();
@@ -207,26 +259,50 @@ public class AccountsController {
         }
         String rString =
                 "{\"accounts\":[";
+
         Iterator<Accounts> iterator = accountsList.iterator();
+        boolean first = true;
         while((iterator).hasNext()) {
+            boolean willBreak = false;
             Accounts accounts = iterator.next();
+            String accountID = accounts.getAccountId();
+            long userID = Long.parseLong(accountID.substring(0, 8));
+            while(userID != id) {
+                if((iterator).hasNext()) accounts = iterator.next();
+                else {
+                    willBreak = true;
+                    break;
+                }
+                accountID = accounts.getAccountId();
+                userID = Long.parseLong(accountID.substring(0, 8));
+            }
+            if(willBreak) {
+                break;
+            }
+            if(first == false){
+                rString = rString + ",";
+            }
             rString = rString +
                     "{\"accountID\":\"" + accounts.getAccountId() + "\"," +
                     "\"label\":\"" + accounts.getLabel() + "\"," +
                     "\"transactions\":" + accounts.getTransactions() + "," +
+                    "\"recurring\":" + accounts.getRecurring() + "," +
                     "\"type\":\"" + accounts.getType() + "\"";
+            first = false;
             if(accounts.getType().equals("CertificateOfDeposit")) {
                 rString = rString + ",\"maturityDate\":\"" + certRepo.getCertificateOfDeposite(accounts.getAccountId()).getMaturityDate() + "\"}";
+
             } else if (accounts.getType().equals("RealEstate")) {
                 rString = rString + ",\"address\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getAddress() + "\"";
                 rString = rString + ",\"city\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getCity() + "\"";
                 rString = rString + ",\"state\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getState() + "\"}";
+
             } else if (accounts.getType().equals("Stock")) {
                 rString = rString + ",\"ticker\":\"" + stockRepo.getStock(accounts.getAccountId()).getTicker() + "\"}";
+
             } else {
                 rString = rString + "}";
             }
-            if(iterator.hasNext()) rString = rString + ",";
         }
         rString = rString + "]}";
         return rString;

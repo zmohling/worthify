@@ -23,7 +23,7 @@ public class UserController{
     UserRepository userRepo;
 
     @RequestMapping("/register")
-    public String register(@RequestBody User user) throws NoSuchAlgorithmException {
+    public ResponseEntity<String> register(@RequestBody User user) throws NoSuchAlgorithmException {
     // System.out.println("Login: Id: " + user.getId() + ": " + user.getFirstName() + " " +
     // user.getLastName());userRepo.save(user);
         byte[] salt = hashingFunction.getSalt();
@@ -43,10 +43,12 @@ public class UserController{
                             "\"email\":\"" + user.getEmail() + "\"," +
                             "\"type\":\"" + user.getType() + "\"}}";
             System.out.println("Inserting user: " + rString);
-            return rString;
+            HttpHeaders responseHeader = new HttpHeaders();
+            responseHeader.set("Authorization", user.getPassword());
+            return ResponseEntity.ok().headers(responseHeader).body(rString);
         } else {
             System.out.println("Registration Failed!");
-            return "";
+            return ResponseEntity.ok().body("");
         }
     }
 
