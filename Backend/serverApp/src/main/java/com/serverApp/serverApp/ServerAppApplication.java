@@ -12,6 +12,7 @@ public class ServerAppApplication{
 	public static void main(String[] args) {
 		SpringApplication.run(ServerAppApplication.class, args);
 
+
 		new EchoServer(4444, true);
 	}
 
