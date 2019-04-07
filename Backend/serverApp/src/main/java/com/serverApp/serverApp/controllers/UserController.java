@@ -31,6 +31,7 @@ public class UserController{
         user.setPassword(hashingFunction.hashingFunction(user.getPassword(), salt));
         System.out.println("registering new user...");
         if(userRepo.checkEmail(user.getEmail()) == 0) {
+            user.setType(0);
             user = userRepo.save(user);
             userRepo.flush();
             String rString =
@@ -41,11 +42,11 @@ public class UserController{
                             "\"lastName\":\"" + user.getLastName() + "\"," +
                             "\"firstName\":\"" + user.getFirstName() + "\"," +
                             "\"email\":\"" + user.getEmail() + "\"," +
+                            "\"authorization\":\"" + user.getPassword() + "\"," +
                             "\"type\":\"" + user.getType() + "\"}}";
             System.out.println("Inserting user: " + rString);
             HttpHeaders responseHeader = new HttpHeaders();
-            responseHeader.set("Authorization", user.getPassword());
-            return ResponseEntity.ok().headers(responseHeader).body(rString);
+            return ResponseEntity.ok().body(rString);
         } else {
             System.out.println("Registration Failed!");
             return ResponseEntity.ok().body("");
@@ -71,11 +72,12 @@ public class UserController{
                             "\"lastName\":\"" + retrievedUser.getLastName() + "\"," +
                             "\"firstName\":\"" + retrievedUser.getFirstName() + "\"," +
                             "\"email\":\"" + retrievedUser.getEmail() + "\"," +
+                            "\"authorization\":\"" + retrievedUser.getPassword() + "\"," +
                             "\"type\":\"" + retrievedUser.getType() + "\"}}";
             System.out.println("Login: " + retrievedUser.getEmail() + ", " + "\n" + retrievedUser.getPassword());
             HttpHeaders responseHeader = new HttpHeaders();
             responseHeader.set("Authorization", retrievedUser.getPassword());
-            return ResponseEntity.ok().headers(responseHeader).body(rString);
+            return ResponseEntity.ok().body(rString);
         }
         else {
             System.out.println("Password Unsuccessful!");
@@ -83,22 +85,6 @@ public class UserController{
         }
     }
 
-    @RequestMapping("/adminlogin")
-    public String adminLogin(@RequestBody User user){
-        User retrievedUser = userRepo.getAdmin(user.getEmail(), user.getPassword());
-
-        String rString =
-                "{\"error\":\"false\","
-                        + "\"message\":\"login success\","
-                        +  "\"user\":{"
-                        + "\"id\":\"" + retrievedUser.getId() + "\"," +
-                        "\"lastName\":\"" + retrievedUser.getLastName() + "\"," +
-                        "\"firstName\":\"" + retrievedUser.getFirstName() + "\"," +
-                        "\"email\":\"" + retrievedUser.getEmail() + "\"," +
-                        "\"type\":\"" + retrievedUser.getType() + "\"}}";
-        System.out.println("Admin Login: " + retrievedUser.getEmail() + ", " + retrievedUser.getPassword());
-        return rString;
-    }
 
     @GetMapping("/users/numOnline")
     public String getNumOnline(){

@@ -54,19 +54,26 @@ public class AccountsController {
             exists = userRepo.checkUserExists(header.get());
             if(exists == 0) {
                 System.out.println("Unauthorized, invalid key");
+                return "{\"error\":\"true\","
+                        + "\"message\":\"invalid authentication key\"}";
             } else {
                 id = userRepo.getUserID(header.get());
                 System.out.println(id + " matches the authentication key");
             }
         } else {
             System.out.println("Unauthorized, no key");
-            return "";
+            return "{\"error\":\"true\","
+                    + "\"message\":\"no authentication key\"}";
         }
-
         JSONObject obj = new JSONObject(string);
         long user = Long.parseLong(obj.get("id").toString());
         Collection<Accounts> allAccounts = accountsRepo.getAccounts(user);
         Iterator<Accounts> iterator = allAccounts.iterator();
+        if(user != id) {
+            System.out.println("Requested users accounts do not match authentication keys");
+            return "{\"error\":\"true\","
+                    + "\"message\":\"requested users accounts do not match authentication keys\"}";
+        }
         String rString =
                 "{\"accounts\":[";
         while((iterator).hasNext()) {
@@ -102,14 +109,17 @@ public class AccountsController {
             exists = userRepo.checkUserExists(header.get());
             if(exists == 0) {
                 System.out.println("Unauthorized, invalid key");
-                return "";
+
+                return "{\"error\":\"true\","
+                        + "\"message\":\"invalid authentication key\"}";
             } else {
                 ID = userRepo.getUserID(header.get());
                 System.out.println(ID + " matches the authentication key");
             }
         } else {
             System.out.println("Unauthorized, no key");
-            return "";
+            return "{\"error\":\"true\","
+                    + "\"message\":\"no authentication key\"}";
         }
 
         JSONObject obj = new JSONObject(string);
@@ -190,14 +200,16 @@ public class AccountsController {
             exists = userRepo.checkUserExists(header.get());
             if(exists == 0) {
                 System.out.println("Unauthorized, invalid key");
-                return "";
+                return "{\"error\":\"true\","
+                        + "\"message\":\"invalid authentication key\"}";
             } else {
                 id = userRepo.getUserID(header.get());
                 System.out.println(id + " matches the authentication key");
             }
         } else {
             System.out.println("Unauthorized, no key");
-            return "";
+            return "{\"error\":\"true\","
+                    + "\"message\":\"no authentication key\"}";
         }
 
         JSONObject obj = new JSONObject(string);
@@ -289,7 +301,6 @@ public class AccountsController {
                     "{\"accountID\":\"" + accounts.getAccountId() + "\"," +
                     "\"label\":\"" + accounts.getLabel() + "\"," +
                     "\"transactions\":" + accounts.getTransactions() + "," +
-                    "\"recurring\":" + accounts.getRecurring() + "," +
                     "\"type\":\"" + accounts.getType() + "\"";
             first = false;
             if(accounts.getType().equals("CertificateOfDeposit")) {
