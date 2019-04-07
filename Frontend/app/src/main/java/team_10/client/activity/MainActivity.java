@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
 
@@ -92,6 +93,13 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     @Override
     protected void onPause() {
         super.onPause();
+
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: Did not close socket.");
+            e.printStackTrace();
+        }
 
         /* Write to file */
         IO.writeAccountsToFile(IO.serializeAccounts(User.getAccounts()), getApplicationContext());
