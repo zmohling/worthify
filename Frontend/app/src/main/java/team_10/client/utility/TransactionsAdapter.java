@@ -108,6 +108,8 @@ public class TransactionsAdapter extends
                 nameText.setText("Label: " + article.getAccount().getLabel());
                 TextView textView = (TextView) popupView.findViewById(R.id.modal_transaction_value);
                 textView.setText("Value of Transaction:  " + article.getValue());
+                TextView dateText = (TextView) popupView.findViewById(R.id.modal_transaction_date);
+                dateText.setText("Date of Transaction: " + article.getDate().toString());
 
                 ((Button) popupView.findViewById(R.id.modal_transaction_cancel)).setOnClickListener(new View.OnClickListener() {
                     @Override

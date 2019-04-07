@@ -18,12 +18,12 @@ public class SavingsAccount extends Account {
      * @param value               Value of transaction, aka change of principal value. (negative or positive)
      * @param annualPercentReturn Interest rate at the time of the transaction.
      */
-    public void addTransaction(LocalDate d, double value, double annualPercentReturn) {
-        addTransaction(d, value, annualPercentReturn, transactions.size());
+    public void addTransaction(LocalDate d, double value, double annualPercentReturn, int recurring) {
+        addTransaction(d, value, annualPercentReturn, transactions.size(), recurring);
     }
 
-    public void addTransaction(LocalDate d, double value, double annualPercentReturn, int transactionID) {
-        Transaction t = new Transaction(General.round(value, 2), General.round(annualPercentReturn, 3), transactionID);
+    public void addTransaction(LocalDate d, double value, double annualPercentReturn, int transactionID, int recurring) {
+        Transaction t = new Transaction(General.round(value, 2), General.round(annualPercentReturn, 3), transactionID, recurring, d);
         t.setAccount(this);
         transactions.put(d, t);
     }
@@ -75,10 +75,12 @@ public class SavingsAccount extends Account {
 
         double annualPercentReturn;
 
-        Transaction(double value, double annualPercentReturn, int transactionID) {
+        Transaction(double value, double annualPercentReturn, int transactionID, int recurring, LocalDate date) {
             this.value = value;
             this.annualPercentReturn = annualPercentReturn;
             this.transactionID = transactionID;
+            this.recurring = recurring;
+            this.date = date;
         }
 
         public double getAnnualPercentReturn() {

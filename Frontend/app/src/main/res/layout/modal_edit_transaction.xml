@@ -19,7 +19,7 @@
             android:layout_centerHorizontal="true"
             android:textSize="22sp"
             android:textColor="@color/text"
-            android:text="Edit Transaction" />
+            android:text="Transaction" />
 
         <TextView
             android:id="@+id/modal_transaction_name"
@@ -38,6 +38,16 @@
             android:layout_margin="5dp"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/modal_transaction_name"
+            android:textColor="@color/text"
+            android:text="Value" />
+
+        <TextView
+            android:id="@+id/modal_transaction_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/modal_transaction_value"
             android:textColor="@color/text"
             android:text="Value" />
 

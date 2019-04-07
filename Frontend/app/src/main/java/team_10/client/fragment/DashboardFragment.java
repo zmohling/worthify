@@ -233,7 +233,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         l.setLabel(editTextLabel.getText().toString());
                         l.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
                                 ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
-                                (rand.nextDouble() % 0.02 + 0.02));
+                                (rand.nextDouble() % 0.02 + 0.02), 1);
                         User.addAccount(l);
                         IO.sendAccountToRemote(l, getContext());
                         break;
@@ -243,7 +243,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         sA.setLabel(editTextLabel.getText().toString());
                         sA.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
                                 ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
-                                (rand.nextDouble() % 0.02 + 0.02));
+                                (rand.nextDouble() % 0.02 + 0.02), 0);
                         User.addAccount(sA);
                         IO.sendAccountToRemote(sA, getContext());
                         break;
@@ -254,7 +254,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         CoD.setMaturityDate(LocalDate.now().plusMonths(18));
                         CoD.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
                                 ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
-                                (rand.nextDouble() % 0.02 + 0.02));
+                                (rand.nextDouble() % 0.02 + 0.02), 0);
                         User.addAccount(CoD);
                         IO.sendAccountToRemote(CoD, getContext());
                         break;

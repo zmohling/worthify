@@ -33,8 +33,11 @@ public class TransactionsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     ArrayList<Transaction> transactions;
+    ArrayList<Transaction> recurringTransactions;
     TransactionsAdapter adapter;
+    TransactionsAdapter recurringAdapter;
     RecyclerView recyclerView;
+    RecyclerView recurringRecyclerView;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -75,6 +78,23 @@ public class TransactionsFragment extends Fragment {
         }
     }
 
+    public void editRecurringTransactions()
+    {
+        List<Account> usersAccounts = getUser().getAccounts();
+        for (int i = 0; i < usersAccounts.size(); i++)
+        {
+            ArrayList<Transaction> temp = new ArrayList<>();
+            temp.addAll(usersAccounts.get(i).getTransactions().values());
+            for (int j = 0; j < temp.size(); j++)
+            {
+                if (temp.get(j).getRecurring() == 1)
+                {
+                    recurringTransactions.add(temp.get(j));
+                }
+            }
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +117,16 @@ public class TransactionsFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        recurringRecyclerView = (RecyclerView) view.findViewById(R.id.rvRecurringTransactions);
+
+        recurringTransactions = new ArrayList<Transaction>();
+        recurringAdapter = new TransactionsAdapter(recurringTransactions);
+        recurringRecyclerView.setAdapter(recurringAdapter);
+        recurringRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        recurringRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         editTransactions();
+        editRecurringTransactions();
 
         return view;
     }

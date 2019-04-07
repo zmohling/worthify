@@ -22,12 +22,12 @@ public class Loan extends Account {
      * @param value        Value of transaction, aka change of principal value. (negative or positive)
      * @param interestRate Interest rate at the time of the transaction.
      */
-    public void addTransaction(LocalDate d, double value, double interestRate) {
-        addTransaction(d, value, interestRate, transactions.size());
+    public void addTransaction(LocalDate d, double value, double interestRate, int recurring) {
+        addTransaction(d, value, interestRate, transactions.size(), recurring);
     }
 
-    public void addTransaction(LocalDate d, double value, double interestRate, int transactionID) {
-        Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactionID);
+    public void addTransaction(LocalDate d, double value, double interestRate, int transactionID, int recurring) {
+        Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactionID, recurring, d);
         t.setAccount(this);
         transactions.put(d, t);
     }
@@ -79,10 +79,12 @@ public class Loan extends Account {
 
         double interestRate;
 
-        Transaction(double value, double interestRate, int transactionID) {
+        Transaction(double value, double interestRate, int transactionID, int recurring, LocalDate date) {
             this.value = value;
             this.interestRate = interestRate;
             this.transactionID = transactionID;
+            this.recurring = recurring;
+            this.date = date;
         }
 
         public double getInterestRate() {
