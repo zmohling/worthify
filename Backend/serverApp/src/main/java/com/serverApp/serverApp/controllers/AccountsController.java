@@ -105,6 +105,7 @@ public class AccountsController {
     public String fetchAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
         int exists = -1;
         long ID = -1;
+        System.out.println(string);
         if(header.isPresent()) {
             exists = userRepo.checkUserExists(header.get());
             if(exists == 0) {
@@ -121,12 +122,12 @@ public class AccountsController {
             return "{\"error\":\"true\","
                     + "\"message\":\"no authentication key\"}";
         }
-
         JSONObject obj = new JSONObject(string);
         JSONArray accountsArr = obj.getJSONArray("accountID");
         Type accountType = new TypeToken<ArrayList<String>>(){}.getType();
         Gson g = new Gson();
         URL accountURL;
+
         String rString = "{";
         for(int i = 0; i < accountsArr.length(); i++) {
             String id = accountsArr.get(i).toString();
@@ -196,6 +197,7 @@ public class AccountsController {
     public String addAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) {
         int exists = -1;
         long id = -1;
+        System.out.println(string);
         if(header.isPresent()) {
             exists = userRepo.checkUserExists(header.get());
             if(exists == 0) {
