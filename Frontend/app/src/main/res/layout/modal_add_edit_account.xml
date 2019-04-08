@@ -5,17 +5,19 @@
     android:background="@color/primary_transparent"
     android:layout_centerInParent="true">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="60dp"
-        android:background="@color/background">
+        android:background="@color/background"
+        android:orientation="vertical">
         <TextView
             android:id="@+id/modal_account_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:layout_gravity="center"
             android:layout_centerHorizontal="true"
             android:textSize="22sp"
             android:textColor="@color/text"
@@ -26,52 +28,55 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
+            android:layout_gravity="center"
             android:backgroundTint="@color/text"
             android:layout_below="@id/modal_account_text">
         </Spinner>
 
-        <EditText
-            android:id="@+id/modal_account_label"
-            android:layout_below="@id/modal_account_spinner"
+        <LinearLayout
+            android:id="@+id/modal_add_edit_account_view_group"
             android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:backgroundTint="@color/edit_text_color"
-            android:hint="Label"
-            android:inputType="text"
-            android:textColor="@color/text"
-            android:textColorHint="@color/text" />
+            android:layout_margin="10dp"
+            android:orientation="vertical" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true" >
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center|bottom">
 
             <Button
                 android:id="@+id/modal_account_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
                 android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="10dp"
+                android:layout_gravity="bottom|center_horizontal"
                 android:background="@drawable/greenbtn_bg"
-                android:textColor="@color/text"
-                android:text="Cancel"/>
+                android:text="Cancel"
+                android:textColor="@color/text" />
 
             <Button
                 android:id="@+id/modal_account_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
                 android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="10dp"
+                android:layout_gravity="bottom|center_horizontal"
                 android:background="@drawable/greenbtn_bg"
-                android:textColor="@color/text"
-                android:text="Add"/>
+                android:text="Add"
+                android:textColor="@color/text" />
 
         </LinearLayout>
 
+    </LinearLayout>
 
-    </RelativeLayout>
+
+
 
 
 </RelativeLayout>

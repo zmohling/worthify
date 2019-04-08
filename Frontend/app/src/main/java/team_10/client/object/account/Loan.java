@@ -1,9 +1,16 @@
 package team_10.client.object.account;
 
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Vector;
 
+import team_10.client.R;
 import team_10.client.utility.General;
 
 /**
@@ -69,6 +76,20 @@ public class Loan extends Account {
         }
 
         return General.round(total, 2); // round to nearest cent
+    }
+
+    public View getView(Context context) {
+        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = vi.inflate(R.layout.item_string_input_view, null);
+
+        // Fill in the details
+        TextView textView = (TextView) v.findViewById(R.id.item_string_input_view_TITLE);
+        textView.setText("Label:");
+
+        EditText editText = (EditText) v.findViewById(R.id.item_string_input_view_INPUT);
+        editText.setHint((label == null) ? "" : label);
+
+        return v;
     }
 
 
