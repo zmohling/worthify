@@ -8,7 +8,8 @@ import team_10.client.object.account.Account;
 public enum TYPE {
     CERTIFICATEOFDEPOSIT("Certificate of Deposit", "CertificateOfDeposit"),
     LOAN("Loan", "Loan"),
-    SAVINGSACCOUNT("Savings Account", "SavingsAccount");
+    SAVINGSACCOUNT("Savings Account", "SavingsAccount"),
+    STOCK("Stock", "Stock");
 
     private String simpleName;
     private String className;

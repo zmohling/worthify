@@ -30,6 +30,7 @@ import team_10.client.object.User;
 import team_10.client.object.account.CertificateOfDeposit;
 import team_10.client.object.account.Loan;
 import team_10.client.object.account.SavingsAccount;
+import team_10.client.object.account.Stock;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.CustomListAdapter;
 import team_10.client.utility.IO;
@@ -259,6 +260,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         User.addAccount(CoD);
                         IO.sendAccountToRemote(CoD, getContext());
                         break;
+                    case "Stock":
+                        Stock s = new Stock(getContext(), "AAPL");
+                        s.setLabel(editTextLabel.getText().toString());
+                        s.addTransaction(LocalDate.now(), 0.0, 1);
+                        User.addAccount(s);
+                        IO.sendAccountToRemote(s, getContext());
                 }
 
                 customAdapter.notifyDataSetChanged();
