@@ -14,7 +14,7 @@
         android:theme="@style/NetWorthrTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:windowSoftInputMode="adjustNothing"
+            android:windowSoftInputMode="adjustPan"
             android:name=".activity.MainActivity"
             android:label="@string/title_activity_main">
             <intent-filter>
