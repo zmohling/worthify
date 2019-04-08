@@ -25,15 +25,13 @@
                 android:paddingBottom="60dp"
                 tools:context=".fragment.DashboardFragment">
 
-                <TextView
-                    android:id="@+id/text_view_dashboard"
-                    android:layout_width="100dp"
-                    android:layout_height="50dp"
+                <ImageView
+                    android:id="@+id/graph"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center"
-                    android:textColor="@color/text"
-                    android:text="@string/title_dashboard" />
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/temp_graph"/>
 
                 <Button
                     android:id="@+id/button_add_account"
@@ -41,7 +39,7 @@
                     android:layout_height="50dp"
                     android:layout_margin="5dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_below="@id/text_view_dashboard"
+                    android:layout_below="@id/graph"
                     android:background="@drawable/ic_add_black_24dp"
                     android:backgroundTint="@color/primary_accent" />
 
