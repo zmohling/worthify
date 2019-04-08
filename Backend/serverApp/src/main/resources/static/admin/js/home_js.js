@@ -1,7 +1,7 @@
 var userDisplay;
 var auth;
-var baseUrl = "http://localhost:8080";
-//var baseUrl = "http://cs309-jr-1.misc.iastate.edu:8080";
+//var baseUrl = "http://localhost:8080";
+var baseUrl = "http://cs309-jr-1.misc.iastate.edu:8080";
 var userJSON;
 var articleJSON;
 
