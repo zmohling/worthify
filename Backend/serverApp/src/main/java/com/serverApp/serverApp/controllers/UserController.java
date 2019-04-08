@@ -172,7 +172,7 @@ public class UserController{
     }
 
     @DeleteMapping("/users/delete/{userId}")
-    public String getAccounts(@PathVariable int userId, @RequestHeader(value = "Authorization") Optional<String> header) {
+    public String deleteUser(@PathVariable int userId, @RequestHeader(value = "Authorization") Optional<String> header) {
         //System.out.println(userId);
         int exists = -1;
         long id = -1;
