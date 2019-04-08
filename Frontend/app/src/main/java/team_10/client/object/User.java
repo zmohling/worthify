@@ -46,6 +46,16 @@ public class User {
         accounts.add(a);
     }
 
+    // Return's ID of remove accounts
+    public static String removeAccount(Account a) {
+        if (a != null) {
+            accounts.remove(a);
+            return a.getID();
+        } else {
+            return null;
+        }
+    }
+
     public static String getEmail() {
         return email;
     }

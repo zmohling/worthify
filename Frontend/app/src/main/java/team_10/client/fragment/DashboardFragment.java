@@ -19,6 +19,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import team_10.client.R;
 import team_10.client.constant.TYPE;
@@ -142,7 +146,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 parent.finish();
                 break;
             case R.id.button_add_account:
-                startAddAccountModal();
+                startAccountModal(null);
                 break;
         }
     }
@@ -167,9 +171,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         listView.requestLayout();
     }
 
-    public void startAddAccountModal() {
-        final String label;
-        final Account[] c = new Account[1];
+    public void startAccountModal(Account a) {
 
         // inflate the layout of the popup window
         final LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
@@ -184,40 +186,64 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             popupWindow.setElevation(100);
         }
 
-        //final EditText editTextLabel = (EditText) popupView.findViewById(R.id.modal_account_label);
-        Spinner spinner = (Spinner) popupView.findViewById(R.id.modal_account_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.account_types, R.layout.item_spinner_item);
-        adapter.setDropDownViewResource(R.layout.item_spinner_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String s = parent.getItemAtPosition(position).toString();
-                TYPE t = TYPE.firstMatch(s);
-                if (t != null) {
-                    try {
-                        c[0] = t.getTypeClass().newInstance();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (java.lang.InstantiationException e) {
-                        e.printStackTrace();
+        final Account[] temp = new Account[1];
+
+        if (a == null) {
+            Spinner spinner = (Spinner) popupView.findViewById(R.id.modal_account_spinner);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.account_types, R.layout.item_spinner_item);
+            adapter.setDropDownViewResource(R.layout.item_spinner_item);
+            spinner.setAdapter(adapter);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String s = parent.getItemAtPosition(position).toString();
+                    TYPE t = TYPE.firstMatch(s);
+                    if (t != null) {
+                        try {
+                            temp[0] = t.getTypeClass().newInstance();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        } catch (java.lang.InstantiationException e) {
+                            e.printStackTrace();
+                        }
+
+                        // LinearLayout Wrapper
+                        ViewGroup insertPoint = (ViewGroup) popupView.findViewById(R.id.modal_add_edit_account_view_group);
+
+                        // clear view
+                        insertPoint.removeAllViews();
+                        // insert into main view
+                        insertPoint.addView(temp[0].getView(getContext()), 0);
                     }
-
-                    ViewGroup insertPoint = (ViewGroup) popupView.findViewById(R.id.modal_add_edit_account_view_group);
-
-                    // clear view
-                    insertPoint.removeAllViews();
-                    // insert into main view
-                    insertPoint.addView(c[0].getView(getContext()), 0);
                 }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        } else {
+            TextView textView = popupView.findViewById(R.id.modal_account_text);
+            textView.setText("Edit and Account");
+            Spinner spinner = (Spinner) popupView.findViewById(R.id.modal_account_spinner);
+            spinner.setVisibility(View.GONE);
+
+            try {
+                temp[0] = (Account) IO.deserializeAccounts(IO.serializeAccounts(new ArrayList<Account>(Arrays.asList(temp))));
+
+                // LinearLayout Wrapper
+                ViewGroup insertPoint = (ViewGroup) popupView.findViewById(R.id.modal_add_edit_account_view_group);
+
+                // clear view
+                insertPoint.removeAllViews();
+                // insert into main view
+                insertPoint.addView(temp[0].getView(getContext()), 0);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
+        }
 
         ((Button) popupView.findViewById(R.id.modal_account_cancel)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,54 +252,25 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
         });
 
-//        ((Button) popupView.findViewById(R.id.modal_account_add)).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Random rand = new Random();
-//                int i = rand.nextInt(4) + 1;
-//
-//                LocalDate now = LocalDate.now();
-//
-//                switch (c[0].getSimpleName()) {
-//                    case "Loan":
-//                        Loan l = new Loan();
-//                        l.setLabel(editTextLabel.getText().toString());
-//                        l.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
-//                                ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
-//                                (rand.nextDouble() % 0.02 + 0.02), 1);
-//                        User.addAccount(l);
-//                        IO.sendAccountToRemote(l, getContext());
-//                        break;
-//
-//                    case "SavingsAccount":
-//                        SavingsAccount sA = new SavingsAccount();
-//                        sA.setLabel(editTextLabel.getText().toString());
-//                        sA.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
-//                                ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
-//                                (rand.nextDouble() % 0.02 + 0.02), 0);
-//                        User.addAccount(sA);
-//                        IO.sendAccountToRemote(sA, getContext());
-//                        break;
-//
-//                    case "CertificateOfDeposit":
-//                        CertificateOfDeposit CoD = new CertificateOfDeposit();
-//                        CoD.setLabel(editTextLabel.getText().toString());
-//                        CoD.setMaturityDate(LocalDate.now().plusMonths(18));
-//                        CoD.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
-//                                ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
-//                                (rand.nextDouble() % 0.02 + 0.02), 0);
-//                        User.addAccount(CoD);
-//                        IO.sendAccountToRemote(CoD, getContext());
-//                        break;
-//                }
-//
-//                customAdapter.notifyDataSetChanged();
-//                setListViewHeightBasedOnChildren(lv);
-//                popupWindow.dismiss();
-//
-//                //System.out.println(IO.serializeAccounts(MainActivity.user.getAccounts()));
-//            }
-//        });
+        final Account tempA = a;
+        ((Button) popupView.findViewById(R.id.modal_account_add)).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (tempA != null) {
+                    User.removeAccount(tempA);
+                }
+
+                User.addAccount(temp[0]);
+                IO.sendAccountToRemote(temp[0], getContext());
+                customAdapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren(lv);
+                popupWindow.dismiss();
+
+                System.out.println(IO.serializeAccounts(User.getAccounts()));
+            }
+        });
 
     }
 

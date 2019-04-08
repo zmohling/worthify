@@ -2,6 +2,8 @@ package team_10.client.object.account;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,8 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Vector;
 
 import team_10.client.R;
@@ -23,7 +25,6 @@ public class CertificateOfDeposit extends Account {
     LocalDate maturityDate;
 
     public CertificateOfDeposit() {
-        maturityDate = null;
     }
 
     /**
@@ -58,7 +59,7 @@ public class CertificateOfDeposit extends Account {
         double total = 0;
 
         if (transaction_dates.size() <= 0) {
-            throw new IllegalStateException("No transactions for this account.");
+            return 0.0;
         } else {
             for (int i = 0; i < transaction_dates.size(); i++) {
 
@@ -107,6 +108,20 @@ public class CertificateOfDeposit extends Account {
         v1_editText.setHint((label == null) ? "" : label);
         linearLayout.addView(v1);
 
+        v1_editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                label = s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+
         // Maturity Date input
         View v2 = vi.inflate(R.layout.item_date_input_view, null);
         TextView v2_textView = (TextView) v2.findViewById(R.id.item_date_input_view_TITLE);
@@ -122,7 +137,8 @@ public class CertificateOfDeposit extends Account {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                v2_editText.setHint(LocalDate.of(year, monthOfYear, dayOfMonth).toString());
+                maturityDate = LocalDate.of(year, monthOfYear, dayOfMonth);
+                v2_editText.setHint(maturityDate.toString());
             }
 
         };

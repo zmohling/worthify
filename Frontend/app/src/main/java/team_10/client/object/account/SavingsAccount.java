@@ -1,6 +1,8 @@
 package team_10.client.object.account;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -47,7 +49,7 @@ public class SavingsAccount extends Account {
         double total = 0;
 
         if (transaction_dates.size() <= 0) {
-            throw new IllegalStateException("No transactions for this account.");
+            return 0.0;
         } else {
             for (int i = 0; i < transaction_dates.size(); i++) {
 
@@ -86,7 +88,21 @@ public class SavingsAccount extends Account {
         EditText editText = (EditText) v.findViewById(R.id.item_string_input_view_INPUT);
         editText.setHint((label == null) ? "" : label);
 
-        return v;    }
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                label = s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+        return v;
+    }
 
 
     /**
