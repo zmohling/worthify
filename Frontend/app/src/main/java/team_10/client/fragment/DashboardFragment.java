@@ -14,22 +14,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 
-import java.time.LocalDate;
-import java.util.Random;
-
 import team_10.client.R;
 import team_10.client.constant.TYPE;
 import team_10.client.object.User;
-import team_10.client.object.account.CertificateOfDeposit;
-import team_10.client.object.account.Loan;
-import team_10.client.object.account.SavingsAccount;
+import team_10.client.object.account.Account;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.CustomListAdapter;
 import team_10.client.utility.IO;
@@ -148,7 +142,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 parent.finish();
                 break;
             case R.id.button_add_account:
-                startModal();
+                startAddAccountModal();
                 break;
         }
     }
@@ -173,14 +167,13 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         listView.requestLayout();
     }
 
-    public void startModal() {
+    public void startAddAccountModal() {
         final String label;
-        final Class[] c = new Class[1];
-
+        final Account[] c = new Account[1];
 
         // inflate the layout of the popup window
-        LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
-        View popupView = inflater.inflate(R.layout.modal_add_account, null);
+        final LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
+        final View popupView = inflater.inflate(R.layout.modal_add_edit_account, null);
 
         // create the popup window
         int width = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -191,7 +184,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             popupWindow.setElevation(100);
         }
 
-        final EditText editTextLabel = (EditText) popupView.findViewById(R.id.modal_account_label);
+        //final EditText editTextLabel = (EditText) popupView.findViewById(R.id.modal_account_label);
         Spinner spinner = (Spinner) popupView.findViewById(R.id.modal_account_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.account_types, R.layout.item_spinner_item);
         adapter.setDropDownViewResource(R.layout.item_spinner_item);
@@ -202,7 +195,20 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 String s = parent.getItemAtPosition(position).toString();
                 TYPE t = TYPE.firstMatch(s);
                 if (t != null) {
-                    c[0] = t.getTypeClass();
+                    try {
+                        c[0] = t.getTypeClass().newInstance();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (java.lang.InstantiationException e) {
+                        e.printStackTrace();
+                    }
+
+                    ViewGroup insertPoint = (ViewGroup) popupView.findViewById(R.id.modal_add_edit_account_view_group);
+
+                    // clear view
+                    insertPoint.removeAllViews();
+                    // insert into main view
+                    insertPoint.addView(c[0].getView(getContext()), 0);
                 }
             }
 
@@ -220,54 +226,54 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
         });
 
-        ((Button) popupView.findViewById(R.id.modal_account_add)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Random rand = new Random();
-                int i = rand.nextInt(4) + 1;
-
-                LocalDate now = LocalDate.now();
-
-                switch (c[0].getSimpleName()) {
-                    case "Loan":
-                        Loan l = new Loan();
-                        l.setLabel(editTextLabel.getText().toString());
-                        l.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
-                                ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
-                                (rand.nextDouble() % 0.02 + 0.02), 1);
-                        User.addAccount(l);
-                        IO.sendAccountToRemote(l, getContext());
-                        break;
-
-                    case "SavingsAccount":
-                        SavingsAccount sA = new SavingsAccount();
-                        sA.setLabel(editTextLabel.getText().toString());
-                        sA.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
-                                ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
-                                (rand.nextDouble() % 0.02 + 0.02), 0);
-                        User.addAccount(sA);
-                        IO.sendAccountToRemote(sA, getContext());
-                        break;
-
-                    case "CertificateOfDeposit":
-                        CertificateOfDeposit CoD = new CertificateOfDeposit();
-                        CoD.setLabel(editTextLabel.getText().toString());
-                        CoD.setMaturityDate(LocalDate.now().plusMonths(18));
-                        CoD.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
-                                ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
-                                (rand.nextDouble() % 0.02 + 0.02), 0);
-                        User.addAccount(CoD);
-                        IO.sendAccountToRemote(CoD, getContext());
-                        break;
-                }
-
-                customAdapter.notifyDataSetChanged();
-                setListViewHeightBasedOnChildren(lv);
-                popupWindow.dismiss();
-
-                //System.out.println(IO.serializeAccounts(MainActivity.user.getAccounts()));
-            }
-        });
+//        ((Button) popupView.findViewById(R.id.modal_account_add)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Random rand = new Random();
+//                int i = rand.nextInt(4) + 1;
+//
+//                LocalDate now = LocalDate.now();
+//
+//                switch (c[0].getSimpleName()) {
+//                    case "Loan":
+//                        Loan l = new Loan();
+//                        l.setLabel(editTextLabel.getText().toString());
+//                        l.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
+//                                ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
+//                                (rand.nextDouble() % 0.02 + 0.02), 1);
+//                        User.addAccount(l);
+//                        IO.sendAccountToRemote(l, getContext());
+//                        break;
+//
+//                    case "SavingsAccount":
+//                        SavingsAccount sA = new SavingsAccount();
+//                        sA.setLabel(editTextLabel.getText().toString());
+//                        sA.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
+//                                ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
+//                                (rand.nextDouble() % 0.02 + 0.02), 0);
+//                        User.addAccount(sA);
+//                        IO.sendAccountToRemote(sA, getContext());
+//                        break;
+//
+//                    case "CertificateOfDeposit":
+//                        CertificateOfDeposit CoD = new CertificateOfDeposit();
+//                        CoD.setLabel(editTextLabel.getText().toString());
+//                        CoD.setMaturityDate(LocalDate.now().plusMonths(18));
+//                        CoD.addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
+//                                ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
+//                                (rand.nextDouble() % 0.02 + 0.02), 0);
+//                        User.addAccount(CoD);
+//                        IO.sendAccountToRemote(CoD, getContext());
+//                        break;
+//                }
+//
+//                customAdapter.notifyDataSetChanged();
+//                setListViewHeightBasedOnChildren(lv);
+//                popupWindow.dismiss();
+//
+//                //System.out.println(IO.serializeAccounts(MainActivity.user.getAccounts()));
+//            }
+//        });
 
     }
 

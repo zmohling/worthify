@@ -1,5 +1,8 @@
 package team_10.client.object.account;
 
+import android.content.Context;
+import android.view.View;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.TreeMap;
@@ -16,12 +19,12 @@ public abstract class Account implements Serializable {
         transactions = new TreeMap<>();
     }
 
-    public void addTransaction(LocalDate d, double value, int recurring, LocalDate date) {
-        addTransaction(d, value, transactions.size(), recurring, date);
+    public void addTransaction(LocalDate d, double value, int recurring) {
+        addTransaction(d, value, transactions.size(), recurring);
     }
 
-    public void addTransaction(LocalDate d, double value, int transactionID, int recurring, LocalDate date) {
-        Transaction t = new Transaction(value, transactionID, recurring, date);
+    public void addTransaction(LocalDate d, double value, int transactionID, int recurring) {
+        Transaction t = new Transaction(value, transactionID, recurring, d);
         t.setAccount(this);
         transactions.put(d, t);
     }
@@ -51,6 +54,8 @@ public abstract class Account implements Serializable {
     }
 
     public abstract double getValue(LocalDate d);
+
+    public abstract View getView(Context context);
 
 
     private class Transaction extends team_10.client.object.account.Transaction {
