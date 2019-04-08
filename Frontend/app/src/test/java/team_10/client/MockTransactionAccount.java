@@ -12,21 +12,20 @@ import team_10.client.object.account.Loan;
 import team_10.client.object.account.Transaction;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class MockTransactionAccount {
-    @Mock
-    Account account;
     @Test
     public void testTransactionsAccount() {
-
+        Account mock = mock(Account.class);
         Loan actualLoan = new Loan();
         actualLoan.addTransaction(LocalDate.now(), 1.02, 1.05, 1);
 
         ArrayList<Transaction> transactions = new ArrayList<>();
         transactions.addAll(actualLoan.getTransactions().values());
-        transactions.get(0).setAccount(account);
-        when(account.getID()).thenReturn("99");
+        when(mock.getID()).thenReturn("99");
+        transactions.get(0).setAccount(mock);
 
         assertEquals(transactions.get(0).getDate(), LocalDate.now());
         assertEquals(transactions.get(0).getValue(), 1.02);

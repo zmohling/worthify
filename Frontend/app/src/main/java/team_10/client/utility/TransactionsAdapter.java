@@ -91,7 +91,7 @@ public class TransactionsAdapter extends
         viewHolder.titleTextView.setText(article.getAccount().getLabel());
         viewHolder.descriptionTextView.setText(article.getValue() + "");
 
-        viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+       /* viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LayoutInflater inflater = LayoutInflater.from(parentContext);
@@ -119,6 +119,7 @@ public class TransactionsAdapter extends
                 });
             }
         });
+        */
     }
 
     // Returns the total count of items in the list
