@@ -1,20 +1,22 @@
 var userDisplay;
 var auth;
+var baseUrl = "http://localhost:8080";
+//var baseUrl = "http://cs309-jr-1.misc.iastate.edu:8080";
 
 window.onload = function(){
 
     auth = getQueryString("auth");
-    console.log(auth);
+    //console.log(auth);
 
     if(auth != null){
 
-        var url = 'http://cs309-jr-1.misc.iastate.edu:8080/getInfo/' + auth;
-        url = 'http://localhost:8080/getInfo/' + auth;
+        var url = baseUrl + '/getInfo/' + auth;
 
         $.ajax({dataType: 'json', type:'GET', url: url,
         success: function(json){
             if(json.error == "auth success"){
                 document.getElementById("nameDisplay").innerHTML = "<b><u>Admin Account:</u></b><br>" + json.firstName + " " + json.lastName;
+                updateUserTable();
             }else{
                 document.getElementById("mainBody").innerHTML = "Login failed... try again";
             }
@@ -50,8 +52,7 @@ var getQueryString = function ( field, url ) {
 
 function updateOnlineUsers(){
 
-    var url = 'http://cs309-jr-1.misc.iastate.edu:8080/users/numOnline';
-    url = 'http://localhost:8080/users/numOnline'
+    var url = baseUrl + '/users/numOnline';
 
     $.ajax({dataType: 'json', type:'GET', url: url,
     success: function(json){
@@ -66,6 +67,34 @@ function updateOnlineUsers(){
         //do nothing
     }
     });
+}
+
+function updateUserTable(){
+    console.log("updating user table...");
+    var url = baseUrl + "/users/listAll";
+
+    var tableHTML = "<tr><th>First Name</th><th>Last Name</th><th>Email</th><th>Number of Accounts</th></tr>"
+
+    $.ajax({dataType: 'json', type:'GET', url: url,
+    success: function(json){
+        console.log(json);
+        for(var i = 0; i < json.numUsers; i ++){
+            tableHTML += "<tr>" +
+                "<td>" + json.users[i].firstName + "</td>" + 
+                "<td>" + json.users[i].lastName + "</td>" + 
+                "<td>" + json.users[i].email + "</td>" + 
+                "<td>" + json.users[i].numAccounts + "</td></tr>";
+        }
+        document.getElementById("userTable").innerHTML = tableHTML;
+    },
+    error: function(){
+        console.log("error updating user table");
+    }
+    })
+}
+
+function updateArticleTable(){
+
 }
 
 function switchTable(evt, tableName) {

@@ -28,4 +28,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT * FROM users WHERE password = ?1 AND type = 1", nativeQuery = true)
     User getAdmin(String password);
+
+    @Query(value = "SELECT * FROM users WHERE type = 0", nativeQuery = true)
+    User[] listAll();
 }

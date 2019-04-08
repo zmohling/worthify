@@ -2,6 +2,7 @@ package com.serverApp.serverApp.controllers;
 import com.serverApp.serverApp.other.hashingFunction;
 import com.serverApp.serverApp.models.User;
 import com.serverApp.serverApp.controllers.AccountsController;
+import com.serverApp.serverApp.repositories.AccountsRepository;
 import com.serverApp.serverApp.repositories.UserRepository;
 import com.serverApp.serverApp.websocket.EchoServer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class UserController{
 
     @Autowired
     UserRepository userRepo;
+
+    @Autowired
+    AccountsRepository accountsRepo;
 
     @RequestMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) throws NoSuchAlgorithmException {
@@ -109,9 +113,50 @@ public class UserController{
         }else{
             return "{ \"error\": \"auth failed\"}";
         }
-
     }
 
+    @GetMapping("users/listAll")
+    public String listAll(){
+        User[] userList = userRepo.listAll();
+        String rString = "{";
+        rString += "\"numUsers\":\"" + userList.length + "\", \"users\": [";
+        for(int i = 0; i < userList.length; i ++){
+            if (i != userList.length - 1) {
+                rString =
+                    rString +
+                        "{"
+                        + "\"email\":\""
+                        + userList[i].getEmail()
+                        + "\","
+                        + "\"firstName\":\""
+                        + userList[i].getFirstName()
+                        + "\","
+                        + "\"lastName\":\""
+                        + userList[i].getLastName()
+                        + "\","
+                        + "\"numAccounts\":\""
+                        + accountsRepo.getAccountsById(userList[i].getId()).length
+                        + "\"},";
+            }else{
+                rString =
+                        rString
+                                + "{"
+                                + "\"email\":\""
+                                + userList[i].getEmail()
+                                + "\","
+                                + "\"firstName\":\""
+                                + userList[i].getFirstName()
+                                + "\","
+                                + "\"lastName\":\""
+                                + userList[i].getLastName()
+                                + "\","
+                                + "\"numAccounts\":\""
+                                + accountsRepo.getAccountsById(userList[i].getId()).length
+                                + "\"}]}";
+            }
+        }
+        return rString;
+    }
 
     @GetMapping("/users/numOnline")
     public String getNumOnline(){
