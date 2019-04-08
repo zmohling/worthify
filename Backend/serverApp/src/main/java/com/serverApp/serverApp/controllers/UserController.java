@@ -7,17 +7,14 @@ import com.serverApp.serverApp.websocket.EchoServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 
 @RestController
 public class UserController{
 
-    EchoServer server = new EchoServer(0000, false);
+    EchoServer echoServer = new EchoServer(0000, false);
 
     @Autowired
     UserRepository userRepo;
@@ -85,10 +82,40 @@ public class UserController{
         }
     }
 
+    @RequestMapping("/getInfo/{auth}")
+    public String getAdminInfo(@PathVariable String auth){
+        User admin = userRepo.getAdmin(auth);
+        if (admin != null) {
+              String rString =
+                "{ \"id\":\""
+              + admin.getId()
+              + "\","
+              + "\"lastName\":\""
+              + admin.getLastName()
+              + "\","
+              + "\"firstName\":\""
+              + admin.getFirstName()
+              + "\","
+              + "\"email\":\""
+              + admin.getEmail()
+              + "\","
+              + "\"authorization\":\""
+              + admin.getPassword()
+              + "\","
+              + "\"type\":\""
+              + admin.getType()
+              + "\",\"error\": \"auth success\"}";
+            return rString;
+        }else{
+            return "{ \"error\": \"auth failed\"}";
+        }
+
+    }
+
 
     @GetMapping("/users/numOnline")
     public String getNumOnline(){
-        String rString = "{\"num\":\"" + server.getNumOnlineUsers() +"\"}";
+        String rString = "{\"num\":\"" + echoServer.getNumOnlineUsers() +"\"}";
         return rString;
     }
 }
