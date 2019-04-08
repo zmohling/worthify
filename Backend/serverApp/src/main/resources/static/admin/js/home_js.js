@@ -126,12 +126,14 @@ function updateArticleTable(){
         console.log(json);
         articleJSON = json;
         for(var i = 0; i < json.numArticles; i ++){
-            tableHTML += "<tr>" +
-                "<td>" + json.articles[i].title + "</td>" + 
-                "<td><a href=\"" + json.articles[i].url + "\" target=\"_blank\">" + json.articles[i].url + "</a></td>" + 
-                "<td>" + json.articles[i].isActive + "</td>" + 
-                "<td>" + json.articles[i].userId + "</td>" +
-                "<td><button class=\"tableButton\" onclick=archiveArticle(" + json.articles[i].id + ")>Delete</button></td></tr>";
+            if(json.articles[i].isActive == 1){
+                tableHTML += "<tr>" +
+                    "<td>" + json.articles[i].title + "</td>" + 
+                    "<td><a href=\"" + json.articles[i].url + "\" target=\"_blank\">" + json.articles[i].url + "</a></td>" + 
+                    "<td>" + json.articles[i].isActive + "</td>" + 
+                    "<td>" + json.articles[i].userId + "</td>" +
+                    "<td><button class=\"tableButton\" onclick=archiveArticle(" + json.articles[i].id + ")>Delete</button></td></tr>";
+            }
         }
         //console.log(tableHTML);
         document.getElementById("articleTable").innerHTML = tableHTML;
