@@ -1,12 +1,17 @@
 package team_10.client.object.account;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.time.temporal.ChronoUnit;
 import java.util.Vector;
 
@@ -18,7 +23,7 @@ public class CertificateOfDeposit extends Account {
     LocalDate maturityDate;
 
     public CertificateOfDeposit() {
-        maturityDate = LocalDate.now().plusMonths(12);
+        maturityDate = null;
     }
 
     /**
@@ -80,26 +85,61 @@ public class CertificateOfDeposit extends Account {
         return General.round(total, 2); // round to nearest cent
     }
 
-    @Override
-    public View getView(Context context) {
-        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = vi.inflate(R.layout.item_string_input_view, null);
-
-        // Fill in the details
-        TextView textView = (TextView) v.findViewById(R.id.item_string_input_view_TITLE);
-        textView.setText("Label:");
-
-        EditText editText = (EditText) v.findViewById(R.id.item_string_input_view_INPUT);
-        editText.setHint((label == null) ? "" : label);
-
-        return v;    }
-
     public void setMaturityDate(LocalDate d) {
         this.maturityDate = d;
     }
 
     public LocalDate getMaturityDate() {
         return this.maturityDate;
+    }
+
+    @Override
+    public View getView(final Context context) {
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        // Label input
+        View v1 = vi.inflate(R.layout.item_string_input_view, null);
+        TextView v1_textView = (TextView) v1.findViewById(R.id.item_string_input_view_TITLE);
+        v1_textView.setText("Label:");
+        EditText v1_editText = (EditText) v1.findViewById(R.id.item_string_input_view_INPUT);
+        v1_editText.setHint((label == null) ? "" : label);
+        linearLayout.addView(v1);
+
+        // Maturity Date input
+        View v2 = vi.inflate(R.layout.item_date_input_view, null);
+        TextView v2_textView = (TextView) v2.findViewById(R.id.item_date_input_view_TITLE);
+        v2_textView.setText("Maturity Date:");
+        final EditText v2_editText = (EditText) v2.findViewById(R.id.item_date_input_view_INPUT);
+        v2_editText.setHint((maturityDate == null) ? "Click to Add" : maturityDate.toString());
+        linearLayout.addView(v2);
+
+        // Date Picker
+        final Calendar myCalendar = Calendar.getInstance();
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                v2_editText.setHint(LocalDate.of(year, monthOfYear, dayOfMonth).toString());
+            }
+
+        };
+
+        v2_editText.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(context, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+
+        return linearLayout;
     }
 
 
