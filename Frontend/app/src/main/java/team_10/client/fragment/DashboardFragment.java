@@ -338,7 +338,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         Random rand = new Random();
         int i = rand.nextInt(4) + 1;
 
-        LocalDate now = LocalDate.now();
+        LocalDate now = (a.getTransactions().isEmpty()) ? LocalDate.now() : (LocalDate) a.getTransactions().keySet().toArray()[0];
 
         for (; i > 0; i--) {
             switch (a.getClass().getSimpleName()) {
@@ -349,13 +349,13 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                     break;
 
                 case "SavingsAccount":
-                    ((SavingsAccount) a).addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
+                    ((SavingsAccount) a).addTransaction(now = now.minusMonths(rand.nextInt(3) + 1),
                             ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
                             (rand.nextDouble() % 0.02 + 0.02), 0);
                     break;
 
                 case "CertificateOfDeposit":
-                    ((CertificateOfDeposit) a).addTransaction(now = now.plusMonths(rand.nextInt(3) + 1),
+                    ((CertificateOfDeposit) a).addTransaction(now = now.minusMonths(rand.nextInt(3) + 1),
                             ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
                             (rand.nextDouble() % 0.02 + 0.02), 0);
                     break;
@@ -390,7 +390,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         recurringRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         transactions.addAll(getTransactions(a));
-        recurringTransactions.addAll(getRecurringTransactions(a));
+        //recurringTransactions.addAll(getRecurringTransactions(a));
 
         return view;
     }
