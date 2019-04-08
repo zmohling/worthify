@@ -22,7 +22,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import team_10.client.R;
 import team_10.client.constant.TYPE;
@@ -100,6 +99,26 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         lv = view.findViewById(R.id.list);
         customAdapter = new CustomListAdapter(view.getContext(), R.layout.item_account_list_item, User.getAccounts());
         lv.setAdapter(customAdapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView <?> arg0, View view, int position, long id) {
+                startAccountModal(User.getAccounts().get(position));
+            }
+        });
+//
+//        for (int i = 0; i <= User.getAccounts().size(); i++) {
+//            System.out.println(i);
+//
+//            if (lv.getChildAt(i) != null && !lv.getChildAt(i).hasOnClickListeners()) {
+//                final int finalI = i;
+//                lv.getChildAt(i).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        System.out.println("CLICKED " + finalI);
+//                    }
+//                });
+//            }
+//        }
 
         customAdapter.notifyDataSetChanged();
         setListViewHeightBasedOnChildren(lv);
@@ -224,12 +243,15 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             });
         } else {
             TextView textView = popupView.findViewById(R.id.modal_account_text);
-            textView.setText("Edit and Account");
+            textView.setText("Edit Account");
             Spinner spinner = (Spinner) popupView.findViewById(R.id.modal_account_spinner);
             spinner.setVisibility(View.GONE);
 
             try {
-                temp[0] = (Account) IO.deserializeAccounts(IO.serializeAccounts(new ArrayList<Account>(Arrays.asList(temp))));
+                ArrayList<Account> aListTemp = new ArrayList<>();
+                aListTemp.add(a);
+
+                temp[0] = (Account) IO.deserializeAccounts(IO.serializeAccounts(aListTemp)).get(0);
 
                 // LinearLayout Wrapper
                 ViewGroup insertPoint = (ViewGroup) popupView.findViewById(R.id.modal_add_edit_account_view_group);
@@ -260,10 +282,13 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
                 if (tempA != null) {
                     User.removeAccount(tempA);
+                    User.addAccount(temp[0]);
+
+                } else {
+                    User.addAccount(temp[0]);
+                    IO.sendAccountToRemote(temp[0], getContext());
                 }
 
-                User.addAccount(temp[0]);
-                IO.sendAccountToRemote(temp[0], getContext());
                 customAdapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren(lv);
                 popupWindow.dismiss();
