@@ -1,20 +1,25 @@
 var userDisplay;
 var auth;
+var baseUrl = "http://localhost:8080";
+//var baseUrl = "http://cs309-jr-1.misc.iastate.edu:8080";
+var userJSON;
+var articleJSON;
 
 window.onload = function(){
 
     auth = getQueryString("auth");
-    console.log(auth);
+    //console.log(auth);
 
     if(auth != null){
 
-        var url = 'http://cs309-jr-1.misc.iastate.edu:8080/getInfo/' + auth;
-        url = 'http://localhost:8080/getInfo/' + auth;
+        var url = baseUrl + '/getInfo/' + auth;
 
         $.ajax({dataType: 'json', type:'GET', url: url,
         success: function(json){
             if(json.error == "auth success"){
                 document.getElementById("nameDisplay").innerHTML = "<b><u>Admin Account:</u></b><br>" + json.firstName + " " + json.lastName;
+                updateUserTable();
+                updateArticleTable();
             }else{
                 document.getElementById("mainBody").innerHTML = "Login failed... try again";
             }
@@ -50,8 +55,7 @@ var getQueryString = function ( field, url ) {
 
 function updateOnlineUsers(){
 
-    var url = 'http://cs309-jr-1.misc.iastate.edu:8080/users/numOnline';
-    url = 'http://localhost:8080/users/numOnline'
+    var url = baseUrl + '/users/numOnline';
 
     $.ajax({dataType: 'json', type:'GET', url: url,
     success: function(json){
@@ -64,6 +68,94 @@ function updateOnlineUsers(){
     },
     error: function(){
         //do nothing
+    }
+    });
+}
+
+function updateUserTable(){
+    console.log("updating user table...");
+    var url = baseUrl + "/users/listAll";
+
+    var tableHTML = "<tr><th>First Name</th><th>Last Name</th><th>Email</th><th>Number of Accounts</th></tr>";
+
+    $.ajax({dataType: 'json', type:'GET', url: url,
+    success: function(json){
+        console.log(json);
+        userJSON = json;
+        for(var i = 0; i < json.numUsers; i ++){
+            tableHTML += "<tr>" +
+                "<td>" + json.users[i].firstName + "</td>" + 
+                "<td>" + json.users[i].lastName + "</td>" + 
+                "<td>" + json.users[i].email + "</td>" + 
+                "<td>" + json.users[i].numAccounts + "</td>" +
+                "<td class=\"userRemoveCol\"><button onclick=removeUser(" + json.users[i].id + ") class=\"tableButtonUser\">Remove</button></td></tr>";
+        }
+        document.getElementById("userTable").innerHTML = tableHTML;
+    },
+    error: function(){
+        console.log("error updating user table");
+    }
+    });
+}
+
+function removeUser(userNum){
+    //console.log(userNum);
+    var url = baseUrl + "/users/delete/" + userNum;
+
+    $.ajax({dataType: 'json', type: "DELETE", headers: {'Authorization': auth}, url: url,
+    success: function(json){
+        if(json.error == "true"){
+            alert("error removing user");
+        }
+        updateUserTable();
+    },
+    error: function(){
+        alert("error removing user...");
+    }
+    });
+}
+
+function updateArticleTable(){
+    console.log("updating article table...");
+    var url = baseUrl + "/article/adminGetAll";
+
+    var tableHTML = "<tr><th>Title</th><th>URL</th><th>Active</th><th>UserID (0 = automated)</th></tr>";
+
+    $.ajax({dataType: 'json', type:'GET', url: url,
+    success: function(json){
+        console.log(json);
+        articleJSON = json;
+        for(var i = 0; i < json.numArticles; i ++){
+            if(json.articles[i].isActive == 1){
+                tableHTML += "<tr>" +
+                    "<td>" + json.articles[i].title + "</td>" + 
+                    "<td><a href=\"" + json.articles[i].url + "\" target=\"_blank\">" + json.articles[i].url + "</a></td>" + 
+                    "<td>" + json.articles[i].isActive + "</td>" + 
+                    "<td>" + json.articles[i].userId + "</td>" +
+                    "<td><button class=\"tableButton\" onclick=archiveArticle(" + json.articles[i].id + ")>Delete</button></td></tr>";
+            }
+        }
+        //console.log(tableHTML);
+        document.getElementById("articleTable").innerHTML = tableHTML;
+    },
+    error: function(){
+        console.log("error updating article table");
+    }
+    });
+}
+
+function archiveArticle(articleNum){
+    var url = baseUrl + "/article/archive/" + articleNum;
+
+    $.ajax({dataType: 'json', type: "DELETE", url: url,
+    success: function(json){
+        if(json.message != "success"){
+            alert("article not archived");
+        }
+        updateArticleTable();
+    },
+    error: function(){
+        alert("article not archived");
     }
     });
 }

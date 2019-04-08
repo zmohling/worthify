@@ -1,6 +1,8 @@
+var baseUrl = "http://localhost:8080";
+//var baseUrl =  "http://cs309-jr-1.misc.iastate.edu:8080";
+
 function login(){
-    var url = "http://cs309-jr-1.misc.iastate.edu:8080/login";
-    url = "http://localhost:8080/login";//for testing purposes
+    var url = baseUrl + "/login";
 
     var userInfo = {
         email:document.getElementById("email").value,
