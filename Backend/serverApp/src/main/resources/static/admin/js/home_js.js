@@ -5,6 +5,30 @@ window.onload = function(){
 
     auth = getQueryString("auth");
     console.log(auth);
+
+    if(auth != null){
+
+        var url = 'http://cs309-jr-1.misc.iastate.edu:8080/getInfo/' + auth;
+        url = 'http://localhost:8080/getInfo/' + auth;
+
+        $.ajax({dataType: 'json', type:'GET', url: url,
+        success: function(json){
+            if(json.error == "auth success"){
+                document.getElementById("nameDisplay").innerHTML = "<b><u>Admin Account:</u></b><br>" + json.firstName + " " + json.lastName;
+            }else{
+                document.getElementById("mainBody").innerHTML = "Login failed... try again";
+            }
+        },
+        error: function(){
+            document.getElementById("mainBody").innerHTML = "Login failed... try again";
+        }
+        });
+
+    }else{
+        document.getElementById("mainBody").innerHTML = "Login failed... try again";
+    }
+
+
     //load the users table by default
     var tabs = document.getElementById("Users");
     tabs.style.display = "block";
