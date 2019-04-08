@@ -132,6 +132,70 @@ public class ArticleController {
         return rString;
     }
 
+    @GetMapping("/article/adminGetAll")
+    public String adminGetAll(){
+        String rString = "{";
+
+        Article[] articles = articleRepo.getAllArticles();
+        rString += "\"numArticles\":\"" + articles.length +"\", \"articles\": [";
+
+        for(int i = 0; i < articles.length; i ++){
+            if(i == articles.length - 1){
+                rString =
+                        rString
+                                + "{"
+                                + "\"id\":\""
+                                + articles[i].getId()
+                                + "\","
+                                + "\"title\":\""
+                                + articles[i].getTitle()
+                                + "\","
+                                + "\"userId\":\""
+                                + articles[i].getUserId()
+                                + "\","
+                                + "\"description\":\""
+                                + articles[i].getDescription()
+                                + "\","
+                                + "\"pictureUrl\":\""
+                                + articles[i].getUrlToImage()
+                                + "\","
+                                + "\"url\":\""
+                                + articles[i].getUrl()
+                                + "\","
+                                + "\"isActive\":\""
+                                + articles[i].getIsActive()
+                                + "\"}]";
+            } else {
+                rString =
+                        rString + "{"
+                                + "\"id\":\""
+                                + articles[i].getId()
+                                + "\","
+                                + "\"title\":\""
+                                + articles[i].getTitle()
+                                + "\","
+                                + "\"userId\":\""
+                                + articles[i].getUserId()
+                                + "\","
+                                + "\"description\":\""
+                                + articles[i].getDescription()
+                                + "\","
+                                + "\"pictureUrl\":\""
+                                + articles[i].getUrlToImage()
+                                + "\","
+                                + "\"url\":\""
+                                + articles[i].getUrl()
+                                + "\","
+                                + "\"isActive\":\""
+                                + articles[i].getIsActive()
+                                + "\"},";
+            }
+        }
+        rString += "}";
+        return rString;
+    }
+
+
 
     @GetMapping("/article/getPersonal/{id}")
     public String getPersonal(@PathVariable long id){
