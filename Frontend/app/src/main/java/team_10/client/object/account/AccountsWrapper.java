@@ -8,6 +8,12 @@ import java.util.List;
  */
 public class AccountsWrapper {
 
+    public AccountsWrapper() { }
+
+    public AccountsWrapper(List<Account> accounts) {
+        setAccounts(accounts);
+    }
+
     private List<Account> accounts;
 
     public List<Account> getAccounts() {

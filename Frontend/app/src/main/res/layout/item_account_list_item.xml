@@ -16,7 +16,6 @@
         android:layout_alignParentLeft="true"
         android:layout_marginHorizontal="5dp"
         android:layout_weight="1"
-        android:editable="false"
         android:textColor="@color/text"
         android:text="Hello" />
 
