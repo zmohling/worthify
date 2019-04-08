@@ -295,4 +295,10 @@ public class ArticleController {
         return rString;
     }
 
+    @DeleteMapping("/article/archive/{id}")
+    public String archiveArticle(@PathVariable int id){
+        articleRepo.deleteArticle(id);
+        return "{\"message\":\"success\"}";
+    }
+
 }

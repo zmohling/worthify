@@ -2,8 +2,10 @@ package com.serverApp.serverApp.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.serverApp.serverApp.models.User;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -31,4 +33,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT * FROM users WHERE type = 0", nativeQuery = true)
     User[] listAll();
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM users WHERE id = ?1", nativeQuery = true)
+    int deleteUser(int id);
 }

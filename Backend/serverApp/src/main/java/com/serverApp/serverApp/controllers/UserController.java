@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 @RestController
 public class UserController{
@@ -125,6 +126,9 @@ public class UserController{
                 rString =
                     rString +
                         "{"
+                        + "\"id\":\""
+                        + userList[i].getId()
+                            + "\","
                         + "\"email\":\""
                         + userList[i].getEmail()
                         + "\","
@@ -141,6 +145,9 @@ public class UserController{
                 rString =
                         rString
                                 + "{"
+                                + "\"id\":\""
+                                + userList[i].getId()
+                                + "\","
                                 + "\"email\":\""
                                 + userList[i].getEmail()
                                 + "\","
@@ -162,5 +169,42 @@ public class UserController{
     public String getNumOnline(){
         String rString = "{\"num\":\"" + echoServer.getNumOnlineUsers() +"\"}";
         return rString;
+    }
+
+    @DeleteMapping("/users/delete/{userId}")
+    public String getAccounts(@PathVariable int userId, @RequestHeader(value = "Authorization") Optional<String> header) {
+        //System.out.println(userId);
+        int exists = -1;
+        long id = -1;
+        if(header.isPresent()) {
+            exists = userRepo.checkUserExists(header.get());
+            if(exists == 0) {
+                System.out.println("Unauthorized, invalid key");
+                return "{\"error\":\"true\","
+                        + "\"message\":\"invalid authentication key\"}";
+            } else {
+                id = userRepo.getUserID(header.get());
+                System.out.println(id + " matches the authentication key");
+            }
+        } else {
+            System.out.println("Unauthorized, no key");
+            return "{\"error\":\"true\","
+                    + "\"message\":\"no authentication key\"}";
+        }
+
+        try{
+            if(userRepo.deleteUser(userId) == 0){
+                return "{\"error\":\"true\","
+                        + "\"message\":\"delete failed\"}";
+            }else{
+                accountsRepo.deleteAllTiedToUser(userId);
+            }
+        }catch(Exception e){
+            return "{\"error\":\"true\","
+                    + "\"message\":\"delete failed\"}";
+        }
+
+        return "{\"error\":\"false\","
+                + "\"message\":\"deleted user\"}";
     }
 }
