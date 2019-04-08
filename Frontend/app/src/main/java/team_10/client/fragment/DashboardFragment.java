@@ -261,7 +261,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         IO.sendAccountToRemote(CoD, getContext());
                         break;
                     case "Stock":
-                        Stock s = new Stock(getContext(), "AAPL");
+                        Stock s = new Stock(getContext());
+                        s.setTicker("AAPL");
                         s.setLabel(editTextLabel.getText().toString());
                         s.addTransaction(LocalDate.now(), 0.0, 1);
                         User.addAccount(s);

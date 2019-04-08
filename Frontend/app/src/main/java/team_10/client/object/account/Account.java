@@ -13,7 +13,7 @@ import java.util.TreeMap;
 public abstract class Account implements Serializable {
     protected String accountID, label;
     protected TreeMap<LocalDate, team_10.client.object.account.Transaction> transactions;
-    private transient Context context;
+    protected transient Context context;
 
     public Account() {
         this.transactions = new TreeMap<>();

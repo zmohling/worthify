@@ -5,41 +5,48 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 
 import team_10.client.constant.URL;
-import team_10.client.fragment.DashboardFragment;
 import team_10.client.object.User;
-import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.VolleySingleton;
 
-import static team_10.client.constant.URL.ROOT_URL;
-
 public class Stock extends Account {
-    public String symbol;
-    public Context context;
+    public String ticker;
     public int amount;
+    public double valueOfStock;
 
 
-    public Stock(Context context, String symbol) {
-        this.symbol = symbol;
-        this.context = context;
+    public Stock() {
     }
+
+    public Stock(Context context){
+        super(context);
+    }
+
+    public String getTicker() { return ticker; }
+    public void setTicker(String symbol) { this.ticker = symbol; }
+
+    public int getAmount() { return amount; }
+    public void setAmount(int amount) { this.amount = amount; }
 
     public void addTransaction(LocalDate d, double value, int amount)
     {
@@ -59,9 +66,7 @@ public class Stock extends Account {
 
     public double getValue(LocalDate d) {
         Vector<LocalDate> transaction_dates = new Vector<LocalDate>(transactions.keySet());
-
-        double total = 0;
-        final double[] stockValue = new double[1];
+        valueOfStock = 0;
 
         if (transaction_dates.size() <= 0) {
             throw new IllegalStateException("No transactions for this account.");
@@ -108,16 +113,16 @@ public class Stock extends Account {
                 String requestBody = null;
                 try {
                     JsonObject userAccountsRequest = new JsonObject();
-                    JsonArray accountId = new JsonArray();
-                    accountId.add(this.accountID);
-                    userAccountsRequest.add("accountID", accountId);
+                    JsonArray accountIdArray = new JsonArray();
+                    accountIdArray.add(accountID);
+                    userAccountsRequest.add("accountID", accountIdArray);
                     requestBody = userAccountsRequest.toString();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
                 final String finalRequestBody = requestBody;
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_GET_API,
+                /*StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_GET_API,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -125,8 +130,7 @@ public class Stock extends Account {
                                     JSONObject returned = new JSONObject(response);
 
                                     if (returned.has(accountID)) {
-                                        stockValue[0] = returned.getDouble(accountID);
-
+                                        valueOfStock = returned.getDouble(accountID);
                                         System.out.println("Accounts Retrieval Successful");
                                     }  else {
                                         System.out.println("Accounts Retrieval Unsuccessful");
@@ -175,13 +179,66 @@ public class Stock extends Account {
                     }
 
 
-                };
+                };*/
 
-                VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+                RequestQueue requestQueue = VolleySingleton.getInstance(context).getRequestQueue();
+                //requestQueue.add(stringRequest);
+                //requestQueue.start();
+
+                /*RequestFuture<String> future = RequestFuture.newFuture();
+                JSONObject userAccountsRequest = new JSONObject();
+                JSONArray accountIdArray = new JSONArray();
+                accountIdArray.
+                accountIdArray.add(accountID);
+                userAccountsRequest.add("accountID", accountIdArray);
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL.URL_GET_API, userAccountsRequest,future, future);
+                new StringRequest(Request.Method.POST, URL.URL_GET_API, future, future);
+                requestQueue.add(request);
+
+
+
+                try {
+                    String response = future.get(); // this will block
+                    try {
+                        JSONObject returned = new JSONObject(response);
+
+                        if (returned.has(accountID)) {
+                            valueOfStock = returned.getDouble(accountID);
+                            System.out.println("Accounts Retrieval Successful");
+                        }  else {
+                            System.out.println("Accounts Retrieval Unsuccessful");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // gson catch exceptions
+                    }
+                } catch (InterruptedException e) {
+                    // exception handling
+                } catch (ExecutionException e) {
+                    // exception handling
+                }
+                //waitForResponse(); */
             }
         }
+        return valueOfStock; // round to nearest cent
+    }
 
-        return stockValue[0] * amount; // round to nearest cent
+    private boolean waitForResponse()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            try{
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                break;
+            }
+            if (valueOfStock != 0)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private class Transaction extends team_10.client.object.account.Transaction {
