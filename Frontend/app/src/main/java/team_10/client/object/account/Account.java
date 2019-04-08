@@ -14,9 +14,15 @@ import java.util.TreeMap;
 public abstract class Account implements Serializable {
     protected String accountID, label;
     protected TreeMap<LocalDate, team_10.client.object.account.Transaction> transactions;
+    protected transient Context context;
 
     public Account() {
+        this.transactions = new TreeMap<>();
+    }
+
+    public Account(Context context) {
         transactions = new TreeMap<>();
+        this.context = context;
     }
 
     public void addTransaction(LocalDate d, double value, int recurring) {

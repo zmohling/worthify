@@ -8,5 +8,6 @@
         <item>Loan</item>
         <item>Savings Account</item>
         <item>Certificate of Deposit</item>
+        <item>Stock</item>
     </string-array>
 </resources>
