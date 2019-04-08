@@ -16,6 +16,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -24,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import team_10.client.constant.URL;
 import team_10.client.object.User;
@@ -185,25 +188,50 @@ public class Stock extends Account {
                 //requestQueue.add(stringRequest);
                 //requestQueue.start();
 
-                /*RequestFuture<String> future = RequestFuture.newFuture();
+                RequestFuture<String> future = RequestFuture.newFuture();
                 JSONObject userAccountsRequest = new JSONObject();
                 JSONArray accountIdArray = new JSONArray();
-                accountIdArray.
-                accountIdArray.add(accountID);
-                userAccountsRequest.add("accountID", accountIdArray);
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL.URL_GET_API, userAccountsRequest,future, future);
-                new StringRequest(Request.Method.POST, URL.URL_GET_API, future, future);
+                accountIdArray.put(accountID);
+                try {
+                    userAccountsRequest.put("accountID", accountIdArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                StringRequest request = new StringRequest(Request.Method.POST, URL.URL_GET_API, future, future){
+                    @Override
+                    public String getBodyContentType() {
+                        return String.format("text/plain;charset=UTF-8");
+                    }
+
+                    @Override
+                    public byte[] getBody() {
+                        try {
+                            return finalRequestBody == null ? null : finalRequestBody.getBytes("utf-8");
+                        } catch (UnsupportedEncodingException uee) {
+                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                                    finalRequestBody, "utf-8");
+                            return null;
+                        }
+                    }
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<String, String>();
+                        final String basicAuth = User.getToken();
+                        params.put("Authorization", basicAuth);
+
+                        return params;
+                    }
+                };
                 requestQueue.add(request);
 
 
 
                 try {
-                    String response = future.get(); // this will block
+                    String returned = future.get(10000, TimeUnit.MILLISECONDS); // this will block
                     try {
-                        JSONObject returned = new JSONObject(response);
-
-                        if (returned.has(accountID)) {
-                            valueOfStock = returned.getDouble(accountID);
+                        JSONObject response = new JSONObject(returned);
+                        if (response.has(accountID)) {
+                            valueOfStock = response.getDouble(accountID);
                             System.out.println("Accounts Retrieval Successful");
                         }  else {
                             System.out.println("Accounts Retrieval Unsuccessful");
@@ -216,6 +244,8 @@ public class Stock extends Account {
                     // exception handling
                 } catch (ExecutionException e) {
                     // exception handling
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
                 }
                 //waitForResponse(); */
             }
