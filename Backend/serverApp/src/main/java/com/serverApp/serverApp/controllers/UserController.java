@@ -2,22 +2,30 @@ package com.serverApp.serverApp.controllers;
 import com.serverApp.serverApp.other.hashingFunction;
 import com.serverApp.serverApp.models.User;
 import com.serverApp.serverApp.controllers.AccountsController;
+import com.serverApp.serverApp.repositories.AccountsRepository;
 import com.serverApp.serverApp.repositories.UserRepository;
+import com.serverApp.serverApp.websocket.EchoServer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 @RestController
 public class UserController{
 
+    EchoServer echoServer = new EchoServer(0000, false);
+
     @Autowired
     UserRepository userRepo;
 
+    @Autowired
+    AccountsRepository accountsRepo;
+
     @RequestMapping("/register")
-    public String register(@RequestBody User user) throws NoSuchAlgorithmException {
+    public ResponseEntity<String> register(@RequestBody User user) throws NoSuchAlgorithmException {
     // System.out.println("Login: Id: " + user.getId() + ": " + user.getFirstName() + " " +
     // user.getLastName());userRepo.save(user);
         byte[] salt = hashingFunction.getSalt();
@@ -25,6 +33,7 @@ public class UserController{
         user.setPassword(hashingFunction.hashingFunction(user.getPassword(), salt));
         System.out.println("registering new user...");
         if(userRepo.checkEmail(user.getEmail()) == 0) {
+            user.setType(0);
             user = userRepo.save(user);
             userRepo.flush();
             String rString =
@@ -35,18 +44,24 @@ public class UserController{
                             "\"lastName\":\"" + user.getLastName() + "\"," +
                             "\"firstName\":\"" + user.getFirstName() + "\"," +
                             "\"email\":\"" + user.getEmail() + "\"," +
+                            "\"authorization\":\"" + user.getPassword() + "\"," +
                             "\"type\":\"" + user.getType() + "\"}}";
             System.out.println("Inserting user: " + rString);
-            return rString;
+            HttpHeaders responseHeader = new HttpHeaders();
+            return ResponseEntity.ok().body(rString);
         } else {
             System.out.println("Registration Failed!");
-            return "";
+            return ResponseEntity.ok().body("");
         }
     }
 
     @RequestMapping("/login")
-    public String login(@RequestBody User user){
+    public ResponseEntity<String> login(@RequestBody User user){
         User retrievedUser = userRepo.getUser(user.getEmail());
+        if(retrievedUser == null) {
+            System.out.println("User does not exist");
+            return ResponseEntity.ok().body("");
+        }
         String hashedPassword = hashingFunction.hashingFunction(user.getPassword(), retrievedUser.getSalt());
         if(retrievedUser.getPassword().equals(hashedPassword))
         {
@@ -59,30 +74,137 @@ public class UserController{
                             "\"lastName\":\"" + retrievedUser.getLastName() + "\"," +
                             "\"firstName\":\"" + retrievedUser.getFirstName() + "\"," +
                             "\"email\":\"" + retrievedUser.getEmail() + "\"," +
+                            "\"authorization\":\"" + retrievedUser.getPassword() + "\"," +
                             "\"type\":\"" + retrievedUser.getType() + "\"}}";
             System.out.println("Login: " + retrievedUser.getEmail() + ", " + "\n" + retrievedUser.getPassword());
-            return rString;
+            HttpHeaders responseHeader = new HttpHeaders();
+            responseHeader.set("Authorization", retrievedUser.getPassword());
+            return ResponseEntity.ok().body(rString);
         }
         else {
             System.out.println("Password Unsuccessful!");
-            return "";
+            return ResponseEntity.ok().body("");
         }
     }
 
-    @RequestMapping("/adminlogin")
-    public String adminLogin(@RequestBody User user){
-        User retrievedUser = userRepo.getAdmin(user.getEmail(), user.getPassword());
+    @RequestMapping("/getInfo/{auth}")
+    public String getAdminInfo(@PathVariable String auth){
+        User admin = userRepo.getAdmin(auth);
+        if (admin != null) {
+              String rString =
+                "{ \"id\":\""
+              + admin.getId()
+              + "\","
+              + "\"lastName\":\""
+              + admin.getLastName()
+              + "\","
+              + "\"firstName\":\""
+              + admin.getFirstName()
+              + "\","
+              + "\"email\":\""
+              + admin.getEmail()
+              + "\","
+              + "\"authorization\":\""
+              + admin.getPassword()
+              + "\","
+              + "\"type\":\""
+              + admin.getType()
+              + "\",\"error\": \"auth success\"}";
+            return rString;
+        }else{
+            return "{ \"error\": \"auth failed\"}";
+        }
+    }
 
-        String rString =
-                "{\"error\":\"false\","
-                        + "\"message\":\"login success\","
-                        +  "\"user\":{"
-                        + "\"id\":\"" + retrievedUser.getId() + "\"," +
-                        "\"lastName\":\"" + retrievedUser.getLastName() + "\"," +
-                        "\"firstName\":\"" + retrievedUser.getFirstName() + "\"," +
-                        "\"email\":\"" + retrievedUser.getEmail() + "\"," +
-                        "\"type\":\"" + retrievedUser.getType() + "\"}}";
-        System.out.println("Admin Login: " + retrievedUser.getEmail() + ", " + retrievedUser.getPassword());
+    @GetMapping("users/listAll")
+    public String listAll(){
+        User[] userList = userRepo.listAll();
+        String rString = "{";
+        rString += "\"numUsers\":\"" + userList.length + "\", \"users\": [";
+        for(int i = 0; i < userList.length; i ++){
+            if (i != userList.length - 1) {
+                rString =
+                    rString +
+                        "{"
+                        + "\"id\":\""
+                        + userList[i].getId()
+                            + "\","
+                        + "\"email\":\""
+                        + userList[i].getEmail()
+                        + "\","
+                        + "\"firstName\":\""
+                        + userList[i].getFirstName()
+                        + "\","
+                        + "\"lastName\":\""
+                        + userList[i].getLastName()
+                        + "\","
+                        + "\"numAccounts\":\""
+                        + accountsRepo.getAccountsById(userList[i].getId()).length
+                        + "\"},";
+            }else{
+                rString =
+                        rString
+                                + "{"
+                                + "\"id\":\""
+                                + userList[i].getId()
+                                + "\","
+                                + "\"email\":\""
+                                + userList[i].getEmail()
+                                + "\","
+                                + "\"firstName\":\""
+                                + userList[i].getFirstName()
+                                + "\","
+                                + "\"lastName\":\""
+                                + userList[i].getLastName()
+                                + "\","
+                                + "\"numAccounts\":\""
+                                + accountsRepo.getAccountsById(userList[i].getId()).length
+                                + "\"}]}";
+            }
+        }
         return rString;
+    }
+
+    @GetMapping("/users/numOnline")
+    public String getNumOnline(){
+        String rString = "{\"num\":\"" + echoServer.getNumOnlineUsers() +"\"}";
+        return rString;
+    }
+
+    @DeleteMapping("/users/delete/{userId}")
+    public String deleteUser(@PathVariable int userId, @RequestHeader(value = "Authorization") Optional<String> header) {
+        //System.out.println(userId);
+        int exists = -1;
+        long id = -1;
+        if(header.isPresent()) {
+            exists = userRepo.checkUserExists(header.get());
+            if(exists == 0) {
+                System.out.println("Unauthorized, invalid key");
+                return "{\"error\":\"true\","
+                        + "\"message\":\"invalid authentication key\"}";
+            } else {
+                id = userRepo.getUserID(header.get());
+                System.out.println(id + " matches the authentication key");
+            }
+        } else {
+            System.out.println("Unauthorized, no key");
+            return "{\"error\":\"true\","
+                    + "\"message\":\"no authentication key\"}";
+        }
+
+        try{
+            if(userRepo.deleteUser(userId) == 0){
+                return "{\"error\":\"true\","
+                        + "\"message\":\"delete failed\"}";
+            }else{
+                accountsRepo.deleteAllTiedToUser(userId);
+            }
+        }catch(Exception e){
+            return "{\"error\":\"true\","
+                    + "\"message\":\"delete failed\"}";
+        }
+
+        return "{\"error\":\"false\","
+                + "\"message\":\"deleted user\"}";
     }
 }

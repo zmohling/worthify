@@ -20,6 +20,7 @@ public class hashingFunction
 
     public static String hashingFunction(String passwordToHash, byte[] salt)
     {
+        if(salt == null) return "null pointer exception";
         String generatedPassword = null;
         try {
             // Create MessageDigest instance for MD5

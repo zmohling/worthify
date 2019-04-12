@@ -29,7 +29,7 @@ public class Accounts implements Serializable{
     @Column(name = "isActive")
     private int isActive;
 
-    @Column(name = "transactions")
+    @Column(name = "transactions", columnDefinition = "TEXT")
     private String transactions;
 
     public static long getSerialVersionUID() {

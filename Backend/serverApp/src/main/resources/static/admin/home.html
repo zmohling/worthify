@@ -1,0 +1,55 @@
+<HTML>
+    <head>
+        <title>Networthr Admin Home</title>
+        <link rel="stylesheet" type="text/css" href="./css/home_styles.css">
+        <script src="./js/home_js.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    </head>
+
+    <header></header>
+    <body id="mainBody">
+        <div class="blocks">
+            <p id="nameDisplay" style="font-size:24;margin:0;padding:25px"><b><u>Admin Account:</u></b>
+                <br>
+            </p>
+        </div><div class="blocks">
+            <button onclick="logout()">Log Out</button>
+        </div>
+
+        <div style="padding-left:25px;padding-right:25px;">
+            <div class="tab">
+                <button class="tablinks active" onclick="switchTable(event, 'Users')">Users</button>
+                <button class="tablinks" onclick="switchTable(event, 'Articles')">Articles</button>
+            </div>
+
+            <div id="Users" class="tabcontent">
+                <p  style="font-size:24;margin:0;padding:15px;padding-bottom:2px;text-align: center;"><b><u>Users</u></p>
+                <p id="userDisplay" style="font-size:20;margin:0;padding:1px;text-align:center;"><b>Online: 0</p>
+                <table id="userTable" class="displayTable">
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Number of Accounts</th>
+                    </tr>  
+                </table>
+            </div>
+            
+            <div id="Articles" class="tabcontent">
+                <p style="font-size:24;margin:0;padding:15px;text-align: center;"><b><u>Articles</u></p>
+                <table id = "articleTable" class="displayTable">
+                    <tr>
+                        <th>Title</th>
+                        <th>Url</th>
+                        <th>Active</th>
+                        <th>UserID (0 = automated)</th>
+                    </tr>   
+                    
+                    
+                    
+                    
+                </table>
+            </div>
+        </div>
+    </body>
+</HTML>

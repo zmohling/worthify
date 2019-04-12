@@ -15,6 +15,7 @@ public class SharedPreferencesManager {
     private static final String KEY_EMAIL = "keyemail";
     private static final String KEY_ID = "keyid";
     private static final String KEY_TYPE = "keytype";
+    private static final String KEY_TOKEN = "keytoken";
 
     private static SharedPreferencesManager mInstance;
     private static Context mCtx;
@@ -40,6 +41,7 @@ public class SharedPreferencesManager {
         editor.putString(KEY_FIRSTNAME, user.getFirstName());
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putInt(KEY_TYPE, user.getType());
+        editor.putString(KEY_TOKEN, user.getToken());
         editor.apply();
     }
 
@@ -57,7 +59,8 @@ public class SharedPreferencesManager {
                 sharedPreferences.getString(KEY_LASTNAME, null),
                 sharedPreferences.getString(KEY_FIRSTNAME, null),
                 sharedPreferences.getString(KEY_EMAIL, null),
-                sharedPreferences.getInt(KEY_TYPE, -1)
+                sharedPreferences.getInt(KEY_TYPE, -1),
+                sharedPreferences.getString(KEY_TOKEN, null)
         );
     }
 

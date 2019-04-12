@@ -231,14 +231,14 @@ public class ProfileActivity extends AppCompatActivity {
 
         Loan carloan = new Loan();
         carloan.setID("000000010001");
-        carloan.addTransaction(LocalDate.now(), 100, 0.04);
-        carloan.addTransaction(LocalDate.now().plusYears(1), 1000, 0.08);
+        carloan.addTransaction(LocalDate.now(), 100, 0.04, 0);
+        carloan.addTransaction(LocalDate.now().plusYears(1), 1000, 0.08, 0);
 
         user.addAccount(carloan);
 
         Loan mortgage = new Loan();
         mortgage.setID("000000010002");
-        mortgage.addTransaction(LocalDate.now().plusMonths(3), 233000, 0.03);
+        mortgage.addTransaction(LocalDate.now().plusMonths(3), 233000, 0.03, 0);
 
         user.addAccount(mortgage);
 

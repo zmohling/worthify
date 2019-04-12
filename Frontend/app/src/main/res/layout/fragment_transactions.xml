@@ -3,15 +3,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background"
     tools:context=".fragment.TransactionsFragment">
 
-    <TextView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main_transactions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:textColor="@color/text"
-        android:text="@string/title_transactions"
-        />
+        android:orientation="vertical"
+        android:weightSum="10"
+        tools:context=".fragment.TransactionsFragment">
+
+        <TextView
+            android:id="@+id/text_view_transactions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/text"
+            android:layout_weight=".25"
+            android:layout_marginTop="10dp"
+            android:text="@string/title_transactions" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvTransactions"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="4.75"
+            android:textColor=" #EDE8D6"/>
+
+        <TextView
+            android:id="@+id/text_view_recurring_transactions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/text"
+            android:layout_weight=".25"
+            android:layout_marginTop="10dp"
+            android:text="Recurring Transactions" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvRecurringTransactions"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="4.75"
+            android:textColor=" #EDE8D6"/>
+    </LinearLayout>
 
 </FrameLayout>

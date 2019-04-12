@@ -1,0 +1,36 @@
+<HTML>
+    <head>
+        <title>Networthr Admin Login Page</title>
+        <link rel="stylesheet" type="text/css" href="./css/login_styles.css">
+        <script src="./js/login_js.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    </head>
+
+    <body>
+        <div class="main">
+            <h1>Networthr Administrator Login</h1>
+            <p>This portal allows Networthr administrators to:</p>
+            <ul>
+                <li>View all active users</li>
+                <li>Review and delete users</li>
+                <li>View and delete articles</li>
+            </ul>
+            <button onclick="document.getElementById('id01').style.display='block'">Log In</button>
+        </div>
+        <div id="id01" class="modal">
+  
+            <div class="modal-content animate">          
+              <div class="container">
+                <label for="uname"><b>Email</b></label>
+                <input id="email" type="text" placeholder="Enter Email" name="uname" required>
+          
+                <label for="psw"><b>Password</b></label>
+                <input id="pass" type="password" placeholder="Enter Password" name="psw" required>
+                  
+                <button id="loginButton" onclick="login()" >Login</button>
+                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+              </div>
+            </div>
+          </div>
+    </body>
+</HTML>

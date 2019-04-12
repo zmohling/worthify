@@ -1,9 +1,18 @@
 package team_10.client.object.account;
 
+import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Vector;
 
+import team_10.client.R;
 import team_10.client.utility.General;
 
 public class SavingsAccount extends Account {
@@ -18,13 +27,13 @@ public class SavingsAccount extends Account {
      * @param value               Value of transaction, aka change of principal value. (negative or positive)
      * @param annualPercentReturn Interest rate at the time of the transaction.
      */
-    public void addTransaction(LocalDate d, double value, double annualPercentReturn) {
-        Transaction t = new Transaction(General.round(value, 2), General.round(annualPercentReturn, 3), transactions.size());
-        transactions.put(d, t);
+    public void addTransaction(LocalDate d, double value, double annualPercentReturn, int recurring) {
+        addTransaction(d, value, annualPercentReturn, transactions.size(), recurring);
     }
 
-    public void addTransaction(LocalDate d, double value, double annualPercentReturn, int transactionID) {
-        Transaction t = new Transaction(General.round(value, 2), General.round(annualPercentReturn, 3), transactionID);
+    public void addTransaction(LocalDate d, double value, double annualPercentReturn, int transactionID, int recurring) {
+        Transaction t = new Transaction(General.round(value, 2), General.round(annualPercentReturn, 3), transactionID, recurring, d);
+        t.setAccount(this);
         transactions.put(d, t);
     }
 
@@ -40,7 +49,7 @@ public class SavingsAccount extends Account {
         double total = 0;
 
         if (transaction_dates.size() <= 0) {
-            throw new IllegalStateException("No transactions for this account.");
+            return 0.0;
         } else {
             for (int i = 0; i < transaction_dates.size(); i++) {
 
@@ -67,6 +76,34 @@ public class SavingsAccount extends Account {
         return General.round(total, 2); // round to nearest cent
     }
 
+    @Override
+    public View getView(Context context) {
+        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = vi.inflate(R.layout.item_string_input_view, null);
+
+        // Fill in the details
+        TextView textView = (TextView) v.findViewById(R.id.item_string_input_view_TITLE);
+        textView.setText("Label:");
+
+        EditText editText = (EditText) v.findViewById(R.id.item_string_input_view_INPUT);
+        editText.setHint((label == null) ? "" : label);
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                label = s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+        return v;
+    }
+
 
     /**
      * Loan specific Transaction object.
@@ -75,10 +112,12 @@ public class SavingsAccount extends Account {
 
         double annualPercentReturn;
 
-        Transaction(double value, double annualPercentReturn, int transactionID) {
+        Transaction(double value, double annualPercentReturn, int transactionID, int recurring, LocalDate date) {
             this.value = value;
             this.annualPercentReturn = annualPercentReturn;
             this.transactionID = transactionID;
+            this.recurring = recurring;
+            this.date = date;
         }
 
         public double getAnnualPercentReturn() {

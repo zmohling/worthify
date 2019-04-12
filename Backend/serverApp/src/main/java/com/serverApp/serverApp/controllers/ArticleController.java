@@ -43,6 +43,7 @@ public class ArticleController {
                 URL articlesURL = new URL("https://newsapi.org/v2/everything?" +
                     "q=" + URLEncoder.encode(keywords[i], "UTF-8") + "&" +
                     "apiKey=b46a1992ed6c457bb31e58178813a3cd");
+                //System.out.println(articlesURL.toString());
                 articles = r.getFromURL(articlesURL);
 
                 for(int j = 0; j < articles.size() && j < 5; j++) {
@@ -53,6 +54,8 @@ public class ArticleController {
                         //truncate description if too long
                         articles.get(j).setDescription(articles.get(j).getDescription().substring(0, 147) + "...");
                     }
+                    articles.get(j).setDescription(articles.get(j).getDescription().replaceAll("\"", "'"));
+                    articles.get(j).setTitle(articles.get(j).getTitle().replaceAll("\"", "'"));
                     if (articleRepo.getDuplicates(articles.get(j).getUrl()) == 0) {
                         articleRepo.save(articles.get(j));
                         insertCount ++;
@@ -128,6 +131,70 @@ public class ArticleController {
         rString += "}";
         return rString;
     }
+
+    @GetMapping("/article/adminGetAll")
+    public String adminGetAll(){
+        String rString = "{";
+
+        Article[] articles = articleRepo.getAllArticles();
+        rString += "\"numArticles\":\"" + articles.length +"\", \"articles\": [";
+
+        for(int i = 0; i < articles.length; i ++){
+            if(i == articles.length - 1){
+                rString =
+                        rString
+                                + "{"
+                                + "\"id\":\""
+                                + articles[i].getId()
+                                + "\","
+                                + "\"title\":\""
+                                + articles[i].getTitle()
+                                + "\","
+                                + "\"userId\":\""
+                                + articles[i].getUserId()
+                                + "\","
+                                + "\"description\":\""
+                                + articles[i].getDescription()
+                                + "\","
+                                + "\"pictureUrl\":\""
+                                + articles[i].getUrlToImage()
+                                + "\","
+                                + "\"url\":\""
+                                + articles[i].getUrl()
+                                + "\","
+                                + "\"isActive\":\""
+                                + articles[i].getIsActive()
+                                + "\"}]";
+            } else {
+                rString =
+                        rString + "{"
+                                + "\"id\":\""
+                                + articles[i].getId()
+                                + "\","
+                                + "\"title\":\""
+                                + articles[i].getTitle()
+                                + "\","
+                                + "\"userId\":\""
+                                + articles[i].getUserId()
+                                + "\","
+                                + "\"description\":\""
+                                + articles[i].getDescription()
+                                + "\","
+                                + "\"pictureUrl\":\""
+                                + articles[i].getUrlToImage()
+                                + "\","
+                                + "\"url\":\""
+                                + articles[i].getUrl()
+                                + "\","
+                                + "\"isActive\":\""
+                                + articles[i].getIsActive()
+                                + "\"},";
+            }
+        }
+        rString += "}";
+        return rString;
+    }
+
 
 
     @GetMapping("/article/getPersonal/{id}")
@@ -226,6 +293,12 @@ public class ArticleController {
         }
         rString += "}";
         return rString;
+    }
+
+    @DeleteMapping("/article/archive/{id}")
+    public String archiveArticle(@PathVariable int id){
+        articleRepo.deleteArticle(id);
+        return "{\"message\":\"success\"}";
     }
 
 }

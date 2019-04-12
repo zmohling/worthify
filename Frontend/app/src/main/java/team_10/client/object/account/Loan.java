@@ -1,9 +1,18 @@
 package team_10.client.object.account;
 
+import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Vector;
 
+import team_10.client.R;
 import team_10.client.utility.General;
 
 /**
@@ -22,13 +31,13 @@ public class Loan extends Account {
      * @param value        Value of transaction, aka change of principal value. (negative or positive)
      * @param interestRate Interest rate at the time of the transaction.
      */
-    public void addTransaction(LocalDate d, double value, double interestRate) {
-        Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactions.size());
-        transactions.put(d, t);
+    public void addTransaction(LocalDate d, double value, double interestRate, int recurring) {
+        addTransaction(d, value, interestRate, transactions.size(), recurring);
     }
 
-    public void addTransaction(LocalDate d, double value, double interestRate, int transactionID) {
-        Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactionID);
+    public void addTransaction(LocalDate d, double value, double interestRate, int transactionID, int recurring) {
+        Transaction t = new Transaction(General.round(value, 2), General.round(interestRate, 3), transactionID, recurring, d);
+        t.setAccount(this);
         transactions.put(d, t);
     }
 
@@ -44,7 +53,7 @@ public class Loan extends Account {
         double total = 0;
 
         if (transaction_dates.size() <= 0) {
-            throw new IllegalStateException("No transactions for this account.");
+            return 0.0;
         } else {
             for (int i = 0; i < transaction_dates.size(); i++) {
 
@@ -71,6 +80,33 @@ public class Loan extends Account {
         return General.round(total, 2); // round to nearest cent
     }
 
+    public View getView(Context context) {
+        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = vi.inflate(R.layout.item_string_input_view, null);
+
+        // Fill in the details
+        TextView textView = (TextView) v.findViewById(R.id.item_string_input_view_TITLE);
+        textView.setText("Label:");
+
+        EditText editText = (EditText) v.findViewById(R.id.item_string_input_view_INPUT);
+        editText.setHint((label == null) ? "" : label);
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                label = s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+        return v;
+    }
+
 
     /**
      * Loan specific Transaction object.
@@ -79,10 +115,12 @@ public class Loan extends Account {
 
         double interestRate;
 
-        Transaction(double value, double interestRate, int transactionID) {
+        Transaction(double value, double interestRate, int transactionID, int recurring, LocalDate date) {
             this.value = value;
             this.interestRate = interestRate;
             this.transactionID = transactionID;
+            this.recurring = recurring;
+            this.date = date;
         }
 
         public double getInterestRate() {
