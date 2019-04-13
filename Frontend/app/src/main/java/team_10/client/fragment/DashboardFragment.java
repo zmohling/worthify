@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -206,14 +207,19 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         final LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
         final View popupView = inflater.inflate(R.layout.modal_add_edit_account, null);
 
-        // create the popup window
+        // Create a window for popupView
         int width = LinearLayout.LayoutParams.MATCH_PARENT;
         int height = LinearLayout.LayoutParams.MATCH_PARENT;
+
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);  // Ensure keyboard does not resize
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             popupWindow.setElevation(100);
         }
+
+        // Insert point for dynamic accou
         final ViewGroup insertPoint = (ViewGroup) popupView.findViewById(R.id.modal_add_edit_account_view_group);
 
         final Account[] temp = new Account[1];
