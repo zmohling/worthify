@@ -3,45 +3,29 @@ package team_10.client.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import team_10.client.R;
-import team_10.client.constant.TYPE;
 import team_10.client.object.User;
 import team_10.client.object.account.Account;
 import team_10.client.object.account.CertificateOfDeposit;
 import team_10.client.object.account.Loan;
 import team_10.client.object.account.SavingsAccount;
-import team_10.client.object.account.Transaction;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.CustomListAdapter;
 import team_10.client.utility.IO;
-import team_10.client.utility.TransactionsAdapter;
+import team_10.client.utility.AccountModal;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -113,7 +97,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-                startAccountModal(User.getAccounts().get(position));
+                startAccountModal(1, User.getAccounts().get(position));
             }
         });
 //
@@ -176,7 +160,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 parent.finish();
                 break;
             case R.id.button_add_account:
-                startAccountModal(null);
+                startAccountModal(0, null);
                 break;
         }
     }
@@ -201,148 +185,17 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         listView.requestLayout();
     }
 
-    public void startAccountModal(Account a) {
-
-        // inflate the layout of the popup window
-        final LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
-        final View popupView = inflater.inflate(R.layout.modal_add_edit_account, null);
-
-        // Create a window for popupView
-        int width = LinearLayout.LayoutParams.MATCH_PARENT;
-        int height = LinearLayout.LayoutParams.MATCH_PARENT;
-
-        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
-        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);  // Ensure keyboard does not resize
-        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            popupWindow.setElevation(100);
-        }
-
-        // Insert point for dynamic accou
-        final ViewGroup insertPoint = (ViewGroup) popupView.findViewById(R.id.modal_add_edit_account_view_group);
-
-        final Account[] temp = new Account[1];
-
-        if (a == null) {
-            Spinner spinner = (Spinner) popupView.findViewById(R.id.modal_account_spinner);
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.account_types, R.layout.item_spinner_item);
-            adapter.setDropDownViewResource(R.layout.item_spinner_item);
-            spinner.setAdapter(adapter);
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String s = parent.getItemAtPosition(position).toString();
-                    TYPE t = TYPE.firstMatch(s);
-                    if (t != null) {
-                        try {
-                            temp[0] = t.getTypeClass().newInstance();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        } catch (java.lang.InstantiationException e) {
-                            e.printStackTrace();
-                        }
-
-                        // clear view
-                        insertPoint.removeAllViews();
-                        // insert into main view
-                        insertPoint.addView(temp[0].getView(getContext()), 0);
-
-
-                        // insert into main view
-                        final View transactionView = createTransactionView(temp[0], inflater);
-                        insertPoint.addView(transactionView);
-
-                        ((Button) insertPoint.findViewById(R.id.button_add_transaction)).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                createRandomTransaction(temp[0]);
-                                insertPoint.removeView(transactionView);
-                                insertPoint.addView(createTransactionView(temp[0], inflater));
-                            }
-                        });
-
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
+    /**
+     * Start Account Modal
+     * @param mode 0 = Add Mode, 1 = Edit Mode
+     * @param a Account to edit, null otherwise
+     */
+    public void startAccountModal(int mode, Account a) {
+        if (mode == 0) {
+            new AccountModal(view).startAccountAddModal();
         } else {
-            // Change Title text
-            TextView textView = popupView.findViewById(R.id.modal_account_text);
-            textView.setText("Edit Account");
-
-            // Change Button text
-            Button confirmButton = popupView.findViewById(R.id.modal_account_add);
-            confirmButton.setText("Confirm");
-
-            Spinner spinner = (Spinner) popupView.findViewById(R.id.modal_account_spinner);
-            spinner.setVisibility(View.GONE);
-
-            try {
-                ArrayList<Account> aListTemp = new ArrayList<>();
-                aListTemp.add(a);
-
-                temp[0] = (Account) IO.deserializeAccounts(IO.serializeAccounts(aListTemp)).get(0);
-
-                // clear view
-                insertPoint.removeAllViews();
-                // insert into main view
-                insertPoint.addView(temp[0].getView(getContext()), 0);
-
-                // insert into main view
-                final View transactionView = createTransactionView(temp[0], inflater);
-                insertPoint.addView(transactionView);
-
-                ((Button) insertPoint.findViewById(R.id.button_add_transaction)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        createRandomTransaction(temp[0]);
-                        insertPoint.removeView(transactionView);
-                        insertPoint.addView(createTransactionView(temp[0], inflater));
-                    }
-                });
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+            new AccountModal(view).startAccountEditModal(a);
         }
-
-
-
-        ((Button) popupView.findViewById(R.id.modal_account_cancel)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-            }
-        });
-
-        final Account tempA = a;
-        ((Button) popupView.findViewById(R.id.modal_account_add)).setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                if (tempA != null) {
-                    User.removeAccount(tempA);
-                    User.addAccount(temp[0]);
-
-                } else {
-                    User.addAccount(temp[0]);
-                    IO.sendAccountToRemote(temp[0], getContext());
-                }
-
-                customAdapter.notifyDataSetChanged();
-                setListViewHeightBasedOnChildren(lv);
-                popupWindow.dismiss();
-
-                System.out.println(IO.serializeAccounts(User.getAccounts()));
-            }
-        });
 
     }
 
@@ -375,64 +228,16 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    private View createTransactionView(Account a, LayoutInflater inflater) {
-        ArrayList<Transaction> transactions;
-        ArrayList<Transaction> recurringTransactions;
-        TransactionsAdapter adapter;
-        TransactionsAdapter recurringAdapter;
-        RecyclerView recyclerView;
-        RecyclerView recurringRecyclerView;
+    public Account a = new Loan();
 
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.modal_transactions, null, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.rvTransactions);
+    private View createAccountAView(View parent, Account a1) {
 
-        transactions = new ArrayList<Transaction>();
-        adapter = new TransactionsAdapter(transactions);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        recurringRecyclerView = (RecyclerView) view.findViewById(R.id.rvRecurringTransactions);
 
-        recurringTransactions = new ArrayList<Transaction>();
-        recurringAdapter = new TransactionsAdapter(recurringTransactions);
-        recurringRecyclerView.setAdapter(recurringAdapter);
-        recurringRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        recurringRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        transactions.addAll(getTransactions(a));
-        //recurringTransactions.addAll(getRecurringTransactions(a));
-
-        return view;
+        return null;
     }
 
-    private List<Transaction> getTransactions(Account a) {
-        ArrayList<Transaction> transactions = new ArrayList<>();
 
-        try {
-            transactions.addAll(a.getTransactions().values());
-        } catch (NullPointerException e) {
-        }
-
-        return transactions;
-    }
-
-    private List<Transaction> getRecurringTransactions(Account a) {
-        ArrayList<Transaction> transactions = new ArrayList<>();
-
-        try {
-            transactions.addAll(a.getTransactions().values());
-        } catch (NullPointerException e) {
-        }
-
-        for (int i = 0; i < transactions.size(); i++) {
-            if (transactions.get(i).getRecurring() == 0) {
-                transactions.remove(i);
-            }
-        }
-        return transactions;
-    }
 
 
 /**
