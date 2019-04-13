@@ -21,10 +21,9 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import android.util.Base64;
 
 import team_10.client.constant.URL;
 import team_10.client.fragment.DashboardFragment;
@@ -187,10 +186,7 @@ public class IO {
                                 for (int i = 0; i < l.size(); i++)
                                     User.addAccount(l.get(i));
 
-                                DashboardFragment.customAdapter.notifyDataSetChanged();
-                                DashboardFragment.setListViewHeightBasedOnChildren(
-                                        DashboardFragment.lv
-                                );
+                                DashboardFragment.updateDashboardUI();
 
                                 System.out.println("Accounts Retrieval Successful");
                             } else {
