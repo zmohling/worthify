@@ -36,18 +36,15 @@ import team_10.client.utility.AccountModal;
  * create an instance of this fragment.
  */
 public class DashboardFragment extends Fragment implements View.OnClickListener {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    View view;
-    public static CustomListAdapter customAdapter;
-    public static ListView lv;
+    private View view;
+    private static CustomListAdapter customAdapter;
+    private static ListView lv;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,7 +61,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
      * @param param2 Parameter 2.
      * @return A new instance of fragment DashboardFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static DashboardFragment newInstance(String param1, String param2) {
         DashboardFragment fragment = new DashboardFragment();
         Bundle args = new Bundle();
@@ -91,39 +87,23 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         view.findViewById(R.id.buttonLogout).setOnClickListener(this);
         view.findViewById(R.id.button_add_account).setOnClickListener(this);
 
+        // ListView of Accounts with adapter
         lv = view.findViewById(R.id.list);
         customAdapter = new CustomListAdapter(view.getContext(), R.layout.item_account_list_item, User.getAccounts());
         lv.setAdapter(customAdapter);
 
+        // Start Account Modal in edit mode if ListView item (account) was clicked
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
                 startAccountModal(1, User.getAccounts().get(position));
             }
         });
-//
-//        for (int i = 0; i <= User.getAccounts().size(); i++) {
-//            System.out.println(i);
-//
-//            if (lv.getChildAt(i) != null && !lv.getChildAt(i).hasOnClickListeners()) {
-//                final int finalI = i;
-//                lv.getChildAt(i).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        System.out.println("CLICKED " + finalI);
-//                    }
-//                });
-//            }
-//        }
 
-        customAdapter.notifyDataSetChanged();
-        setListViewHeightBasedOnChildren(lv);
-
-        System.out.println(IO.serializeAccounts(User.getAccounts()));
+        updateDashboardUI();
 
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -147,6 +127,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         mListener = null;
     }
 
+    // Top level button listener
     @Override
     public void onClick(View v) {
         Activity parent = getActivity();
@@ -165,7 +146,28 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
+    /**
+     * Start Account Modal
+     *
+     * @param mode 0 = Add Mode, 1 = Edit Mode
+     * @param a    Account to edit, null otherwise
+     */
+    public void startAccountModal(int mode, Account a) {
+        if (mode == 0) {
+            new AccountModal(view).createAccountAddModal();
+        } else {
+            new AccountModal(view).createAccountEditModal(a);
+        }
+    }
+
+    // Update ListView UI
+    public static void updateDashboardUI() {
+        customAdapter.notifyDataSetChanged();
+        setListViewHeightBasedOnChildren(lv);
+    }
+
+    // Update ListView height equal to total height of child views
+    private static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             return;
@@ -185,20 +187,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         listView.requestLayout();
     }
 
-    /**
-     * Start Account Modal
-     * @param mode 0 = Add Mode, 1 = Edit Mode
-     * @param a Account to edit, null otherwise
-     */
-    public void startAccountModal(int mode, Account a) {
-        if (mode == 0) {
-            new AccountModal(view).startAccountAddModal();
-        } else {
-            new AccountModal(view).startAccountEditModal(a);
-        }
-
-    }
-
+    // TODO: TEST METHOD; DELETE
     private void createRandomTransaction(Account a) {
         Random rand = new Random();
         int i = rand.nextInt(4) + 1;
@@ -228,30 +217,18 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    public Account a = new Loan();
-
-    private View createAccountAView(View parent, Account a1) {
-
-
-
-        return null;
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
-
-
-
-
-/**
- * This interface must be implemented by activities that contain this
- * fragment to allow an interaction in this fragment to be communicated
- * to the activity and potentially other fragments contained in that
- * activity.
- * <p>
- * See the Android Training lesson <a href=
- * "http://developer.android.com/training/basics/fragments/communicating.html"
- * >Communicating with Other Fragments</a> for more information.
- */
-public interface OnFragmentInteractionListener {
-    // TODO: Update argument type and name
-    void onFragmentInteraction(Uri uri);
 }
-    }

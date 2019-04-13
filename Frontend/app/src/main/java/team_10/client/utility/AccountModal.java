@@ -23,6 +23,7 @@ import java.util.List;
 
 import team_10.client.R;
 import team_10.client.constant.TYPE;
+import team_10.client.fragment.DashboardFragment;
 import team_10.client.object.User;
 import team_10.client.object.account.Account;
 import team_10.client.object.account.Transaction;
@@ -73,9 +74,17 @@ public class AccountModal {
         }
     }
 
+    /**
+     * Creates a PopupWindow view where user adds an Account
+     */
+    public void createAccountAddModal() {
+        // Change Title text
+        TextView textView = popupView.findViewById(R.id.modal_account_text);
+        textView.setText("Add an Account");
 
-    public void startAccountAddModal() {
-
+        // Change Button text
+        Button confirmButton = popupView.findViewById(R.id.modal_account_add);
+        confirmButton.setText("Add");
 
         Spinner spinner = (Spinner) popupView.findViewById(R.id.modal_account_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context.getApplicationContext(), R.array.account_types, R.layout.item_spinner_item);
@@ -132,16 +141,7 @@ public class AccountModal {
                 User.addAccount(a_temp);
                 IO.sendAccountToRemote(a_temp, context);
 
-//                if (a_temp != null) {
-//                    User.removeAccount(a_temp);
-//                    User.addAccount(temp[0]);
-//
-//                } else {
-//
-//                }
-
-                //customAdapter.notifyDataSetChanged();
-                //setListViewHeightBasedOnChildren(lv);
+                DashboardFragment.updateDashboardUI();
                 popupWindow.dismiss();
 
                 System.out.println(IO.serializeAccounts(User.getAccounts()));
@@ -149,7 +149,11 @@ public class AccountModal {
         });
     }
 
-    public void startAccountEditModal(final Account a) {
+    /**
+     * Creates a PopupWindow view where the user edits an account.
+     * @param a Account to edit
+     */
+    public void createAccountEditModal(final Account a) {
         a_temp = a;
 
         // Change Title text
@@ -196,11 +200,11 @@ public class AccountModal {
 
             @Override
             public void onClick(View v) {
-                    User.removeAccount(a);
-                    User.addAccount(a_temp);
+                // Remove existing account and replace with our modified copy
+                User.removeAccount(a);
+                User.addAccount(a_temp);
 
-                //customAdapter.notifyDataSetChanged();
-                //setListViewHeightBasedOnChildren(lv);
+                DashboardFragment.updateDashboardUI();
                 popupWindow.dismiss();
 
                 System.out.println(IO.serializeAccounts(User.getAccounts()));
