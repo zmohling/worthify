@@ -271,8 +271,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 }
             });
         } else {
+            // Change Title text
             TextView textView = popupView.findViewById(R.id.modal_account_text);
             textView.setText("Edit Account");
+
+            // Change Button text
+            Button confirmButton = popupView.findViewById(R.id.modal_account_add);
+            confirmButton.setText("Confirm");
+
             Spinner spinner = (Spinner) popupView.findViewById(R.id.modal_account_spinner);
             spinner.setVisibility(View.GONE);
 
