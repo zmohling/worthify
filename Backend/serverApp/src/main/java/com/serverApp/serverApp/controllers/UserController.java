@@ -148,7 +148,7 @@ public class UserController{
                         + "\"message\":\"email already taken\"}");
             }
             userRepo.changeEmail(changedEmail, email);
-            retrievedUser = userRepo.getUser(email);
+            retrievedUser = userRepo.getUser(changedEmail);
             System.out.println("Changing email for User: " + retrievedUser.getId());
             String rString =
                     "{\"error\":\"false\","
