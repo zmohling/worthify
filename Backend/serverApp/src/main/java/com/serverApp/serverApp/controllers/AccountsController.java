@@ -108,7 +108,6 @@ public class AccountsController {
             exists = userRepo.checkUserExists(header.get());
             if(exists == 0) {
                 System.out.println("Unauthorized, invalid key");
-
                 return "{\"error\":\"true\","
                         + "\"message\":\"invalid authentication key\"}";
             } else {

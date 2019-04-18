@@ -36,6 +36,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying
     @Transactional
+    @Query(value ="UPDATE users u set u.salt = ?1, u.password = ?2 WHERE u.email = ?3", nativeQuery = true)
+    void changePassword(byte[] salt, String password, String email);
+
+    @Modifying
+    @Transactional
+    @Query(value ="UPDATE users u set u.email = ?1 WHERE u.email = ?2", nativeQuery = true)
+    void changeEmail(String changedEmail, String email);
+
+    @Modifying
+    @Transactional
     @Query(value = "DELETE FROM users WHERE id = ?1", nativeQuery = true)
     int deleteUser(int id);
 }
