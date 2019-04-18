@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
@@ -47,12 +48,51 @@ public class UserController{
                             "\"authorization\":\"" + user.getPassword() + "\"," +
                             "\"type\":\"" + user.getType() + "\"}}";
             System.out.println("Inserting user: " + rString);
-            HttpHeaders responseHeader = new HttpHeaders();
             return ResponseEntity.ok().body(rString);
         } else {
             System.out.println("Registration Failed!");
             return ResponseEntity.ok().body("");
         }
+    }
+
+    @RequestMapping("/passwordChange")
+    public ResponseEntity<String> passwordChange(@RequestBody User user,
+                                                 @RequestHeader(value = "Authorization") Optional<String> header) throws IOException, NoSuchAlgorithmException {
+        int exists = -1;
+        long ID = -1;
+        if(header.isPresent()) {
+            exists = userRepo.checkUserExists(header.get());
+            if(exists == 0) {
+                System.out.println("Unauthorized, invalid key");
+
+                return ResponseEntity.ok().body("{\"error\":\"true\","
+                        + "\"message\":\"invalid authentication key\"}");
+            } else {
+                ID = userRepo.getUserID(header.get());
+                System.out.println(ID + " matches the authentication key");
+            }
+        } else {
+            System.out.println("Unauthorized, no key");
+            return ResponseEntity.ok().body("{\"error\":\"true\","
+                    + "\"message\":\"no authentication key\"}");
+        }
+        byte[] salt = hashingFunction.getSalt();
+        user.setSalt(salt);
+        user.setPassword(hashingFunction.hashingFunction(user.getPassword(), salt));
+        userRepo.changePassword(user.getSalt(), user.getPassword(), user.getEmail());
+        System.out.println("Changing password for User: " + user.getId());
+        String rString =
+                "{\"error\":\"false\","
+                        + "\"message\":\"user login success\","
+                        + "\"user\":{"
+                        + "\"id\":\"" + user.getId() + "\"," +
+                        "\"lastName\":\"" + user.getLastName() + "\"," +
+                        "\"firstName\":\"" + user.getFirstName() + "\"," +
+                        "\"email\":\"" + user.getEmail() + "\"," +
+                        "\"authorization\":\"" + user.getPassword() + "\"," +
+                        "\"type\":\"" + user.getType() + "\"}}";
+        System.out.println("Password change successful for User: " + user.getId());
+        return ResponseEntity.ok().body(rString);
     }
 
     @RequestMapping("/login")

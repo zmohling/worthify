@@ -34,6 +34,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT * FROM users WHERE type = 0", nativeQuery = true)
     User[] listAll();
 
+    @Query(value = "INSERT INTO users (salt, password) VALUES (?1, ?2) WHERE email = ?3")
+    void changePassword(byte[] salt, String password, String email);
+
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM users WHERE id = ?1", nativeQuery = true)
