@@ -5,6 +5,7 @@ import com.serverApp.serverApp.controllers.AccountsController;
 import com.serverApp.serverApp.repositories.AccountsRepository;
 import com.serverApp.serverApp.repositories.UserRepository;
 import com.serverApp.serverApp.websocket.EchoServer;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
@@ -56,7 +58,7 @@ public class UserController{
     }
 
     @RequestMapping("/passwordChange")
-    public ResponseEntity<String> passwordChange(@RequestBody User user,
+    public ResponseEntity<String> passwordChange(@RequestBody String string,
                                                  @RequestHeader(value = "Authorization") Optional<String> header) throws IOException, NoSuchAlgorithmException {
         int exists = -1;
         long ID = -1;
@@ -76,23 +78,93 @@ public class UserController{
             return ResponseEntity.ok().body("{\"error\":\"true\","
                     + "\"message\":\"no authentication key\"}");
         }
-        byte[] salt = hashingFunction.getSalt();
-        user.setSalt(salt);
-        user.setPassword(hashingFunction.hashingFunction(user.getPassword(), salt));
-        userRepo.changePassword(user.getSalt(), user.getPassword(), user.getEmail());
-        System.out.println("Changing password for User: " + user.getId());
-        String rString =
-                "{\"error\":\"false\","
-                        + "\"message\":\"user login success\","
-                        + "\"user\":{"
-                        + "\"id\":\"" + user.getId() + "\"," +
-                        "\"lastName\":\"" + user.getLastName() + "\"," +
-                        "\"firstName\":\"" + user.getFirstName() + "\"," +
-                        "\"email\":\"" + user.getEmail() + "\"," +
-                        "\"authorization\":\"" + user.getPassword() + "\"," +
-                        "\"type\":\"" + user.getType() + "\"}}";
-        System.out.println("Password change successful for User: " + user.getId());
-        return ResponseEntity.ok().body(rString);
+        JSONObject obj = new JSONObject(string);
+        String changedPassword = obj.getString("changedPassword");
+        String email = obj.getString("email");
+        String password = obj.getString("password");
+        User retrievedUser = userRepo.getUser(email);
+        if(retrievedUser == null) {
+            System.out.println("User does not exist");
+            return ResponseEntity.ok().body("");
+        }
+        String hashedPassword = hashingFunction.hashingFunction(password, retrievedUser.getSalt());
+        if(retrievedUser.getPassword().equals(hashedPassword)) {
+            byte[] salt = hashingFunction.getSalt();
+            retrievedUser.setSalt(salt);
+            retrievedUser.setPassword(hashingFunction.hashingFunction(changedPassword, salt));
+            userRepo.changePassword(retrievedUser.getSalt(), retrievedUser.getPassword(), retrievedUser.getEmail());
+            System.out.println("Changing password for User: " + retrievedUser.getId());
+            String rString =
+                    "{\"error\":\"false\","
+                            + "\"message\":\"user password change success\","
+                            + "\"user\":{"
+                            + "\"id\":\"" + retrievedUser.getId() + "\"," +
+                            "\"lastName\":\"" + retrievedUser.getLastName() + "\"," +
+                            "\"firstName\":\"" + retrievedUser.getFirstName() + "\"," +
+                            "\"email\":\"" + retrievedUser.getEmail() + "\"," +
+                            "\"authorization\":\"" + retrievedUser.getPassword() + "\"," +
+                            "\"type\":\"" + retrievedUser.getType() + "\"}}";
+            System.out.println("Password change successful for User: " + retrievedUser.getId());
+            return ResponseEntity.ok().body(rString);
+        }
+        return ResponseEntity.ok().body("{\"error\":\"true\","
+                + "\"message\":\"incorrect password\"}");
+    }
+
+    @RequestMapping("/emailChange")
+    public ResponseEntity<String> emailChange(@RequestBody String string,
+                                                 @RequestHeader(value = "Authorization") Optional<String> header) throws IOException, NoSuchAlgorithmException {
+        int exists = -1;
+        long ID = -1;
+        if(header.isPresent()) {
+            exists = userRepo.checkUserExists(header.get());
+            if(exists == 0) {
+                System.out.println("Unauthorized, invalid key");
+
+                return ResponseEntity.ok().body("{\"error\":\"true\","
+                        + "\"message\":\"invalid authentication key\"}");
+            } else {
+                ID = userRepo.getUserID(header.get());
+                System.out.println(ID + " matches the authentication key");
+            }
+        } else {
+            System.out.println("Unauthorized, no key");
+            return ResponseEntity.ok().body("{\"error\":\"true\","
+                    + "\"message\":\"no authentication key\"}");
+        }
+        JSONObject obj = new JSONObject(string);
+        String changedEmail = obj.getString("changedEmail");
+        String email = obj.getString("email");
+        String password = obj.getString("password");
+        User retrievedUser = userRepo.getUser(email);
+        if(retrievedUser == null) {
+            System.out.println("User does not exist");
+            return ResponseEntity.ok().body("");
+        }
+        String hashedPassword = hashingFunction.hashingFunction(password, retrievedUser.getSalt());
+        if(retrievedUser.getPassword().equals(hashedPassword)) {
+            if(userRepo.checkEmail(changedEmail) != 0) {
+                return ResponseEntity.ok().body("{\"error\":\"true\","
+                        + "\"message\":\"email already taken\"}");
+            }
+            userRepo.changeEmail(changedEmail, email);
+            retrievedUser = userRepo.getUser(email);
+            System.out.println("Changing email for User: " + retrievedUser.getId());
+            String rString =
+                    "{\"error\":\"false\","
+                            + "\"message\":\"user email change success\","
+                            + "\"user\":{"
+                            + "\"id\":\"" + retrievedUser.getId() + "\"," +
+                            "\"lastName\":\"" + retrievedUser.getLastName() + "\"," +
+                            "\"firstName\":\"" + retrievedUser.getFirstName() + "\"," +
+                            "\"email\":\"" + retrievedUser.getEmail() + "\"," +
+                            "\"authorization\":\"" + retrievedUser.getPassword() + "\"," +
+                            "\"type\":\"" + retrievedUser.getType() + "\"}}";
+            System.out.println("Email change successful for User: " + retrievedUser.getId());
+            return ResponseEntity.ok().body(rString);
+        }
+        return ResponseEntity.ok().body("{\"error\":\"true\","
+                + "\"message\":\"incorrect password\"}");
     }
 
     @RequestMapping("/login")

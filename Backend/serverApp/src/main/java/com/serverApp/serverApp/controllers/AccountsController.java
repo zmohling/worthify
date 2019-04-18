@@ -100,7 +100,7 @@ public class AccountsController {
 
 
     @RequestMapping("/accounts/fetch")
-    public String fetchAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
+    public JsonObject fetchAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
         int exists = -1;
         long ID = -1;
         System.out.println(string);
@@ -108,17 +108,20 @@ public class AccountsController {
             exists = userRepo.checkUserExists(header.get());
             if(exists == 0) {
                 System.out.println("Unauthorized, invalid key");
-
-                return "{\"error\":\"true\","
-                        + "\"message\":\"invalid authentication key\"}";
+                JsonObject returnObj = new JsonObject();
+                returnObj.addProperty("rString", "{\"error\":\"true\","
+                        + "\"message\":\"invalid authentication key\"}");
+                return returnObj;
             } else {
                 ID = userRepo.getUserID(header.get());
                 System.out.println(ID + " matches the authentication key");
             }
         } else {
             System.out.println("Unauthorized, no key");
-            return "{\"error\":\"true\","
-                    + "\"message\":\"no authentication key\"}";
+            JsonObject returnObj = new JsonObject();
+            returnObj.addProperty("rString", "{\"error\":\"true\","
+                    + "\"message\":\"no authentication key\"}");
+            return returnObj;
         }
         JSONObject obj = new JSONObject(string);
         JSONArray accountsArr = obj.getJSONArray("accountID");
@@ -188,7 +191,9 @@ public class AccountsController {
             }
         }
         rString = rString + "}";
-        return rString;
+        JsonObject returnObj = new JsonObject();
+        returnObj.addProperty("rString", rString);
+        return returnObj;
     }
 
     @RequestMapping("/accounts/add")
