@@ -10,7 +10,7 @@ stages:
 gradle-build:
   stage: gradlebuild
   tags:
-    - shell
+    - backend
   script:
     - cd Backend/serverApp
     - gradle build
@@ -34,7 +34,7 @@ gradle-build:
 autoDeploy:
   stage: autodeploy
   tags:
-   - shell
+   - backend
   script:
     - cd Backend/serverApp
     - gradle build
