@@ -39,8 +39,8 @@ autoDeploy:
     - cd Backend/serverApp
     - gradle build
     - sudo mv build/libs/*.jar /target/web-demo.jar 
-    - sudo systemctl stop systemd-web-demo
-    - sudo systemctl start systemd-web-demo
+    - sudo systemctl stop system-web-demo
+    - sudo systemctl start system-web-demo
 
     
 # To build android projects
