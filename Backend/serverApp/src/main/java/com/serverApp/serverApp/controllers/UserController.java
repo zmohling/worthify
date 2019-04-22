@@ -157,7 +157,7 @@ public class UserController{
                             + "\"id\":\"" + changedUser.getId() + "\"," +
                             "\"lastName\":\"" + changedUser.getLastName() + "\"," +
                             "\"firstName\":\"" + changedUser.getFirstName() + "\"," +
-                            "\"email\":\"" + changedUser.getEmail() + "\"," +
+                            "\"email\":\"" + changedEmail + "\"," +
                             "\"authorization\":\"" + changedUser.getPassword() + "\"," +
                             "\"type\":\"" + changedUser.getType() + "\"}}";
             System.out.println("Email change successful for User: " + changedUser.getId());
