@@ -23,7 +23,7 @@ public interface AccountsRepository extends JpaRepository<Accounts, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE accounts SET label = ?1, transaction = ?2 WHERE accountID = ?3", nativeQuery = true)
+    @Query(value = "UPDATE accounts SET label = ?1, transactions = ?2 WHERE accountID = ?3", nativeQuery = true)
     void editAccount(String label, String transaction, String accountID);
 
 

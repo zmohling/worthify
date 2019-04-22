@@ -15,6 +15,6 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE accounts SET ticker = ?1 WHERE accountID = ?2", nativeQuery = true)
+    @Query(value = "UPDATE stocks SET ticker = ?1 WHERE accountID = ?2", nativeQuery = true)
     void editStock(String ticker, String accountID);
 }

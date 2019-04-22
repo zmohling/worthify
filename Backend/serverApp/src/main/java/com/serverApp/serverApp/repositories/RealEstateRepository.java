@@ -16,6 +16,6 @@ public interface RealEstateRepository extends JpaRepository<RealEstate, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE accounts SET address = ?1, city = ?2, state = ?3 WHERE accountID = ?4", nativeQuery = true)
+    @Query(value = "UPDATE real_estate SET address = ?1, city = ?2, state = ?3 WHERE accountID = ?4", nativeQuery = true)
     void editRealEstate(String address, String city, String state, String accountID);
 }
