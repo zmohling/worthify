@@ -2,7 +2,9 @@ package com.serverApp.serverApp.controllers;
 
 import com.google.gson.reflect.TypeToken;
 import com.serverApp.serverApp.models.*;
+import com.serverApp.serverApp.other.RealEstateRetrieval;
 import com.serverApp.serverApp.repositories.*;
+import com.serverApp.serverApp.other.StockRetrieval;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,24 +46,34 @@ public class AccountsController {
     {
         RealEstate;
     }
-    @RequestMapping("/accounts/get/all")
-    public String getAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) {
+
+    public Optional<String> checkHeader(Optional<String> header) {
         int exists = -1;
-        long id = -1;
+        long ID = -1;
         if(header.isPresent()) {
             exists = userRepo.checkUserExists(header.get());
             if(exists == 0) {
                 System.out.println("Unauthorized, invalid key");
-                return "{\"error\":\"true\","
-                        + "\"message\":\"invalid authentication key\"}";
+                return Optional.of("{\"error\":\"true\","
+                        + "\"message\":\"invalid authentication key\"}");
             } else {
-                id = userRepo.getUserID(header.get());
-                System.out.println(id + " matches the authentication key");
+                ID = userRepo.getUserID(header.get());
+                System.out.println(ID + " matches the authentication key");
+                return Optional.empty();
             }
         } else {
             System.out.println("Unauthorized, no key");
-            return "{\"error\":\"true\","
-                    + "\"message\":\"no authentication key\"}";
+            return Optional.of("{\"error\":\"true\","
+                    + "\"message\":\"no authentication key\"}");
+        }
+    }
+
+    @RequestMapping("/accounts/get/all")
+    public String getAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) {
+        long id = -1;
+        Optional<String> headerCheck = checkHeader(header);
+        if(!headerCheck.isPresent()) {
+            return headerCheck.get();
         }
         JSONObject obj = new JSONObject(string);
         long user = Long.parseLong(obj.get("id").toString());
@@ -101,29 +113,15 @@ public class AccountsController {
 
     @RequestMapping("/accounts/fetch")
     public String fetchAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
-        int exists = -1;
-        long ID = -1;
-        System.out.println(string);
-        if(header.isPresent()) {
-            exists = userRepo.checkUserExists(header.get());
-            if(exists == 0) {
-                System.out.println("Unauthorized, invalid key");
-                return "{\"error\":\"true\","
-                        + "\"message\":\"invalid authentication key\"}";
-            } else {
-                ID = userRepo.getUserID(header.get());
-                System.out.println(ID + " matches the authentication key");
-            }
-        } else {
-            System.out.println("Unauthorized, no key");
-            return "{\"error\":\"true\","
-                    + "\"message\":\"no authentication key\"}";
+        Optional<String> headerCheck = checkHeader(header);
+        if(!headerCheck.isPresent()) {
+            return headerCheck.get();
         }
+        System.out.println(string);
         JSONObject obj = new JSONObject(string);
         JSONArray accountsArr = obj.getJSONArray("accountID");
         Type accountType = new TypeToken<ArrayList<String>>(){}.getType();
         Gson g = new Gson();
-        URL accountURL;
 
         String rString = "{";
         for(int i = 0; i < accountsArr.length(); i++) {
@@ -136,54 +134,18 @@ public class AccountsController {
                 realEstate.setState(realEstateRepo.getRealEstate(realEstate.getAccountId()).getState());
                 realEstate.setAddress(realEstateRepo.getRealEstate(realEstate.getAccountId()).getAddress());
                 realEstate.setCity(realEstateRepo.getRealEstate(realEstate.getAccountId()).getCity());
-                Scanner scanner = new Scanner(realEstate.getAddress());
-                String url = "http://www.zillow.com/webservice/GetSearchResults.htm?zws-id=X1-ZWz1894b6xqbd7_a6mew&" +
-                        "address=" + scanner.next();
-                while(scanner.hasNext()) {
-                    url = url + "+" + scanner.next();
-                }
-                url = url + "&citystatezip=" + realEstate.getCity() + "%2C+" + realEstate.getState() + "\n";
-
-                accountURL = new URL(url);
-                HttpURLConnection con = (HttpURLConnection) accountURL.openConnection();
-                con.setRequestMethod("GET");
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuffer content = new StringBuffer();
-                while ((inputLine = in.readLine()) != null) {
-                    content.append(inputLine);
-                }
-                in.close();
-                //parse the content
-                String[] output = content.toString().split("amount");
-                String val = "";
-                for(int j = 0; j < output[1].length(); j++) {
-                    if(Character.isDigit(output[1].charAt(j))) {
-                        val = val + output[1].charAt(j);
-                    }
-                }
+                RealEstateRetrieval realEstateRetrieval = new RealEstateRetrieval();
+                String val = realEstateRetrieval.retrieveRealEstate(realEstate);
                 if(i != 0) rString = rString + ",";
                 rString = rString + "\"" + id + "\" :" + val;
             } else if (type.equals("Stock")) {
                 Stock stock = new Stock();
                 stock.setAccountID(id);
                 stock.setTicker(stockRepo.getStock(id).getTicker());
-                String url = "https://api.iextrading.com/1.0/stock/"
-                        + stock.getTicker() + "/price";
-                accountURL = new URL(url);
-                HttpURLConnection con = (HttpURLConnection) accountURL.openConnection();
-                con.setRequestMethod("GET");
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuffer content = new StringBuffer();
-                while ((inputLine = in.readLine()) != null) {
-                    content.append(inputLine);
-                }
-                in.close();
+                StockRetrieval stockRetrieval = new StockRetrieval();
+                String val = stockRetrieval.retrieveStock(stock.getTicker());
                 if(i != 0) rString = rString + ",";
-                rString = rString + "\"" + id + "\" :" + content.toString();
+                rString = rString + "\"" + id + "\" :" + val;
             }
         }
         rString = rString + "}";
@@ -192,25 +154,12 @@ public class AccountsController {
 
     @RequestMapping("/accounts/add")
     public String addAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) {
-        int exists = -1;
         long id = -1;
         System.out.println(string);
-        if(header.isPresent()) {
-            exists = userRepo.checkUserExists(header.get());
-            if(exists == 0) {
-                System.out.println("Unauthorized, invalid key");
-                return "{\"error\":\"true\","
-                        + "\"message\":\"invalid authentication key\"}";
-            } else {
-                id = userRepo.getUserID(header.get());
-                System.out.println(id + " matches the authentication key");
-            }
-        } else {
-            System.out.println("Unauthorized, no key");
-            return "{\"error\":\"true\","
-                    + "\"message\":\"no authentication key\"}";
+        Optional<String> headerCheck = checkHeader(header);
+        if(!headerCheck.isPresent()) {
+            return headerCheck.get();
         }
-
         JSONObject obj = new JSONObject(string);
         JSONArray accountsArr = obj.getJSONArray("accounts");
         Type accountType = new TypeToken<ArrayList<Accounts>>(){}.getType();
@@ -222,6 +171,7 @@ public class AccountsController {
         }
         ArrayList<Accounts> accountsList = g.fromJson(accountsArr.toString(), accountType);
         //storing the accounts into the Accounts table
+
         for(int i = 0; i < accountsList.size(); i++) {
             String accountID = accountsList.get(i).getAccountId();
             long userID = Long.parseLong(accountID.substring(0, 8));
@@ -271,10 +221,15 @@ public class AccountsController {
                 stockRepo.save(stock);
             }
         }
+        String rString = getReturnString(accountsList, id);
+
+        return rString;
+    }
+
+    String getReturnString(ArrayList<Accounts> accountsArrayList, long id) {
         String rString =
                 "{\"accounts\":[";
-
-        Iterator<Accounts> iterator = accountsList.iterator();
+        Iterator<Accounts> iterator = accountsArrayList.iterator();
         boolean first = true;
         while((iterator).hasNext()) {
             boolean willBreak = false;
@@ -320,6 +275,4 @@ public class AccountsController {
         rString = rString + "]}";
         return rString;
     }
-
-
 }
