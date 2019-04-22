@@ -47,30 +47,30 @@ autoDeploy:
 # Notice that we cd into Android_test folder which contains all Android files before building apk.    
 # Ensure the tag matches with the tag created for Android runner
 # Android runner should have docker as executor.
-android-build:
-  image: javiersantos/android-ci:latest
-  stage: androidbuild
-  before_script:
-    - export GRADLE_USER_HOME=`pwd`/.gradle
-    - chmod +x ./Android_test/gradlew
-  tags:
-   - android_tag1
-  script:
-    - cd Android_test
-    - ./gradlew assemble
-  artifacts:
-    paths:
-    - Android_test/app/build/outputs/
+#android-build:
+#  image: javiersantos/android-ci:latest
+#  stage: androidbuild
+#  before_script:
+#    - export GRADLE_USER_HOME=`pwd`/.gradle
+#    - chmod +x ./Android_test/gradlew
+#  tags:
+#   - android_tag1
+#  script:
+#    - cd Android_test
+#    - ./gradlew assemble
+#  artifacts:
+#    paths:
+#    - Android_test/app/build/outputs/
     
 # To run Android unit tests.   
-unitTests:
-  image: javiersantos/android-ci:latest
-  stage: androidtest
-  before_script:
-    - export GRADLE_USER_HOME=`pwd`/.gradle
-    - chmod +x ./Android_test/gradlew
-  tags:
-   - android_tag1
-  script:
-    - cd Android_test
-    - ./gradlew test
+#unitTests:
+#  image: javiersantos/android-ci:latest
+#  stage: androidtest
+#  before_script:
+#    - export GRADLE_USER_HOME=`pwd`/.gradle
+#    - chmod +x ./Android_test/gradlew
+#  tags:
+#   - android_tag1
+#  script:
+#    - cd Android_test
+#    - ./gradlew test
