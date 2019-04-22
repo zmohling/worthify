@@ -72,8 +72,10 @@ public class AccountsController {
     public String getAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) {
         long id = -1;
         Optional<String> headerCheck = checkHeader(header);
-        if(!headerCheck.isPresent()) {
+        if(headerCheck.isPresent()) {
             return headerCheck.get();
+        } else {
+            id = userRepo.getUserID(header.get());
         }
         JSONObject obj = new JSONObject(string);
         long user = Long.parseLong(obj.get("id").toString());
@@ -114,7 +116,7 @@ public class AccountsController {
     @RequestMapping("/accounts/fetch")
     public String fetchAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
         Optional<String> headerCheck = checkHeader(header);
-        if(!headerCheck.isPresent()) {
+        if(headerCheck.isPresent()) {
             return headerCheck.get();
         }
         System.out.println(string);
@@ -157,8 +159,10 @@ public class AccountsController {
         long id = -1;
         System.out.println(string);
         Optional<String> headerCheck = checkHeader(header);
-        if(!headerCheck.isPresent()) {
+        if(headerCheck.isPresent()) {
             return headerCheck.get();
+        } else {
+            id = userRepo.getUserID(header.get());
         }
         JSONObject obj = new JSONObject(string);
         JSONArray accountsArr = obj.getJSONArray("accounts");
