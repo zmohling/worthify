@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +33,6 @@ import static team_10.client.settings.SharedPreferencesManager.getUser;
 public class SettingsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    ArrayList<Transaction> transactions;
-    ArrayList<Transaction> recurringTransactions;
-    TransactionsAdapter adapter;
-    TransactionsAdapter recurringAdapter;
-    RecyclerView recyclerView;
-    RecyclerView recurringRecyclerView;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -69,32 +64,6 @@ public class SettingsFragment extends Fragment {
         return fragment;
     }
 
-    public void editTransactions()
-    {
-        List<Account> usersAccounts = getUser().getAccounts();
-        for (int i = 0; i < usersAccounts.size(); i++)
-        {
-            transactions.addAll(usersAccounts.get(i).getTransactions().values());
-        }
-    }
-
-    public void editRecurringTransactions()
-    {
-        List<Account> usersAccounts = getUser().getAccounts();
-        for (int i = 0; i < usersAccounts.size(); i++)
-        {
-            ArrayList<Transaction> temp = new ArrayList<>();
-            temp.addAll(usersAccounts.get(i).getTransactions().values());
-            for (int j = 0; j < temp.size(); j++)
-            {
-                if (temp.get(j).getRecurring() == 1)
-                {
-                    recurringTransactions.add(temp.get(j));
-                }
-            }
-        }
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,24 +78,8 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_transactions, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.rvTransactions);
-
-        transactions = new ArrayList<Transaction>();
-        adapter = new TransactionsAdapter(transactions);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        recurringRecyclerView = (RecyclerView) view.findViewById(R.id.rvRecurringTransactions);
-
-        recurringTransactions = new ArrayList<Transaction>();
-        recurringAdapter = new TransactionsAdapter(recurringTransactions);
-        recurringRecyclerView.setAdapter(recurringAdapter);
-        recurringRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        recurringRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        editTransactions();
-        editRecurringTransactions();
+        TextView emailName = view.findViewById(R.id.text_view_profile_name);
+        emailName.setText("Email Address: " + getUser().getEmail());
 
         return view;
     }
