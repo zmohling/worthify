@@ -20,8 +20,9 @@
             android:id="@+id/text_view_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
             android:textColor="@color/text"
+            android:textSize="20dp"
             android:layout_weight=".25"
             android:layout_marginTop="10dp"
             android:text="@string/title_settings" />
@@ -30,12 +31,30 @@
             android:id="@+id/text_view_profile_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
             android:textColor="@color/text"
             android:layout_weight=".25"
             android:layout_marginTop="10dp"
             android:text="Email: " />
 
+        <TextView
+            android:id="@+id/text_view_change_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:textColor="@color/text"
+            android:layout_weight=".25"
+            android:layout_marginTop="10dp"
+            android:text="Change your email address" />
+        <TextView
+            android:id="@+id/text_view_change_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:textColor="@color/text"
+            android:layout_weight=".25"
+            android:layout_marginTop="10dp"
+            android:text="Change your password" />
     </LinearLayout>
 
 </FrameLayout>

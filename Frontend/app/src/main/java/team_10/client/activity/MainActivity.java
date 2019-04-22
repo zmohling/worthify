@@ -23,6 +23,7 @@ import team_10.client.R;
 import team_10.client.fragment.DashboardFragment;
 import team_10.client.fragment.NewsArticle;
 import team_10.client.fragment.NewsFragment;
+import team_10.client.fragment.SettingsFragment;
 import team_10.client.fragment.TransactionsFragment;
 import team_10.client.object.User;
 import team_10.client.object.account.Account;
@@ -31,7 +32,7 @@ import team_10.client.utility.IO;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
-public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, TransactionsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener {
 
     private static BottomNavigationView bottomNav;
     Socket serverSocket;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
                     worked = loadFragment(f, "home");
                     break;
                 case R.id.navigation_transactions:
-                    f = new TransactionsFragment();
+                    f = new SettingsFragment();
                     worked = loadFragment(f, "other");
                     break;
             }
