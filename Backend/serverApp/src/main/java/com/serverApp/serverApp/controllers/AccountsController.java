@@ -230,6 +230,87 @@ public class AccountsController {
         return rString;
     }
 
+    @RequestMapping("/accounts/edit")
+    public String editAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) {
+        long id = -1;
+        System.out.println(string);
+        Optional<String> headerCheck = checkHeader(header);
+        if(headerCheck.isPresent()) {
+            return headerCheck.get();
+        } else {
+            id = userRepo.getUserID(header.get());
+        }
+        JSONObject obj = new JSONObject(string);
+        JSONArray accountsArr = obj.getJSONArray("accounts");
+        Type accountType = new TypeToken<ArrayList<Accounts>>(){}.getType();
+        Gson g = new Gson();
+        ArrayList<String> transactionArr = new ArrayList<String>();
+        for(int i = 0; i < accountsArr.length(); i++) {
+            transactionArr.add(accountsArr.getJSONObject(i).getJSONObject("transactions").toString());
+            accountsArr.getJSONObject(i).remove("transactions");
+        }
+        ArrayList<Accounts> accountsList = g.fromJson(accountsArr.toString(), accountType);
+        //storing the accounts into the Accounts table
+
+        for(int i = 0; i < accountsList.size(); i++) {
+            String accountID = accountsList.get(i).getAccountId();
+            long userID = Long.parseLong(accountID.substring(0, 8));
+            boolean willBreak = false;
+            System.out.println("UserID: " + userID + ", id: " + id);
+            while(userID != id) {
+                i++;
+                if(i > accountsList.size()) {
+                    willBreak = true;
+                    break;
+                } else {
+                    accountID = accountsList.get(i).getAccountId();
+                }
+                userID = Long.parseLong(accountID.substring(0, 8));
+            }
+            if(willBreak) break;
+
+            accountsList.get(i).setTransactions(transactionArr.get(i));
+            accountsList.get(i).setIsActive(1);
+            accountsRepo.editAccount(accountsList.get(i).getLabel(),
+                    accountsList.get(i).getTransactions(),
+                    accountsList.get(i).getAccountId());
+
+            //when the account type is CertificateOfDeposit
+            if(accountsList.get(i).getType().equals("CertificateOfDeposit")) {
+                Date maturityDate = Date.valueOf(accountsArr.getJSONObject(i).getString("maturityDate"));
+                CertificateOfDeposit certificateOfDeposit = new CertificateOfDeposit();
+                certificateOfDeposit.setMaturityDate(maturityDate);
+                certificateOfDeposit.setAccountsId(accountsList.get(i).getAccountId());
+                certRepo.editCertificateOfDeposit(certificateOfDeposit.getMaturityDate(),
+                        accountsList.get(i).getAccountId());
+
+            } else if(accountsList.get(i).getType().equals("RealEstate")) { //when the type is RealEstate
+                String address = accountsArr.getJSONObject(i).getString("address");
+                String city = accountsArr.getJSONObject(i).getString("city");
+                String state = accountsArr.getJSONObject(i).getString("state");
+                city = city.replace(' ', '-');
+                RealEstate realEstate = new RealEstate();
+                realEstate.setAccountId(accountsList.get(i).getAccountId());
+                realEstate.setAddress(address);
+                realEstate.setCity(city);
+                realEstate.setState(state);
+                realEstateRepo.editRealEstate(realEstate.getAddress(), realEstate.getCity(), realEstate.getState(),
+                        accountsList.get(i).getAccountId());
+
+            } else if(accountsList.get(i).getType().equals("Stock")) { //when the type is Stock
+                String ticker = accountsArr.getJSONObject(i).getString("ticker");
+                Stock stock = new Stock();
+                stock.setAccountID(accountsList.get(i).getAccountId());
+                stock.setTicker(ticker);
+                stockRepo.editStock(stock.getTicker(),
+                        accountsList.get(i).getAccountId());
+            }
+        }
+        String rString = getReturnString(accountsList, id);
+
+        return rString;
+    }
+
     String getReturnString(ArrayList<Accounts> accountsArrayList, long id) {
         String rString =
                 "{\"accounts\":[";

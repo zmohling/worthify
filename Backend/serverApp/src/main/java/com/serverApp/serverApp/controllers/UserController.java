@@ -148,19 +148,19 @@ public class UserController{
                         + "\"message\":\"email already taken\"}");
             }
             userRepo.changeEmail(changedEmail, email);
-            retrievedUser = userRepo.getUser(changedEmail);
-            System.out.println("Changing email for User: " + retrievedUser.getId());
+            User changedUser = userRepo.getUser(changedEmail);
+            System.out.println("Changing email for User: " + changedUser.getId());
             String rString =
                     "{\"error\":\"false\","
                             + "\"message\":\"user email change success\","
                             + "\"user\":{"
-                            + "\"id\":\"" + retrievedUser.getId() + "\"," +
-                            "\"lastName\":\"" + retrievedUser.getLastName() + "\"," +
-                            "\"firstName\":\"" + retrievedUser.getFirstName() + "\"," +
-                            "\"email\":\"" + retrievedUser.getEmail() + "\"," +
-                            "\"authorization\":\"" + retrievedUser.getPassword() + "\"," +
-                            "\"type\":\"" + retrievedUser.getType() + "\"}}";
-            System.out.println("Email change successful for User: " + retrievedUser.getId());
+                            + "\"id\":\"" + changedUser.getId() + "\"," +
+                            "\"lastName\":\"" + changedUser.getLastName() + "\"," +
+                            "\"firstName\":\"" + changedUser.getFirstName() + "\"," +
+                            "\"email\":\"" + changedEmail + "\"," +
+                            "\"authorization\":\"" + changedUser.getPassword() + "\"," +
+                            "\"type\":\"" + changedUser.getType() + "\"}}";
+            System.out.println("Email change successful for User: " + changedUser.getId());
             return ResponseEntity.ok().body(rString);
         }
         return ResponseEntity.ok().body("{\"error\":\"true\","
