@@ -23,6 +23,12 @@ public interface AccountsRepository extends JpaRepository<Accounts, Long> {
 
     @Transactional
     @Modifying
+    @Query(value = "UPDATE accounts SET label = ?1, transaction = ?2 WHERE accountID = ?3", nativeQuery = true)
+    void editAccount(String label, String transaction, String accountID);
+
+
+    @Transactional
+    @Modifying
     @Query(value = "DELETE FROM accounts WHERE CAST(SUBSTRING(accountID, 1, 8) as unsigned) = ?1", nativeQuery = true)
     int deleteAllTiedToUser(int userId);
 
