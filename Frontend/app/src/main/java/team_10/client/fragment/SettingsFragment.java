@@ -1,6 +1,7 @@
 package team_10.client.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,16 +20,35 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import team_10.client.R;
+import team_10.client.activity.MainActivity;
+import team_10.client.constant.URL;
+import team_10.client.object.User;
 import team_10.client.object.account.Account;
 import team_10.client.object.account.Transaction;
+import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.TransactionsAdapter;
+import team_10.client.utility.VolleySingleton;
 
 import static team_10.client.settings.SharedPreferencesManager.getUser;
 
@@ -138,7 +158,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 EditText email = (EditText) popupView.findViewById(R.id.modal_edit_email_email);
-                EditText password = (EditText) popupView.findViewById(R.id.modal_edit_email_password);
+                final EditText password = (EditText) popupView.findViewById(R.id.modal_edit_email_password);
                 EditText newEmail = (EditText) popupView.findViewById(R.id.modal_edit_email_new_email);
                 final String emailString = email.getText().toString();
                 final String passwordString = password.getText().toString();
@@ -171,6 +191,102 @@ public class SettingsFragment extends Fragment {
                     newEmail.requestFocus();
                     return;
                 }
+
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("email", emailString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    json.put("password", passwordString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    json.put("changedEmail", newEmailString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                final String requestBody = json.toString();
+
+                //if everything is fine
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_EDIT_EMAIL,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    //converting response to json object
+                                    JSONObject obj = new JSONObject(response);
+
+                                    //if no error in response
+                                    if (!obj.getBoolean("error")) {
+
+                                        //getting the user from the response
+                                        JSONObject userJson = obj.getJSONObject("user");
+
+                                        //creating a new user object
+                                        User user = new User(
+                                                userJson.getInt("id"),
+                                                userJson.getString("lastName"),
+                                                userJson.getString("firstName"),
+                                                userJson.getString("email"),
+                                                userJson.getInt("type"),
+                                                userJson.getString("authorization")
+                                        );
+
+                                        //storing the user in shared preferences
+                                        SharedPreferencesManager.getInstance(getContext()).logout();
+                                        SharedPreferencesManager.getInstance(getContext()).userLogin(user);
+
+                                        //starting the profile activity
+                                        Toast.makeText(getContext(), "Email Successfully Changed", Toast.LENGTH_SHORT).show();
+                                        popupWindow.dismiss();
+                                    } else {
+                                        Toast.makeText(getContext(), "Unsuccessful Change: " + obj.getString("message"), Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (JSONException e) {
+                                    Toast.makeText(getContext(), "Unsuccessful Change", Toast.LENGTH_SHORT).show();
+                                    password.setText("");
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getContext(),
+                                        (error.getMessage() == null) ? "Unsuccessful Login" : "Unsuccessful Login: " + error.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                                password.setText("");
+                            }
+                        }) {
+                    @Override
+                    public String getBodyContentType() {
+                        return String.format("application/json; charset=utf-8");
+                    }
+
+                    @Override
+                    public byte[] getBody() throws AuthFailureError {
+                        try {
+                            return requestBody == null ? null : requestBody.getBytes("utf-8");
+                        } catch (UnsupportedEncodingException uee) {
+                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                                    requestBody, "utf-8");
+                            return null;
+                        }
+                    }
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String>  params = new HashMap<String, String>();
+                        final String basicAuth = User.getToken();
+                        params.put("Authorization", basicAuth);
+
+                        return params;
+                    }
+                };
+
+                VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
             }
         });
     }

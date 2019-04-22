@@ -11,4 +11,6 @@ public class URL {
     public static final String URL_GET_ACCOUNTS = ROOT_URL + "accounts/get/all";
     public static final String URL_GET_ARTICLES = ROOT_URL + "article/getPersonal/" + SharedPreferencesManager.getUser().getID();
     public static final String URL_GET_API = ROOT_URL + "accounts/fetch";
+    public static final String URL_EDIT_EMAIL = ROOT_URL + "emailChange";
+    public static final String URL_EDIT_PASSWORD = ROOT_URL + "passwordChange";
 }
