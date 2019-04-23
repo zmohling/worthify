@@ -3,6 +3,7 @@ import com.serverApp.serverApp.other.hashingFunction;
 import com.serverApp.serverApp.models.User;
 import com.serverApp.serverApp.controllers.AccountsController;
 import com.serverApp.serverApp.repositories.AccountsRepository;
+import com.serverApp.serverApp.repositories.ArticleRepository;
 import com.serverApp.serverApp.repositories.UserRepository;
 import com.serverApp.serverApp.websocket.EchoServer;
 import org.json.JSONObject;
@@ -26,6 +27,7 @@ public class UserController{
 
     @Autowired
     AccountsRepository accountsRepo;
+
 
     @RequestMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) throws NoSuchAlgorithmException {
@@ -319,4 +321,6 @@ public class UserController{
         return "{\"error\":\"false\","
                 + "\"message\":\"deleted user\"}";
     }
+
+
 }
