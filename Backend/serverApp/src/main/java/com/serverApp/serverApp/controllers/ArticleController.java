@@ -323,4 +323,9 @@ public class ArticleController {
         return "{\"message\":\"success\"}";
     }
 
+    @RequestMapping("/article/upvote/{userId}/{articleId}")
+    public String upvoteArticle(@PathVariable long userId, @PathVariable long articleId){
+
+    }
+
 }

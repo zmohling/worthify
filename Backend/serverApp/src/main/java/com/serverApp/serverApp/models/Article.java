@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name="articles")
@@ -51,6 +52,10 @@ public class Article implements Serializable {
 
     @Column(name = "votes")
     private int votes;
+
+    @ElementCollection
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<Integer> votedUsers
 
     public int getVotes() {
         return votes;
