@@ -49,6 +49,16 @@ public class Article implements Serializable {
     @Column(name = "keyword")
     private String keyword;
 
+    @Column(name = "votes")
+    private int votes;
+
+    public int getVotes() {
+        return votes;
+    }
+
+    public void setVotes(int votes) {
+        this.votes = votes;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
