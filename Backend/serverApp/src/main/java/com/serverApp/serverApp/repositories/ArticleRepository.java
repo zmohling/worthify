@@ -1,5 +1,6 @@
 package com.serverApp.serverApp.repositories;
 
+import com.serverApp.serverApp.models.Vote;
 import org.hibernate.annotations.SQLUpdate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.serverApp.serverApp.models.Article;
@@ -8,12 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-    @Query(value = "SELECT COUNT(id) FROM articles", nativeQuery = true)
-    int getNumArticles();
+    @Query(value = "SELECT COUNT(id) FROM articles WHERE id = ?1", nativeQuery = true)
+    int getNumArticles(long id);
 
     @Query(value = "SELECT * FROM articles", nativeQuery = true)
     Article[] getAllArticles();
@@ -29,5 +32,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Query(value = "UPDATE articles SET is_active = 0 WHERE id= ?1", nativeQuery = true)
     int deleteArticle(int id);
 
-
+    @Query(value = "SELECT voters FROM articles WHERE id = ?1")
+    List<Vote> getVoterList(long id);
 }

@@ -2,6 +2,7 @@ package com.serverApp.serverApp.controllers;
 
 import com.serverApp.serverApp.models.Accounts;
 import com.serverApp.serverApp.models.Article;
+import com.serverApp.serverApp.models.Vote;
 import com.serverApp.serverApp.other.ArticleRetrieval;
 import com.serverApp.serverApp.repositories.AccountsRepository;
 import com.serverApp.serverApp.repositories.ArticleRepository;
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 public class ArticleController {
@@ -325,7 +327,39 @@ public class ArticleController {
 
     @RequestMapping("/article/upvote/{userId}/{articleId}")
     public String upvoteArticle(@PathVariable long userId, @PathVariable long articleId){
+        if(articleRepo.getNumArticles(articleId) == 1){
+            Article article = articleRepo.getOne(articleId);
+            if(getUserVote(userId, articleId) == -2){//this means they have not voted yet
+                article.getVoters().add(new Vote(userId, 1));
 
+            }
+        }
+
+        return "{\"error\":\"article not found\"}";
+    }
+
+    @RequestMapping("/article/downvote/{userId}/{articleId}")
+    public String downvoteArticle(@PathVariable long userId, @PathVariable long articleId){
+        return null;
+    }
+
+    /**
+     * This method searches the voters list of a certain article for a certain user and returns
+     * their vote or -2 if they were not found. (-2 because -1 is an option for a vote)
+     * @param userId
+     * @param articleId
+     * @return vote or -2 if not found
+     */
+    public int getUserVote(long userId, long articleId){
+        List<Vote> voters = articleRepo.getVoterList(articleId);
+
+        //linear search RIP server
+        for(int i = 0; i < voters.size(); i ++){
+            if(voters.get(i).getUserId() == userId){
+                return voters.get(i).getVote();
+            }
+        }
+        return -2;
     }
 
 }

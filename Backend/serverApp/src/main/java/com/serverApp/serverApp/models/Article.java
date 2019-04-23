@@ -54,8 +54,8 @@ public class Article implements Serializable {
     private int votes;
 
     @ElementCollection
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<Integer> votedUsers
+    @OneToMany(mappedBy = "articles")
+    List<Vote> voters;
 
     public int getVotes() {
         return votes;
@@ -163,5 +163,13 @@ public class Article implements Serializable {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public List<Vote> getVoters() {
+        return voters;
+    }
+
+    public void setVoters(List<Vote> voters) {
+        this.voters = voters;
     }
 }
