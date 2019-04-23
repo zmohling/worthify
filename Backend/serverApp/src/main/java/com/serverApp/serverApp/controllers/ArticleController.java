@@ -6,6 +6,7 @@ import com.serverApp.serverApp.models.Vote;
 import com.serverApp.serverApp.other.ArticleRetrieval;
 import com.serverApp.serverApp.repositories.AccountsRepository;
 import com.serverApp.serverApp.repositories.ArticleRepository;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -329,10 +330,35 @@ public class ArticleController {
     public String upvoteArticle(@PathVariable long userId, @PathVariable long articleId){
         if(articleRepo.getNumArticles(articleId) == 1){
             Article article = articleRepo.getOne(articleId);
-            if(getUserVote(userId, articleId) == -2){//this means they have not voted yet
-                article.getVoters().add(new Vote(userId, 1));
+            int vote = getUserVote(userId, article);
+            int pos = -1;
+            if(vote > -2){
+                pos = getUserPosition(userId, article);
+            }
+            switch(vote){
+                case 1://toggle back to 0
+                    article.getVoters().get(pos).setVote(0);
+                    article.setVotes(article.getVotes() - 1);
+                    break;
+                case 0:
+                    article.getVoters().get(pos).setVote(1);
+                    article.setVotes(article.getVotes() + 1);
+                    break;
+                case -1:
+                    article.getVoters().get(pos).setVote(1);
+                    article.setVotes(article.getVotes() + 2); // + 2 because they changed from a negative vote to positive
+                    break;
+                default://add new voter to article list
+                    article.getVoters().add(new Vote(userId, 1));
+                    article.setVotes(article.getVotes() + 1);
+                    break;
 
             }
+
+            articleRepo.updateArticleVoters(article.getVoters(), articleId);
+            articleRepo.updateArticleVotes(article.getVotes(), articleId);
+            return "{\"error\":\"none\"}";
+
         }
 
         return "{\"error\":\"article not found\"}";
@@ -347,11 +373,11 @@ public class ArticleController {
      * This method searches the voters list of a certain article for a certain user and returns
      * their vote or -2 if they were not found. (-2 because -1 is an option for a vote)
      * @param userId
-     * @param articleId
+     * @param article
      * @return vote or -2 if not found
      */
-    public int getUserVote(long userId, long articleId){
-        List<Vote> voters = articleRepo.getVoterList(articleId);
+    public int getUserVote(long userId, Article article){
+        List<Vote> voters = article.getVoters();
 
         //linear search RIP server
         for(int i = 0; i < voters.size(); i ++){
@@ -360,6 +386,25 @@ public class ArticleController {
             }
         }
         return -2;
+    }
+
+    /**
+     * This method searches the voters list of a certain article for a certain user and returns
+     * their index (-1 if not found)
+     * @param userId
+     * @param article
+     * @return index or -1 if not found
+     */
+    public int getUserPosition(long userId, Article article){
+        List<Vote> voters = article.getVoters();
+
+        //linear search RIP server
+        for(int i = 0; i < voters.size(); i ++){
+            if(voters.get(i).getUserId() == userId){
+                return i;
+            }
+        }
+        return -1;
     }
 
 }

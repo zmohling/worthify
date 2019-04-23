@@ -1,6 +1,5 @@
 package com.serverApp.serverApp.models;
 
-import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
 
@@ -33,13 +32,6 @@ public class Vote {
         this.id = id;
     }
 
-    public Article getArticle() {
-        return article;
-    }
-
-    public void setArticle(Article article) {
-        this.article = article;
-    }
 
     public long getUserId() {
         return userId;
