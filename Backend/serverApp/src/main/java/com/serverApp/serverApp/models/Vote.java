@@ -7,16 +7,23 @@ import javax.persistence.*;
 @Table(name = "vote")
 public class Vote {
 
-    public Vote(long userId, int vote){
+    public Vote(long userId, int vote, Article article){
         setUserId(userId);
         setVote(vote);
+        setArticle(article);
     }
+
+    /**
+     * idk why it made me make a default constructor
+     */
+    public Vote(){}
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @ManyToOne
+    @JoinColumn(name = "article_id")
     private Article article;
 
     @Column(name = "userId")
@@ -47,5 +54,13 @@ public class Vote {
 
     public void setVote(int vote) {
         this.vote = vote;
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
     }
 }

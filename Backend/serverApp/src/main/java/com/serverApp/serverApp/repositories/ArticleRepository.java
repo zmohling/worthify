@@ -36,9 +36,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Query(value = "UPDATE articles SET is_active = 0 WHERE id= ?1", nativeQuery = true)
     int deleteArticle(int id);
 
-  @Modifying
-  @Transactional
-  @Query(
+    @Modifying
+    @Transactional
+    @Query(
       value =
           "UPDATE networthr.articles SET description = REPLACE(description, 'â€œ', '“');\n"
               + "UPDATE networthr.articles SET description = REPLACE(description, 'â€�', '”');\n"
@@ -57,12 +57,12 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
               + "UPDATE networthr.articles SET title = REPLACE(title, 'â€“', '—');\n"
               + "UPDATE networthr.articles SET title = REPLACE(title, 'â€¢', '-');\n"
               + "UPDATE networthr.articles SET title = REPLACE(title, 'â€¦', '…');", nativeQuery = true)
-  void fixArticles();
+    void fixArticles();
 
-  @Modifying
-  @Transactional
-  @Query(value = "UPDATE articles SET voters = ?1 WHERE id = ?2", nativeQuery = true)
-  int updateArticleVoters(List<Vote> newVoters, long id);
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE articles SET voters = ?1 WHERE id = ?2", nativeQuery = true)
+    int updateArticleVoters(List<Vote> newVoters, long id);
 
     @Modifying
     @Transactional

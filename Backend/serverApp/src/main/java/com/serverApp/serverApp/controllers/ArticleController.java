@@ -70,10 +70,10 @@ public class ArticleController {
                     articles.get(j).setDescription(articles.get(j).getDescription().replaceAll("’", "\t’"));
                     articles.get(j).setTitle(articles.get(j).getTitle().replaceAll("’", "\t’"));*/
 
-                    System.out.println(articles.get(j).getTitle());
+                    //System.out.println(articles.get(j).getTitle());
 
-                    articles.get(j).setDescription(URLEncoder.encode(articles.get(j).getDescription(), "UTF-8"));
-                    articles.get(j).setTitle(URLEncoder.encode(articles.get(j).getTitle(), "UTF-8"));
+                    //articles.get(j).setDescription(URLEncoder.encode(articles.get(j).getDescription(), "UTF-8"));
+                    //articles.get(j).setTitle(URLEncoder.encode(articles.get(j).getTitle(), "UTF-8"));
 
                     //System.out.println(articles.get(j).getTitle());
                     if (articleRepo.getDuplicates(articles.get(j).getUrl()) == 0) {
@@ -91,7 +91,7 @@ public class ArticleController {
 
 
     @GetMapping("/article/getAll")
-    public String getAll(){
+    public String getAll() throws Exception{
 
         String rString = "{";
 
@@ -109,13 +109,13 @@ public class ArticleController {
                                 + articles[i].getId()
                                 + "\","
                                 + "\"title\":\""
-                                + articles[i].getTitle()
+                                + URLEncoder.encode(articles[i].getTitle(), "UTF-8")
                                 + "\","
                                 + "\"votes\":\""
                                 + articles[i].getVotes()
                                 + "\","
                                 + "\"description\":\""
-                                + articles[i].getDescription()
+                                + URLEncoder.encode(articles[i].getDescription(), "UTF-8")
                                 + "\","
                                 + "\"pictureUrl\":\""
                                 + articles[i].getUrlToImage()
@@ -135,13 +135,13 @@ public class ArticleController {
                                 + articles[i].getId()
                                 + "\","
                                 + "\"title\":\""
-                                + articles[i].getTitle()
+                                + URLEncoder.encode(articles[i].getTitle(), "UTF-8")
                                 + "\","
                                 + "\"votes\":\""
                                 + articles[i].getVotes()
                                 + "\","
                                 + "\"description\":\""
-                                + articles[i].getDescription()
+                                + URLEncoder.encode(articles[i].getDescription(), "UTF-8")
                                 + "\","
                                 + "\"pictureUrl\":\""
                                 + articles[i].getUrlToImage()
@@ -159,7 +159,7 @@ public class ArticleController {
     }
 
     @GetMapping("/article/adminGetAll")
-    public String adminGetAll(){
+    public String adminGetAll()throws Exception {
         String rString = "{";
 
         Article[] articles = articleRepo.getAllArticles();
@@ -174,7 +174,7 @@ public class ArticleController {
                                 + articles[i].getId()
                                 + "\","
                                 + "\"title\":\""
-                                + articles[i].getTitle()
+                                + URLEncoder.encode(articles[i].getTitle(), "UTF-8")
                                 + "\","
                                 + "\"votes\":\""
                                 + articles[i].getVotes()
@@ -183,7 +183,7 @@ public class ArticleController {
                                 + articles[i].getUserId()
                                 + "\","
                                 + "\"description\":\""
-                                + articles[i].getDescription()
+                                + URLEncoder.encode(articles[i].getDescription(), "UTF-8")
                                 + "\","
                                 + "\"pictureUrl\":\""
                                 + articles[i].getUrlToImage()
@@ -201,7 +201,7 @@ public class ArticleController {
                                 + articles[i].getId()
                                 + "\","
                                 + "\"title\":\""
-                                + articles[i].getTitle()
+                                + URLEncoder.encode(articles[i].getTitle(), "UTF-8")
                                 + "\","
                                 + "\"votes\":\""
                                 + articles[i].getVotes()
@@ -210,7 +210,7 @@ public class ArticleController {
                                 + articles[i].getUserId()
                                 + "\","
                                 + "\"description\":\""
-                                + articles[i].getDescription()
+                                + URLEncoder.encode(articles[i].getDescription(), "UTF-8")
                                 + "\","
                                 + "\"pictureUrl\":\""
                                 + articles[i].getUrlToImage()
@@ -230,7 +230,7 @@ public class ArticleController {
 
 
     @GetMapping("/article/getPersonal/{id}")
-    public String getPersonal(@PathVariable long id){
+    public String getPersonal(@PathVariable long id) throws Exception{
         Accounts[] accounts = accountRepo.getAccountsById(id);
         //System.out.println("Number of accounts: " + accounts.length);
         ArrayList<String> keywords = new ArrayList<>();
@@ -284,13 +284,13 @@ public class ArticleController {
                                 + articles.get(i).getId()
                                 + "\","
                                 + "\"title\":\""
-                                + articles.get(i).getTitle()
+                                + URLEncoder.encode(articles.get(i).getTitle(), "UTF-8")
                                 + "\","
                                 + "\"votes\":\""
                                 + articles.get(i).getVotes()
                                 + "\","
                                 + "\"description\":\""
-                                + articles.get(i).getDescription()
+                                + URLEncoder.encode(articles.get(i).getDescription(), "UTF-8")
                                 + "\","
                                 + "\"pictureUrl\":\""
                                 + articles.get(i).getUrlToImage()
@@ -310,13 +310,13 @@ public class ArticleController {
                                 + articles.get(i).getId()
                                 + "\","
                                 + "\"title\":\""
-                                + articles.get(i).getTitle()
+                                + URLEncoder.encode(articles.get(i).getTitle(), "UTF-8")
                                 + "\","
                                 + "\"votes\":\""
                                 + articles.get(i).getVotes()
                                 + "\","
                                 + "\"description\":\""
-                                + articles.get(i).getDescription()
+                                + URLEncoder.encode(articles.get(i).getDescription(), "UTF-8")
                                 + "\","
                                 + "\"pictureUrl\":\""
                                 + articles.get(i).getUrlToImage()
@@ -344,6 +344,7 @@ public class ArticleController {
         if(articleRepo.getNumArticles(articleId) == 1){
             Article article = articleRepo.getOne(articleId);
             int vote = getUserVote(userId, article);
+            int newVote = vote;
             int pos = -1;
             if(vote > -2){
                 pos = getUserPosition(userId, article);
@@ -352,25 +353,33 @@ public class ArticleController {
                 case 1://toggle back to 0
                     article.getVoters().get(pos).setVote(0);
                     article.setVotes(article.getVotes() - 1);
+                    newVote = 0;
                     break;
                 case 0:
                     article.getVoters().get(pos).setVote(1);
                     article.setVotes(article.getVotes() + 1);
+                    newVote = 1;
                     break;
                 case -1:
                     article.getVoters().get(pos).setVote(1);
                     article.setVotes(article.getVotes() + 2); // + 2 because they changed from a negative vote to positive
+                    newVote = 1;
                     break;
                 default://add new voter to article list
-                    article.getVoters().add(new Vote(userId, 1));
+                    article.getVoters().add(new Vote(userId, 1, article));
                     article.setVotes(article.getVotes() + 1);
+                    newVote = 1;
                     break;
 
             }
 
-            articleRepo.updateArticleVoters(article.getVoters(), articleId);
-            articleRepo.updateArticleVotes(article.getVotes(), articleId);
-            return "{\"error\":\"none\"}";
+            /*articleRepo.updateArticleVoters(article.getVoters(), articleId);
+            articleRepo.updateArticleVotes(article.getVotes(), articleId);*/
+
+            articleRepo.save(article);
+            return "{\"error\":\"none\"," +
+                    "\"userId\":\"" + userId +"\"," +
+                    "\"currentVote\":\"" + newVote + "\"}";
 
         }
 
@@ -381,7 +390,9 @@ public class ArticleController {
     public String downvoteArticle(@PathVariable long userId, @PathVariable long articleId){
         if(articleRepo.getNumArticles(articleId) == 1){
             Article article = articleRepo.getOne(articleId);
+
             int vote = getUserVote(userId, article);
+            int newVote = vote;
             int pos = -1;
             if(vote > -2){
                 pos = getUserPosition(userId, article);
@@ -390,25 +401,34 @@ public class ArticleController {
                 case 1:
                     article.getVoters().get(pos).setVote(-1);
                     article.setVotes(article.getVotes() - 2);
+                    vote = -1;
                     break;
                 case 0:
                     article.getVoters().get(pos).setVote(-1);
                     article.setVotes(article.getVotes() - 1);
+                    newVote = -1;
                     break;
                 case -1://toggle back to 0
                     article.getVoters().get(pos).setVote(0);
                     article.setVotes(article.getVotes() + 1); // + 2 because they changed from a negative vote to positive
+                    newVote = 0;
                     break;
                 default://add new voter to article list
-                    article.getVoters().add(new Vote(userId, -1));
+                    article.getVoters().add(new Vote(userId, -1, article));
                     article.setVotes(article.getVotes() - 1);
+                    newVote = -1;
                     break;
 
             }
 
-            articleRepo.updateArticleVoters(article.getVoters(), articleId);
-            articleRepo.updateArticleVotes(article.getVotes(), articleId);
-            return "{\"error\":\"none\"}";
+            /*articleRepo.updateArticleVoters(article.getVoters(), articleId);
+
+            articleRepo.updateArticleVotes(article.getVotes(), articleId);*/
+
+            articleRepo.save(article);
+            return "{\"error\":\"none\"," +
+                    "\"userId\":\"" + userId +"\"," +
+                    "\"currentVote\":\"" + newVote + "\"}";
 
         }
 
