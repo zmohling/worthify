@@ -4,6 +4,7 @@ package com.serverApp.serverApp.models;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "vote")
 public class Vote {
 
     public Vote(long userId, int vote){
@@ -11,19 +12,11 @@ public class Vote {
         setVote(vote);
     }
 
-    /**
-     * idk why they made me do this
-     */
-    public Vote(){
-
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "article_id")
     private Article article;
 
     @Column(name = "userId")
@@ -39,7 +32,6 @@ public class Vote {
     public void setId(long id) {
         this.id = id;
     }
-
 
     public long getUserId() {
         return userId;

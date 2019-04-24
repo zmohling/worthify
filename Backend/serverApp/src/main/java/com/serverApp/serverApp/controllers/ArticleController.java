@@ -14,7 +14,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -367,7 +366,40 @@ public class ArticleController {
 
     @RequestMapping("/article/downvote/{userId}/{articleId}")
     public String downvoteArticle(@PathVariable long userId, @PathVariable long articleId){
-        return null;
+        if(articleRepo.getNumArticles(articleId) == 1){
+            Article article = articleRepo.getOne(articleId);
+            int vote = getUserVote(userId, article);
+            int pos = -1;
+            if(vote > -2){
+                pos = getUserPosition(userId, article);
+            }
+            switch(vote){
+                case 1://toggle back to 0
+                    article.getVoters().get(pos).setVote(0);
+                    article.setVotes(article.getVotes() - 1);
+                    break;
+                case 0:
+                    article.getVoters().get(pos).setVote(1);
+                    article.setVotes(article.getVotes() + 1);
+                    break;
+                case -1:
+                    article.getVoters().get(pos).setVote(1);
+                    article.setVotes(article.getVotes() + 2); // + 2 because they changed from a negative vote to positive
+                    break;
+                default://add new voter to article list
+                    article.getVoters().add(new Vote(userId, 1));
+                    article.setVotes(article.getVotes() + 1);
+                    break;
+
+            }
+
+            articleRepo.updateArticleVoters(article.getVoters(), articleId);
+            articleRepo.updateArticleVotes(article.getVotes(), articleId);
+            return "{\"error\":\"none\"}";
+
+        }
+
+        return "{\"error\":\"article not found\"}";
     }
 
     /**
@@ -397,8 +429,7 @@ public class ArticleController {
      * @return index or -1 if not found
      */
     public int getUserPosition(long userId, Article article){
-        ArrayList<Vote> voters = article.getVoters();
-
+        List<Vote> voters = article.getVoters();
 
         //linear search RIP server
         for(int i = 0; i < voters.size(); i ++){

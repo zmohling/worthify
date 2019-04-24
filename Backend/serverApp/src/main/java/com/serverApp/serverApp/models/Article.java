@@ -1,11 +1,8 @@
 package com.serverApp.serverApp.models;
 
-
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -57,7 +54,7 @@ public class Article implements Serializable {
     @Column(name = "voters")
     @ElementCollection
     @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL)
-    private Collection<Vote> voters = new ArrayList<>();
+    private List<Vote> voters = new ArrayList<>();
 
     public int getVotes() {
         return votes;
@@ -167,11 +164,11 @@ public class Article implements Serializable {
         this.keyword = keyword;
     }
 
-    public Collection<Vote> getVoters() {
+    public List<Vote> getVoters() {
         return voters;
     }
 
-    public void setVoters(Collection<Vote> voters) {
+    public void setVoters(List<Vote> voters) {
         this.voters = voters;
     }
 }
