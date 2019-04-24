@@ -16,8 +16,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import team_10.client.object.account.Account;
-import team_10.client.object.account.Transaction;
+import team_10.client.data.models.Account;
+import team_10.client.data.models.Transaction;
 
 public class AbstractAccountAdapter implements JsonSerializer<Account>, JsonDeserializer<Account> {
 

@@ -1,4 +1,4 @@
-package team_10.client.object.account;
+package team_10.client.data.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;

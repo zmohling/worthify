@@ -1,16 +1,12 @@
-package team_10.client.object.account;
+package team_10.client.data.models;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.JsonArray;
@@ -277,7 +273,7 @@ public class Stock extends Account {
         return false;
     }
 
-    private class Transaction extends team_10.client.object.account.Transaction {
+    private class Transaction extends team_10.client.data.models.Transaction {
 
         Transaction(double value, int transactionID, int recurring, LocalDate date) {
             this.value = value;

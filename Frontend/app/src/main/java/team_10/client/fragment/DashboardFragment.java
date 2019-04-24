@@ -18,10 +18,10 @@ import java.util.Random;
 
 import team_10.client.R;
 import team_10.client.object.User;
-import team_10.client.object.account.Account;
-import team_10.client.object.account.CertificateOfDeposit;
-import team_10.client.object.account.Loan;
-import team_10.client.object.account.SavingsAccount;
+import team_10.client.data.models.Account;
+import team_10.client.data.models.CertificateOfDeposit;
+import team_10.client.data.models.Loan;
+import team_10.client.data.models.SavingsAccount;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.AccountModal;
 import team_10.client.utility.CustomListAdapter;

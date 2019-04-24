@@ -1,9 +1,6 @@
 package team_10.client.add_edit_account;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import team_10.client.object.account.Account;
+import team_10.client.data.models.Account;
 
 public class AddEditAccountPresenter implements AddEditAccountContract.Presenter {
 
@@ -11,7 +8,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
     private final AddEditAccountContract.View mAddEditAccountView;
 
-    private final List<AddEditAccountContract.InputView> mInputViews;
+    //private final List<AddEditAccountContract.InputView> mInputViews;
 
     private boolean isDataMissing;
 
@@ -19,7 +16,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
         this.mAccountModel = account;
         this.mAddEditAccountView = view;
-        this.mInputViews = new ArrayList<>();
+        //this.mInputViews = new ArrayList<>();
 
         isDataMissing = false;
 
@@ -28,7 +25,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
     @Override
     public void subscribe() {
-        populateAccountandTransactionLists();
+
     }
 
     @Override
@@ -37,8 +34,13 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
     }
 
     @Override
-    public void populateAccountandTransactionLists() {
+    public AddEditAccountContract.View getAccountInputsView() {
+        return null;
+    }
 
+    @Override
+    public AddEditAccountContract.View getTransactionsView() {
+        return null;
     }
 
     @Override
@@ -53,12 +55,17 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
     }
 
     @Override
-    public void populateInputView() {
+    public void cancel() {
 
     }
 
     @Override
-    public void populateTransactionView() {
+    public void addTransaction() {
+
+    }
+
+    @Override
+    public void deleteTransaction() {
 
     }
 

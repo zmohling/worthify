@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import team_10.client.R;
-import team_10.client.object.account.Account;
+import team_10.client.data.models.Account;
 import team_10.client.object.account.UserInputField;
 
 public abstract class InputFieldFactory {

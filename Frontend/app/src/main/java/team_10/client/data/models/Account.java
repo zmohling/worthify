@@ -1,4 +1,4 @@
-package team_10.client.object.account;
+package team_10.client.data.models;
 
 import android.content.Context;
 import android.view.View;
@@ -6,6 +6,8 @@ import android.view.View;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.TreeMap;
+
+import team_10.client.object.account.UserInputField;
 
 /**
  * Abstract Account class for all account types. All transactions for all types that extend
@@ -20,7 +22,8 @@ public abstract class Account implements Serializable {
     protected String label;
 
     protected String accountID;
-    protected TreeMap<LocalDate, team_10.client.object.account.Transaction> transactions;
+    protected int isActive;
+    protected TreeMap<LocalDate, team_10.client.data.models.Transaction> transactions;
     protected transient Context context;
 
     public Account() {
@@ -66,12 +69,16 @@ public abstract class Account implements Serializable {
         this.label = label;
     }
 
+    public int isActive() { return this.isActive; }
+
+    public void setIsActive(int isActive) { this.isActive = isActive; }
+
     public abstract double getValue(LocalDate d);
 
     public abstract View getView(Context context);
 
 
-    private class Transaction extends team_10.client.object.account.Transaction {
+    private class Transaction extends team_10.client.data.models.Transaction {
         private Transaction(double value, int transactionID, int recurring, LocalDate date) {
             super(value, transactionID, recurring, date);
         }

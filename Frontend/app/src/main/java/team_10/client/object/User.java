@@ -2,7 +2,7 @@ package team_10.client.object;
 
 import java.util.List;
 
-import team_10.client.object.account.Account;
+import team_10.client.data.models.Account;
 
 public class User {
     private static int userID, type, numAccounts;

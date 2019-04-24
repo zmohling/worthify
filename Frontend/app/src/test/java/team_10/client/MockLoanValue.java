@@ -6,8 +6,8 @@ import org.mockito.Mock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import team_10.client.object.account.Loan;
-import team_10.client.object.account.Transaction;
+import team_10.client.data.models.Loan;
+import team_10.client.data.models.Transaction;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.when;

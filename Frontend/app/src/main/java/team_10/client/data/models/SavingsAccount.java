@@ -1,4 +1,4 @@
-package team_10.client.object.account;
+package team_10.client.data.models;
 
 import android.content.Context;
 import android.text.Editable;
@@ -108,7 +108,7 @@ public class SavingsAccount extends Account {
     /**
      * Loan specific Transaction object.
      */
-    private class Transaction extends team_10.client.object.account.Transaction {
+    private class Transaction extends team_10.client.data.models.Transaction {
 
         double annualPercentReturn;
 

@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import team_10.client.R;
-import team_10.client.object.account.Account;
+import team_10.client.data.models.Account;
 import team_10.client.object.account.AccountsWrapper;
-import team_10.client.object.account.Loan;
+import team_10.client.data.models.Loan;
 import team_10.client.object.User;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.AbstractAccountAdapter;

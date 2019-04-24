@@ -1,4 +1,4 @@
-package team_10.client.object.account;
+package team_10.client.data.models;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Vector;
 
 import team_10.client.R;
+import team_10.client.object.account.UserInputField;
 import team_10.client.utility.General;
 
 public class CertificateOfDeposit extends Account {
@@ -167,7 +168,7 @@ public class CertificateOfDeposit extends Account {
     /**
      * Loan specific Transaction object.
      */
-    private class Transaction extends team_10.client.object.account.Transaction {
+    private class Transaction extends team_10.client.data.models.Transaction {
 
         double annualPercentReturn;
 

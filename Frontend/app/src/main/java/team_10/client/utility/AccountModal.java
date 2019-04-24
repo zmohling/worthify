@@ -25,8 +25,8 @@ import team_10.client.R;
 import team_10.client.constant.TYPE;
 import team_10.client.fragment.DashboardFragment;
 import team_10.client.object.User;
-import team_10.client.object.account.Account;
-import team_10.client.object.account.Transaction;
+import team_10.client.data.models.Account;
+import team_10.client.data.models.Transaction;
 
 public class AccountModal {
     private Context context;

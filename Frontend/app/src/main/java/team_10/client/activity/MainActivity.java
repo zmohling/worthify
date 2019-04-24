@@ -1,5 +1,6 @@
 package team_10.client.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -10,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -20,18 +20,20 @@ import java.net.Socket;
 import java.util.List;
 
 import team_10.client.R;
+import team_10.client.data.models.Account;
 import team_10.client.fragment.DashboardFragment;
 import team_10.client.fragment.NewsArticle;
 import team_10.client.fragment.NewsFragment;
 import team_10.client.fragment.TransactionsFragment;
 import team_10.client.object.User;
-import team_10.client.object.account.Account;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.IO;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
 public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, TransactionsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener {
+
+    public static Context myContext;
 
     private static BottomNavigationView bottomNav;
     Socket serverSocket;
@@ -77,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        myContext = this.getApplicationContext();
 
         if (!SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));

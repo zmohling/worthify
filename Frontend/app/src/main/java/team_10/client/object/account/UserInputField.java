@@ -12,12 +12,3 @@ public @interface UserInputField {
     String name();
     Class inputType();
 }
-
-
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-@interface Accessor {}
-
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-@interface Mutator {}

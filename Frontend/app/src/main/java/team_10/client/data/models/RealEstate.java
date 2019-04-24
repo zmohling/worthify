@@ -1,4 +1,4 @@
-package team_10.client.object.account;
+package team_10.client.data.models;
 
 import android.content.Context;
 import android.view.View;
@@ -100,7 +100,7 @@ public class RealEstate extends Account {
         return null;
     }
 
-    private class Transaction extends team_10.client.object.account.Transaction {
+    private class Transaction extends team_10.client.data.models.Transaction {
 
         Transaction(double value, int transactionID, int recurring, LocalDate date) {
             this.value = value;

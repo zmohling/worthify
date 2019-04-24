@@ -15,41 +15,24 @@ public interface AddEditAccountContract {
     interface Presenter extends BasePresenter {
 
         // Interactions with View
-        void populateAccountandTransactionLists();
-
+        View getAccountInputsView();
+        View getTransactionsView();
         void saveAccount();
-
-        // Interactions with InputFieldView
-        void populateInputView();
-
-        // Interactions with TransactionView
-        void populateTransactionView();
-
+        void cancel();
+        void addTransaction();
+        void deleteTransaction();
 
         boolean isDataMissing();
     }
 
     interface View extends BaseView<Presenter> {
 
-        void addInputField(android.view.View view);
+        void setTitle();
 
-        void addTransactionItem(android.view.View view);
+        void setAddConfirmButtonText();
 
+        void insertAccountInputsView(android.view.View view);
+
+        void insertTransactionsView(android.view.View view);
     }
-
-    /**
-     * The subview contains the dynamically generated input views.
-     */
-    interface InputView extends BaseView<Presenter>{
-
-        void setLabelText(String labelText);
-
-        void setEditLabelText(String editLabelText);
-
-    }
-
-    interface TransactionView extends BaseView<Presenter>{
-
-    }
-
 }

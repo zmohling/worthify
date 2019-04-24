@@ -2,6 +2,8 @@ package team_10.client.object.account;
 
 import java.util.List;
 
+import team_10.client.data.models.Account;
+
 /*
  * Wrapper class for sending serializing, sending, and
  * receiving accounts.

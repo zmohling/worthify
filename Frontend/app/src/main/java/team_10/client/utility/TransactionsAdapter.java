@@ -1,33 +1,17 @@
 package team_10.client.utility;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import team_10.client.R;
-import team_10.client.constant.TYPE;
-import team_10.client.fragment.NewsArticle;
-import team_10.client.object.Article;
-import team_10.client.object.account.Transaction;
+import team_10.client.data.models.Transaction;
 
 public class TransactionsAdapter extends
         RecyclerView.Adapter<TransactionsAdapter.ViewHolder> {

@@ -28,7 +28,7 @@ import java.util.Map;
 import team_10.client.constant.URL;
 import team_10.client.fragment.DashboardFragment;
 import team_10.client.object.User;
-import team_10.client.object.account.Account;
+import team_10.client.data.models.Account;
 import team_10.client.object.account.AccountsWrapper;
 import team_10.client.settings.SharedPreferencesManager;
 

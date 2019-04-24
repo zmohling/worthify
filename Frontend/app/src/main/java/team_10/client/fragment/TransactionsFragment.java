@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import team_10.client.R;
-import team_10.client.object.account.Account;
-import team_10.client.object.account.Transaction;
+import team_10.client.data.models.Account;
+import team_10.client.data.models.Transaction;
 import team_10.client.utility.TransactionsAdapter;
 
 import static team_10.client.settings.SharedPreferencesManager.getUser;

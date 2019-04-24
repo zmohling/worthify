@@ -12,7 +12,7 @@ import java.util.List;
 
 import team_10.client.R;
 import team_10.client.constant.TYPE;
-import team_10.client.object.account.Account;
+import team_10.client.data.models.Account;
 
 public class CustomListAdapter extends ArrayAdapter {
 
