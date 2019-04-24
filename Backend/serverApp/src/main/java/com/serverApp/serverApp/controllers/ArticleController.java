@@ -70,6 +70,8 @@ public class ArticleController {
                     articles.get(j).setDescription(articles.get(j).getDescription().replaceAll("’", "\t’"));
                     articles.get(j).setTitle(articles.get(j).getTitle().replaceAll("’", "\t’"));*/
 
+                    System.out.println(articles.get(j).getTitle());
+
                     articles.get(j).setDescription(URLEncoder.encode(articles.get(j).getDescription(), "UTF-8"));
                     articles.get(j).setTitle(URLEncoder.encode(articles.get(j).getTitle(), "UTF-8"));
 
