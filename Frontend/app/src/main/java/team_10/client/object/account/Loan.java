@@ -24,6 +24,10 @@ public class Loan extends Account {
     public Loan() {
     }
 
+    public Loan(String label) {
+        this.label = label;
+    }
+
     /**
      * Overloaded addTransaction method for Loan.
      *

@@ -84,6 +84,7 @@ public class IO {
     public static String serializeAccounts(List<Account> accounts) {
         GsonBuilder b = new GsonBuilder();
         b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
+        b.setPrettyPrinting();
         Gson g = b.create();
 
         AccountsWrapper a = new AccountsWrapper();
@@ -95,6 +96,7 @@ public class IO {
     public static List<Account> deserializeAccounts(String accounts) {
         GsonBuilder b = new GsonBuilder();
         b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
+        b.setPrettyPrinting();
         Gson g = b.create();
 
         AccountsWrapper a = g.fromJson(accounts, AccountsWrapper.class);

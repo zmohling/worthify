@@ -23,9 +23,9 @@ import team_10.client.object.account.CertificateOfDeposit;
 import team_10.client.object.account.Loan;
 import team_10.client.object.account.SavingsAccount;
 import team_10.client.settings.SharedPreferencesManager;
+import team_10.client.utility.AccountModal;
 import team_10.client.utility.CustomListAdapter;
 import team_10.client.utility.IO;
-import team_10.client.utility.AccountModal;
 
 /**
  * A simple {@link Fragment} subclass.

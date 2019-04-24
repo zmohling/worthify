@@ -104,12 +104,12 @@ public class AccountModal {
                         e.printStackTrace();
                     }
 
+
+
                     // clear view
                     insertPoint.removeAllViews();
                     // insert into main view
-                    insertPoint.addView(a_temp.getView(context), 0);
-
-
+                    insertPoint.addView(InputFieldFactory.getInputFieldView(a_temp, context), 0);
                     // insert into main view
                     final View transactionView = createTransactionView(a_temp, inflater);
                     insertPoint.addView(transactionView);
@@ -122,7 +122,6 @@ public class AccountModal {
                             insertPoint.addView(createTransactionView(a_temp, inflater));
                         }
                     });
-
                 }
             }
 
@@ -177,7 +176,6 @@ public class AccountModal {
             insertPoint.removeAllViews();
             // insert into main view
             insertPoint.addView(a_temp.getView(context), 0);
-
             // insert into main view
             final View transactionView = createTransactionView(a_temp, inflater);
             insertPoint.addView(transactionView);
@@ -190,7 +188,6 @@ public class AccountModal {
                     insertPoint.addView(createTransactionView(a_temp, inflater));
                 }
             });
-
         } catch (Exception e) {
             e.printStackTrace();
         }

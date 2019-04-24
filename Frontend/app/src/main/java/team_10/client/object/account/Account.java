@@ -12,7 +12,14 @@ import java.util.TreeMap;
  * this class are put in the transactions TreeMap.
  */
 public abstract class Account implements Serializable {
-    protected String accountID, label;
+    @UserInputField(
+            priority = 0,
+            name = "Label",
+            inputType = String.class
+    )
+    protected String label;
+
+    protected String accountID;
     protected TreeMap<LocalDate, team_10.client.object.account.Transaction> transactions;
     protected transient Context context;
 

@@ -22,7 +22,12 @@ import team_10.client.utility.General;
 
 public class CertificateOfDeposit extends Account {
 
-    LocalDate maturityDate;
+    @UserInputField(
+            priority = 1,
+            name = "Maturity Date",
+            inputType = LocalDate.class
+    )
+    protected LocalDate maturityDate;
 
     public CertificateOfDeposit() {
     }
