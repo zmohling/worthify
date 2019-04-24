@@ -374,21 +374,21 @@ public class ArticleController {
                 pos = getUserPosition(userId, article);
             }
             switch(vote){
-                case 1://toggle back to 0
-                    article.getVoters().get(pos).setVote(0);
-                    article.setVotes(article.getVotes() - 1);
+                case 1:
+                    article.getVoters().get(pos).setVote(-1);
+                    article.setVotes(article.getVotes() - 2);
                     break;
                 case 0:
-                    article.getVoters().get(pos).setVote(1);
-                    article.setVotes(article.getVotes() + 1);
+                    article.getVoters().get(pos).setVote(-1);
+                    article.setVotes(article.getVotes() - 1);
                     break;
-                case -1:
-                    article.getVoters().get(pos).setVote(1);
-                    article.setVotes(article.getVotes() + 2); // + 2 because they changed from a negative vote to positive
+                case -1://toggle back to 0
+                    article.getVoters().get(pos).setVote(0);
+                    article.setVotes(article.getVotes() + 1); // + 2 because they changed from a negative vote to positive
                     break;
                 default://add new voter to article list
-                    article.getVoters().add(new Vote(userId, 1));
-                    article.setVotes(article.getVotes() + 1);
+                    article.getVoters().add(new Vote(userId, -1));
+                    article.setVotes(article.getVotes() - 1);
                     break;
 
             }
