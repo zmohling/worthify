@@ -21,6 +21,8 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import team_10.client.R;
@@ -93,9 +95,11 @@ public class NewsFragment extends Fragment {
                             {
                                 try {
                                     JSONObject userJson = returned.getJSONObject("article"+ i);
-                                    articles.add(new Article(userJson.getString("title"), userJson.getString("description"), userJson.getString("pictureUrl"), userJson.getString("url")));
+                                    articles.add(new Article(URLDecoder.decode(userJson.getString("title"), "UTF-8"), URLDecoder.decode(userJson.getString("description"), "UTF-8"), userJson.getString("pictureUrl"), userJson.getString("url")));
 
                                 } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (UnsupportedEncodingException e) {
                                     e.printStackTrace();
                                 }
                             }
