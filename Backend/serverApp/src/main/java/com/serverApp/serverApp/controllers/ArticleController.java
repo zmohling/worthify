@@ -14,6 +14,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -396,7 +397,8 @@ public class ArticleController {
      * @return index or -1 if not found
      */
     public int getUserPosition(long userId, Article article){
-        List<Vote> voters = article.getVoters();
+        ArrayList<Vote> voters = article.getVoters();
+
 
         //linear search RIP server
         for(int i = 0; i < voters.size(); i ++){

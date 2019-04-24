@@ -11,11 +11,19 @@ public class Vote {
         setVote(vote);
     }
 
+    /**
+     * idk why they made me do this
+     */
+    public Vote(){
+
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @ManyToOne
+    @JoinColumn(name = "article_id")
     private Article article;
 
     @Column(name = "userId")

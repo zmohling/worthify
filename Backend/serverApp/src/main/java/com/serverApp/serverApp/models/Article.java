@@ -1,10 +1,11 @@
 package com.serverApp.serverApp.models;
 
-import net.bytebuddy.implementation.bind.annotation.Default;
-import org.hibernate.validator.constraints.Length;
+
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -56,7 +57,7 @@ public class Article implements Serializable {
     @Column(name = "voters")
     @ElementCollection
     @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL)
-    List<Vote> voters;
+    private Collection<Vote> voters = new ArrayList<>();
 
     public int getVotes() {
         return votes;
@@ -166,11 +167,11 @@ public class Article implements Serializable {
         this.keyword = keyword;
     }
 
-    public List<Vote> getVoters() {
+    public Collection<Vote> getVoters() {
         return voters;
     }
 
-    public void setVoters(List<Vote> voters) {
+    public void setVoters(Collection<Vote> voters) {
         this.voters = voters;
     }
 }
