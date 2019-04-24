@@ -29,6 +29,11 @@ import java.net.URL;
 import java.sql.Date;
 import java.util.*;
 
+/**
+ * @author Michael Davis
+ *
+ * Rest Controller to handle anything to do with accounts coming/going to the android client
+ */
 @RestController
 public class AccountsController {
     @Autowired
@@ -47,6 +52,12 @@ public class AccountsController {
         RealEstate;
     }
 
+    /**
+     * method to check the header that the client sends
+     * helper method to validate http requests
+     * @param header header
+     * @return optional string
+     */
     public Optional<String> checkHeader(Optional<String> header) {
         int exists = -1;
         long ID = -1;
@@ -68,6 +79,12 @@ public class AccountsController {
         }
     }
 
+    /**
+     * takes a user object in json string format and returns all of their accounts
+     * @param string user
+     * @param header verification
+     * @return list of accounts
+     */
     @RequestMapping("/accounts/get/all")
     public String getAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) {
         long id = -1;
@@ -113,6 +130,13 @@ public class AccountsController {
     }
 
 
+    /**
+     * implements various APIs to get data for dynamic accounts
+     * @param string user
+     * @param header verification
+     * @return updated account variables
+     * @throws IOException IOException
+     */
     @RequestMapping("/accounts/fetch")
     public String fetchAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
         Optional<String> headerCheck = checkHeader(header);
@@ -154,6 +178,12 @@ public class AccountsController {
         return rString;
     }
 
+    /**
+     * takes a user and adds an account
+     * @param string user
+     * @param header verification
+     * @return what the user sent if successful
+     */
     @RequestMapping("/accounts/add")
     public String addAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) {
         long id = -1;
@@ -230,6 +260,12 @@ public class AccountsController {
         return rString;
     }
 
+    /**
+     * takes a user in json string format and edits their account
+     * @param string user
+     * @param header verification
+     * @return identical string if successful
+     */
     @RequestMapping("/accounts/edit")
     public String editAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) {
         long id = -1;
@@ -311,6 +347,12 @@ public class AccountsController {
         return rString;
     }
 
+    /**
+     * helper method to addAccount()
+     * @param accountsArrayList list of accounts
+     * @param id userId
+     * @return json formatted string
+     */
     String getReturnString(ArrayList<Accounts> accountsArrayList, long id) {
         String rString =
                 "{\"accounts\":[";
