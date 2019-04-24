@@ -1,4 +1,0 @@
-interest rates,student loans,
-Loan,interest rates,student loans
-CertificateOfDeposit,
-SavingsAccount,

@@ -4,7 +4,11 @@ package com.serverApp.serverApp.models;
 import javax.persistence.*;
 import java.io.Serializable;
 
-//use IEX API
+/**
+ * @author Michael Davis
+ *
+ * Entity representing the stocks table
+ */
 @Entity
 @Table(name = "stocks")
 public class Stock implements Serializable {

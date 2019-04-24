@@ -3,6 +3,11 @@ package com.serverApp.serverApp.models;
 
 import javax.persistence.*;
 
+/**
+ * @author Griffin Stout
+ *
+ * Entity representing the vote table
+ */
 @Entity
 @Table(name = "vote")
 public class Vote {
@@ -13,9 +18,6 @@ public class Vote {
         setArticle(article);
     }
 
-    /**
-     * idk why it made me make a default constructor
-     */
     public Vote(){}
 
     @Id

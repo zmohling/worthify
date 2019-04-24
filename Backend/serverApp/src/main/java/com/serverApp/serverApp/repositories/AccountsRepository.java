@@ -9,6 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
+/**
+ * @author Michael Davis
+ *
+ * JPA repository for Accounts
+ */
 @Repository
 public interface AccountsRepository extends JpaRepository<Accounts, Long> {
 

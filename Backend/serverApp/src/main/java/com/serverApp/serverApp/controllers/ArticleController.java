@@ -21,6 +21,14 @@ import java.util.List;
  * @author Griffin Stout
  *
  * Rest Controller for the articles table
+ *
+ * ENDPOINT /article/updateDB for updating the articles in the DB (see fetchNewArticles())
+ * ENDPOINT /article/getAll for getting every article in the DB (see getAll())
+ * ENDPOINT /article/adminGetAll for getting every article (specialized for admin) (see adminGetAll())
+ * ENDPOINT /article/getPersonal/{id} for getting the articles of a specific user (see getPersonal())
+ * ENDPOINT /article/archive/{id} for archiving an article (see archiveArticle()
+ * ENDPOINT /article/upvote/{userId}/{articleId} for upvoting an article (see upvoteArticle())
+ * ENDPOINT /article/downvote/{userId}/{articleId} for downvoting an article (see downvoteArticle())
  */
 @RestController
 public class ArticleController {
@@ -480,8 +488,8 @@ public class ArticleController {
     /**
      * This method searches the voters list of a certain article for a certain user and returns
      * their vote or -2 if they were not found. (-2 because -1 is an option for a vote)
-     * @param userId
-     * @param article
+     * @param userId userId
+     * @param article article
      * @return vote or -2 if not found
      */
     public int getUserVote(long userId, Article article){
@@ -499,8 +507,8 @@ public class ArticleController {
     /**
      * This method searches the voters list of a certain article for a certain user and returns
      * their index (-1 if not found)
-     * @param userId
-     * @param article
+     * @param userId userId
+     * @param article article
      * @return index or -1 if not found
      */
     public int getUserPosition(long userId, Article article){

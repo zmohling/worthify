@@ -7,6 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author Griffin Stout and Michae Davis
+ *
+ * JPA repository for Users
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 

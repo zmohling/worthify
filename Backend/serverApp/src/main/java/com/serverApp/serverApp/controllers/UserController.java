@@ -22,14 +22,14 @@ import java.util.Optional;
  *
  * Rest Controller for the User table
  *
- * @endpoint /register for registering a user (see register())
- * @endpoint /passwordChange for changing a password (see passwordChange())
- * @endpoint /emailChange for changing an email (see emailChange())
- * @endpoint /login for logging in (see login())
- * @endpoint /getInfo/{auth} for getting the info of a user (see getAdminInfo())
- * @endpoint /users/listAll for listing all users (see listAll())
- * @endpoint /users/numOnline for getting all of the online users (see numOnline())
- * @endpoint /users/delete/{userId} for deleting a user
+ * ENDPOINT /register for registering a user (see register())
+ * ENDPOINT /passwordChange for changing a password (see passwordChange())
+ * ENDPOINT /emailChange for changing an email (see emailChange())
+ * ENDPOINT /login for logging in (see login())
+ * ENDPOINT /getInfo/{auth} for getting the info of a user (see getAdminInfo())
+ * ENDPOINT /users/listAll for listing all users (see listAll())
+ * ENDPOINT /users/numOnline for getting all of the online users (see numOnline())
+ * ENDPOINT /users/delete/{userId} for deleting a user
  */
 @RestController
 public class UserController{
@@ -346,9 +346,9 @@ public class UserController{
 
     /**
      * delete a user (only administrators)
-     * @param userId 
-     * @param header
-     * @return
+     * @param userId id of the admin
+     * @param header verification
+     * @return error/success message
      */
     @DeleteMapping("/users/delete/{userId}")
     public String deleteUser(@PathVariable int userId, @RequestHeader(value = "Authorization") Optional<String> header) {

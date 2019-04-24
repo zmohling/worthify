@@ -5,6 +5,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Griffin Stout
+ *
+ * Entity representing the articles table
+ */
 @Entity
 @Table(name="articles")
 public class Article implements Serializable {

@@ -3,6 +3,11 @@ package com.serverApp.serverApp.models;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * @author Griffin Stout
+ *
+ * Entity representing the users table
+ */
 @Entity
 @Table(name = "users")
 public class User implements Serializable {

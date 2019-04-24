@@ -4,6 +4,11 @@ package com.serverApp.serverApp.models;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * @author Griffin Stout
+ *
+ * Entity representing the RealEstate table
+ */
 @Entity
 @Table(name = "real_estate")
 public class RealEstate implements Serializable {

@@ -8,6 +8,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+
+/**
+ * @author Griffin Stout
+ *
+ * websocket server that handles all online users and their threads
+ */
 public class EchoServer implements Runnable {
 
     private ServerSocket socket = null;

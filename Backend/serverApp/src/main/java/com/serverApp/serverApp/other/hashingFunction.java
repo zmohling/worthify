@@ -4,6 +4,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+/**
+ * @author Michael Davis
+ *
+ * class to handle hashing for hashed passwords
+ */
 public class hashingFunction
 {
     public static byte[] getSalt() throws NoSuchAlgorithmException
