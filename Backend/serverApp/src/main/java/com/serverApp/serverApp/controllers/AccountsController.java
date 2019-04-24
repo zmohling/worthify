@@ -36,21 +36,35 @@ import java.util.*;
  */
 @RestController
 public class AccountsController {
+    /**
+     * @Autowired repository to AccountsRepository
+     */
     @Autowired
     AccountsRepository accountsRepo;
+
+    /**
+     * @Autowired repository to UserRepository
+     */
     @Autowired
     UserRepository userRepo;
+
+    /**
+     * @Autowired repository to CertificateOfDepositRepository
+     */
     @Autowired
     CertificateOfDepositRepository certRepo;
+
+    /**
+     * @Autowired repository to RealEstateRepository
+     */
     @Autowired
     RealEstateRepository realEstateRepo;
+
+    /**
+     * @Autowired repository to StockRepository
+     */
     @Autowired
     StockRepository stockRepo;
-
-    enum needsAPI
-    {
-        RealEstate;
-    }
 
     /**
      * method to check the header that the client sends

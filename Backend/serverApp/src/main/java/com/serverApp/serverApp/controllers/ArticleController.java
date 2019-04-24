@@ -9,6 +9,8 @@ import com.serverApp.serverApp.repositories.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -17,7 +19,8 @@ import java.util.List;
 
 /**
  * @author Griffin Stout
- * Rest Controller for the articles table 
+ *
+ * Rest Controller for the articles table
  */
 @RestController
 public class ArticleController {
@@ -27,16 +30,21 @@ public class ArticleController {
     private String[] savingsAccountKeywords = {"saving", "savings account"};
     private String[] certificateOfDepositKeywords = {"CD", "CD rates"};
 
-
+    /**
+     * @Autowired repository to ArticleRepository
+     */
     @Autowired
     ArticleRepository articleRepo;
 
+    /**
+     * @Autowired repository to AccountsRepository
+     */
     @Autowired
     AccountsRepository accountRepo;
 
-    @Autowired
-    UserController userRepo;
-
+    /**
+     * updates the articles in the database every 5 hours
+     */
     @RequestMapping("/article/updateDB")
     @Scheduled(fixedRate = 18000000)//5 hours
     public void fetchNewArticles(){
@@ -92,9 +100,13 @@ public class ArticleController {
         System.out.println("Fetching articles...\n" + insertCount + " articles inserted.");
     }
 
-
+    /**
+     * gets all of the articles in the database in json format
+     * @return every article in the database
+     * @throws UnsupportedEncodingException UnsupportedEncodingException
+     */
     @GetMapping("/article/getAll")
-    public String getAll() throws Exception{
+    public String getAll() throws UnsupportedEncodingException {
 
         String rString = "{";
 
@@ -161,8 +173,13 @@ public class ArticleController {
         return rString;
     }
 
+    /**
+     * returns all of the articles in a special format for the admin
+     * @return special formatting for adrmin use
+     * @throws UnsupportedEncodingException UnsupportedEncodingException
+     */
     @GetMapping("/article/adminGetAll")
-    public String adminGetAll()throws Exception {
+    public String adminGetAll() throws UnsupportedEncodingException {
         String rString = "{";
 
         Article[] articles = articleRepo.getAllArticles();
@@ -231,9 +248,14 @@ public class ArticleController {
     }
 
 
-
+    /**
+     * returns a list of articles based on the accounts of a specific user
+     * @param id id of the user
+     * @return list of articles for that user
+     * @throws UnsupportedEncodingException UnsupportedEncodingException
+     */
     @GetMapping("/article/getPersonal/{id}")
-    public String getPersonal(@PathVariable long id) throws Exception{
+    public String getPersonal(@PathVariable long id) throws UnsupportedEncodingException{
         Accounts[] accounts = accountRepo.getAccountsById(id);
         //System.out.println("Number of accounts: " + accounts.length);
         ArrayList<String> keywords = new ArrayList<>();
@@ -336,12 +358,23 @@ public class ArticleController {
         return rString;
     }
 
+    /**
+     * archives an article
+     * @param id if of article to archive
+     * @return success message
+     */
     @DeleteMapping("/article/archive/{id}")
     public String archiveArticle(@PathVariable int id){
         articleRepo.deleteArticle(id);
         return "{\"message\":\"success\"}";
     }
 
+    /**
+     * upvotes an article
+     * @param userId user who is upvoting
+     * @param articleId article to upvote
+     * @return the vote of the user (1,0 ir -1)
+     */
     @RequestMapping("/article/upvote/{userId}/{articleId}")
     public String upvoteArticle(@PathVariable long userId, @PathVariable long articleId){
         if(articleRepo.getNumArticles(articleId) == 1){
@@ -389,6 +422,12 @@ public class ArticleController {
         return "{\"error\":\"article not found\"}";
     }
 
+    /**
+     * downvotes an article
+     * @param userId user who is downvoting
+     * @param articleId article to downvote
+     * @return the vote of the user (1,0 ir -1)
+     */
     @RequestMapping("/article/downvote/{userId}/{articleId}")
     public String downvoteArticle(@PathVariable long userId, @PathVariable long articleId){
         if(articleRepo.getNumArticles(articleId) == 1){

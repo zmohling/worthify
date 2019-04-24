@@ -17,18 +17,43 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+/**
+ * @author Griffin Stout and Michael Davis
+ *
+ * Rest Controller for the User table
+ *
+ * @endpoint /register for registering a user (see register())
+ * @endpoint /passwordChange for changing a password (see passwordChange())
+ * @endpoint /emailChange for changing an email (see emailChange())
+ * @endpoint /login for logging in (see login())
+ * @endpoint /getInfo/{auth} for getting the info of a user (see getAdminInfo())
+ * @endpoint /users/listAll for listing all users (see listAll())
+ * @endpoint /users/numOnline for getting all of the online users (see numOnline())
+ * @endpoint /users/delete/{userId} for deleting a user
+ */
 @RestController
 public class UserController{
 
     EchoServer echoServer = new EchoServer(0000, false);
 
+    /**
+     * @Autowired repository to UserRepository
+     */
     @Autowired
     UserRepository userRepo;
 
+    /**
+     * @Autowired repository to AccountsRepository
+     */
     @Autowired
     AccountsRepository accountsRepo;
 
-
+    /**
+     * register a user
+     * @param user user to register
+     * @return json formatted user
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     */
     @RequestMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) throws NoSuchAlgorithmException {
     // System.out.println("Login: Id: " + user.getId() + ": " + user.getFirstName() + " " +
@@ -59,6 +84,14 @@ public class UserController{
         }
     }
 
+    /**
+     * change a user's password
+     * @param string user
+     * @param header verification
+     * @return json formatted user
+     * @throws IOException IOException
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     */
     @RequestMapping("/passwordChange")
     public ResponseEntity<String> passwordChange(@RequestBody String string,
                                                  @RequestHeader(value = "Authorization") Optional<String> header) throws IOException, NoSuchAlgorithmException {
@@ -113,6 +146,14 @@ public class UserController{
                 + "\"message\":\"incorrect password\"}");
     }
 
+    /**
+     * change a user's email
+     * @param string user
+     * @param header verification
+     * @return json formatted user
+     * @throws IOException IOException
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     */
     @RequestMapping("/emailChange")
     public ResponseEntity<String> emailChange(@RequestBody String string,
                                                  @RequestHeader(value = "Authorization") Optional<String> header) throws IOException, NoSuchAlgorithmException {
@@ -169,6 +210,11 @@ public class UserController{
                 + "\"message\":\"incorrect password\"}");
     }
 
+    /**
+     * log into the app
+     * @param user user to log in
+     * @return a json formatted user
+     */
     @RequestMapping("/login")
     public ResponseEntity<String> login(@RequestBody User user){
         User retrievedUser = userRepo.getUser(user.getEmail());
@@ -201,6 +247,11 @@ public class UserController{
         }
     }
 
+    /**
+     * administrators can
+     * @param auth authorization
+     * @return the users info
+     */
     @RequestMapping("/getInfo/{auth}")
     public String getAdminInfo(@PathVariable String auth){
         User admin = userRepo.getAdmin(auth);
@@ -230,6 +281,10 @@ public class UserController{
         }
     }
 
+    /**
+     * lists all the users
+     * @return alist of all the users
+     */
     @GetMapping("users/listAll")
     public String listAll(){
         User[] userList = userRepo.listAll();
@@ -279,12 +334,22 @@ public class UserController{
         return rString;
     }
 
+    /**
+     * a json formatted number of people online
+     * @return the number of people online
+     */
     @GetMapping("/users/numOnline")
     public String getNumOnline(){
         String rString = "{\"num\":\"" + echoServer.getNumOnlineUsers() +"\"}";
         return rString;
     }
 
+    /**
+     * delete a user (only administrators)
+     * @param userId 
+     * @param header
+     * @return
+     */
     @DeleteMapping("/users/delete/{userId}")
     public String deleteUser(@PathVariable int userId, @RequestHeader(value = "Authorization") Optional<String> header) {
         //System.out.println(userId);
