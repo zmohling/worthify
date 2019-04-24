@@ -119,6 +119,14 @@ public class SettingsFragment extends Fragment {
                 editEmailModal();
             }
         });
+        TextView editPassword = view.findViewById(R.id.text_view_change_password);
+        editPassword.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                editPasswordModal();
+            }
+        });
 
         return view;
     }
@@ -241,6 +249,167 @@ public class SettingsFragment extends Fragment {
 
                                         //starting the profile activity
                                         Toast.makeText(getContext(), "Email Successfully Changed", Toast.LENGTH_SHORT).show();
+                                        popupWindow.dismiss();
+                                    } else {
+                                        Toast.makeText(getContext(), "Unsuccessful Change: " + obj.getString("message"), Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (JSONException e) {
+                                    Toast.makeText(getContext(), "Unsuccessful Change", Toast.LENGTH_SHORT).show();
+                                    password.setText("");
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getContext(),
+                                        (error.getMessage() == null) ? "Unsuccessful Login" : "Unsuccessful Login: " + error.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                                password.setText("");
+                            }
+                        }) {
+                    @Override
+                    public String getBodyContentType() {
+                        return String.format("application/json; charset=utf-8");
+                    }
+
+                    @Override
+                    public byte[] getBody() throws AuthFailureError {
+                        try {
+                            return requestBody == null ? null : requestBody.getBytes("utf-8");
+                        } catch (UnsupportedEncodingException uee) {
+                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                                    requestBody, "utf-8");
+                            return null;
+                        }
+                    }
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String>  params = new HashMap<String, String>();
+                        final String basicAuth = User.getToken();
+                        params.put("Authorization", basicAuth);
+
+                        return params;
+                    }
+                };
+
+                VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
+            }
+        });
+    }
+
+    public void editPasswordModal()
+    {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View parent = this.getView();
+        final View popupView = inflater.inflate(R.layout.modal_edit_password, null);
+
+        // Create a window for popupView
+        int width = LinearLayout.LayoutParams.MATCH_PARENT;
+        int height = LinearLayout.LayoutParams.MATCH_PARENT;
+
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
+        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);  // Ensure keyboard does not resize
+        popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+
+        ((Button) popupView.findViewById(R.id.modal_edit_password_cancel)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            popupWindow.setElevation(100);
+        }
+
+        ((Button) popupView.findViewById(R.id.modal_edit_password_add)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText email = (EditText) popupView.findViewById(R.id.modal_edit_password_email);
+                final EditText password = (EditText) popupView.findViewById(R.id.modal_edit_password_password);
+                EditText newPassword = (EditText) popupView.findViewById(R.id.modal_edit_password_new_password);
+                final String emailString = email.getText().toString();
+                final String passwordString = password.getText().toString();
+                final String newPasswordString = newPassword.getText().toString();
+
+                Pattern emailRegex = Pattern.compile("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=" +
+                        "?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[" +
+                        "\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a" +
+                        "-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}" +
+                        "(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0" +
+                        "c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])");
+                Matcher m = emailRegex.matcher(email.getText());
+
+                //validating inputs
+                if (TextUtils.isEmpty(emailString) || !m.matches()) {
+                    email.setError("Invalid or Missing Email");
+                    email.requestFocus();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(passwordString)) {
+                    password.setError("Invalid or Missing Password");
+                    password.requestFocus();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(newPasswordString)) {
+                    newPassword.setError("Invalid or Missing New Email");
+                    newPassword.requestFocus();
+                    return;
+                }
+
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("email", emailString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    json.put("password", passwordString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    json.put("changedPassword", newPasswordString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                final String requestBody = json.toString();
+
+                //if everything is fine
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_EDIT_PASSWORD,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    //converting response to json object
+                                    JSONObject obj = new JSONObject(response);
+
+                                    //if no error in response
+                                    if (!obj.getBoolean("error")) {
+
+                                        //getting the user from the response
+                                        JSONObject userJson = obj.getJSONObject("user");
+
+                                        //creating a new user object
+                                        User user = new User(
+                                                userJson.getInt("id"),
+                                                userJson.getString("lastName"),
+                                                userJson.getString("firstName"),
+                                                userJson.getString("email"),
+                                                userJson.getInt("type"),
+                                                userJson.getString("authorization")
+                                        );
+
+                                        //storing the user in shared preferences
+                                        SharedPreferencesManager.getInstance(getContext()).logout();
+                                        SharedPreferencesManager.getInstance(getContext()).userLogin(user);
+
+                                        //starting the profile activity
+                                        Toast.makeText(getContext(), "Password Successfully Changed", Toast.LENGTH_SHORT).show();
                                         popupWindow.dismiss();
                                     } else {
                                         Toast.makeText(getContext(), "Unsuccessful Change: " + obj.getString("message"), Toast.LENGTH_SHORT).show();
