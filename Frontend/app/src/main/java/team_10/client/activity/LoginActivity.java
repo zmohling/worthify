@@ -80,6 +80,85 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //open register screen
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("email", "sample@example.com");
+                    json.put("password", "password");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                final String requestBody = json.toString();
+
+                //if everything is fine
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_LOGIN,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                progressBar.setVisibility(View.GONE);
+
+                                try {
+                                    //converting response to json object
+                                    JSONObject obj = new JSONObject(response);
+
+                                    //if no error in response
+                                    if (!obj.getBoolean("error")) {
+
+                                        //getting the user from the response
+                                        JSONObject userJson = obj.getJSONObject("user");
+
+                                        //creating a new user object
+                                        User user = new User(
+                                                userJson.getInt("id"),
+                                                userJson.getString("lastName"),
+                                                userJson.getString("firstName"),
+                                                userJson.getString("email"),
+                                                userJson.getInt("type"),
+                                                userJson.getString("authorization")
+                                        );
+
+                                        //storing the user in shared preferences
+                                        SharedPreferencesManager.getInstance(getApplicationContext()).userLogin(user);
+
+                                        //starting the profile activity
+                                        finish();
+                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Unsuccessful Login: " + obj.getString("message"), Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (JSONException e) {
+                                    Toast.makeText(getApplicationContext(), "Unsuccessful Login", Toast.LENGTH_SHORT).show();
+                                    editTextPassword.setText("");
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getApplicationContext(),
+                                        (error.getMessage() == null) ? "Unsuccessful Login" : "Unsuccessful Login: " + error.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                                editTextPassword.setText("");
+                            }
+                        }) {
+                    @Override
+                    public String getBodyContentType() {
+                        return String.format("application/json; charset=utf-8");
+                    }
+
+                    @Override
+                    public byte[] getBody() throws AuthFailureError {
+                        try {
+                            return requestBody == null ? null : requestBody.getBytes("utf-8");
+                        } catch (UnsupportedEncodingException uee) {
+                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+                                    requestBody, "utf-8");
+                            return null;
+                        }
+                    }
+                };
+
+                VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
                 finish();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
