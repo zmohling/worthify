@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,6 +46,7 @@ public class NewsFragment extends Fragment {
     ArrayList<Article> articles;
     ArticlesAdapter adapter;
     RecyclerView recyclerView;
+    SwipeRefreshLayout pullToRefresh;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -128,6 +130,8 @@ public class NewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news , container ,false);
         recyclerView = (RecyclerView) view.findViewById(R.id.rvArticles);
 
+        pullToRefresh = (SwipeRefreshLayout) view.findViewById(R.id.pullToRefresh);
+
         articles = new ArrayList<Article>();
         adapter = new ArticlesAdapter(articles, getFragmentManager());
         recyclerView.setAdapter(adapter);
@@ -135,6 +139,15 @@ public class NewsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         editArticles();
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+                articles.clear();
+                editArticles();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
 
         return view;
     }
