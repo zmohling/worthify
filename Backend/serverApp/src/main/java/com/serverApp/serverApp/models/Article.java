@@ -51,9 +51,8 @@ public class Article implements Serializable {
     @Column(name = "votes")
     private int votes;
 
-    @Column(name = "voters")
-    @ElementCollection
-    @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn
     private List<Vote> voters = new ArrayList<>();
 
     public int getVotes() {
