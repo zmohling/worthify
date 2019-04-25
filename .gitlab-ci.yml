@@ -1,19 +1,23 @@
-# Stages of pipeline, should match with stage tag inside each job.
 # Each stages executes in sequence, if previous job fails, then all the preceeding jobs are skipped.
 stages:
-  - gradlebuild
-  - autodeploy
-  - androidbuild
+  - backend_build
+  - backend_deploy
 
 # tags: "shell" should match with the tag name provided to runner, for spring runner should execute in shell.
 # Notice that in petclinic project, the spring project is in root of master, if yours is in folder then cd to that folder.
-gradle-build:
-  stage: gradlebuild
+backend_build:
+  stage: backend_build
   tags:
     - backend
   script:
     - cd Backend/serverApp
     - gradle build
+  only:
+      refs:
+          - develop
+          - master
+      changes:
+          - "Backend/**"
   
 # artifacts are created when job executes successfully, and can be manually downloaded from GitLab GUI.
 # artifacts are not mandatory, buts it good practice, in case auto deploy fails, you can manually download the jar.
@@ -31,8 +35,8 @@ gradle-build:
 # Below stage builds, deploys and executes the jar as service.
 # Make sure there is /target directory in your server, else script will fail, or use any other folder you like.
 # If you are changing the folder, reflect the change in systemd-web-demo service too.
-autoDeploy:
-  stage: autodeploy
+backend_deploy:
+  stage: backend_deploy
   tags:
    - backend
   script:
@@ -41,6 +45,12 @@ autoDeploy:
     - sudo mv build/libs/*.jar /target/web-demo.jar 
     - sudo systemctl stop system-web-demo
     - sudo systemctl start system-web-demo
+  only:
+      refs:
+          - develop
+          - master
+      changes:
+          - "Backend/**"
 
     
 # To build android projects
