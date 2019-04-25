@@ -14,4 +14,10 @@
         <item name="android:navigationBarColor">@color/primary</item>
     </style>
 
+    <style name="NetWorthrTheme.NumberPicker">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColorPrimary">@color/text</item>
+
+    </style>
+
 </resources>

@@ -6,25 +6,31 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.NumberPicker;
+import android.widget.PopupWindow;
 
 import java.util.List;
 
-import team_10.client.R;
 import team_10.client.MainActivity;
+import team_10.client.R;
+import team_10.client.constant.TYPE;
 import team_10.client.dashboard.add_edit_account.AddEditAccountPresenter;
 import team_10.client.dashboard.add_edit_account.AddEditAccountView;
+import team_10.client.data.User;
 import team_10.client.data.models.Account;
-import team_10.client.data.models.Loan;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.data.source.AccountsRepository;
-import team_10.client.data.User;
 import team_10.client.data.source.local.SharedPreferencesManager;
 import team_10.client.utility.adapter.CustomListAdapter;
 
@@ -66,7 +72,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         // Start Account Modal in edit mode if ListView item (account) was clicked
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-                startAddEditAccounts(accounts.get(position).getID(), null);
+                startAddEditAccounts(accounts.get(position).getID(), accounts.get(position).getClass());
             }
         });
 
@@ -106,10 +112,53 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 break;
             case R.id.button_add_account:
 
-                startAddEditAccounts(null, Loan.class);
+                startAccountPickerPopup();
+                //startAddEditAccounts(null, Loan.class);
 
                 break;
         }
+    }
+
+    /**
+     * Number picker for choosing an account type to add
+     */
+    public void startAccountPickerPopup() {
+        View popupView;
+        PopupWindow popupWindow;
+        LayoutInflater inflater;
+
+        inflater = LayoutInflater.from(MainActivity.myContext);
+        popupView = inflater.inflate(R.layout.modal_wheel_picker, null);
+
+        List<String> accountTypes = TYPE.getAllAsStrings();
+
+        NumberPicker picker = popupView.findViewById(R.id.modal_account_picker);
+        picker.setMinValue(0);
+        picker.setMaxValue(accountTypes.size() - 1);
+        picker.setDisplayedValues((accountTypes.toArray(new String[accountTypes.size()])));
+
+        // Create a window for popupView
+        int width = LinearLayout.LayoutParams.MATCH_PARENT;
+        int height = LinearLayout.LayoutParams.MATCH_PARENT;
+
+        popupWindow = new PopupWindow(popupView, width, height, true);
+        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);  // Ensure keyboard does not resize
+        popupWindow.showAtLocation(this.getView(), Gravity.CENTER, 0, 0);
+
+        Button continueButton = popupView.findViewById(R.id.modal_add_edit_account_continue);
+
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                TYPE t = TYPE.firstMatch(accountTypes.get(picker.getValue()));
+
+                startAddEditAccounts(null, t.getTypeClass());
+
+                popupWindow.dismiss();
+            }
+        });
+
     }
 
     public void startAddEditAccounts(@Nullable String accountID, @Nullable Class<? extends Account> type) {

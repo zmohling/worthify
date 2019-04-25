@@ -12,13 +12,13 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import team_10.client.MainActivity;
+import team_10.client.dashboard.DashboardFragment;
+import team_10.client.data.UserInputField;
 import team_10.client.data.models.Account;
 import team_10.client.data.models.Transaction;
 import team_10.client.data.source.AccountsDataSource;
-import team_10.client.dashboard.DashboardFragment;
-import team_10.client.data.UserInputField;
-import team_10.client.utility.factory.InputFieldFactory;
 import team_10.client.utility.adapter.TransactionsAdapter;
+import team_10.client.utility.factory.InputFieldFactory;
 
 public class AddEditAccountPresenter implements AddEditAccountContract.Presenter,
         AccountsDataSource.GetAccountCallback {
@@ -62,7 +62,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
             if (mAddEditAccountView.isActive()) {
 
-                mAddEditAccountView.setTitle("Add a New Account");
+                mAddEditAccountView.setTitle("ADD");
 
                 mAddEditAccountView.setAddConfirmButtonText("Add");
 
@@ -74,7 +74,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
             if (mAddEditAccountView.isActive()) {
 
-                mAddEditAccountView.setTitle("Edit an Account");
+                mAddEditAccountView.setTitle("EDIT");
 
                 mAddEditAccountView.setAddConfirmButtonText("Save");
 
