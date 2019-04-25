@@ -115,7 +115,7 @@ public class SettingsFragment extends Fragment{
         TextView lastName = view.findViewById(R.id.text_view_profile_last_name);
         lastName.setText("" + getUser().getLastName());
         TextView emailName = view.findViewById(R.id.text_view_profile_email);
-        emailName.setText("Email Address: " + getUser().getEmail());
+        emailName.setText("" + getUser().getEmail());
         TextView editEmail = view.findViewById(R.id.text_view_change_email);
         editEmail.setOnClickListener(new View.OnClickListener()
         {
