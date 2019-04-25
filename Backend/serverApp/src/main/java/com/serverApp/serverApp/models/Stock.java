@@ -5,9 +5,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * @author Michael Davis
- *
  * Entity representing the stocks table
+ *
+ * @author Michael Davis
  */
 @Entity
 @Table(name = "stocks")

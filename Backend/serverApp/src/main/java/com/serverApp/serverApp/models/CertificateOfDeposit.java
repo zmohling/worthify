@@ -6,9 +6,9 @@ import java.io.Serializable;
 import java.sql.Date;
 
 /**
- * @author Michael Davis
  *
  * Entity representing the CertificateOfDeposit table
+ * @author Michael Davis
  */
 @Entity
 @Table(name = "certificateOfDeposit")

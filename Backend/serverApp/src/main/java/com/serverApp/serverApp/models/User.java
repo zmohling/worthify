@@ -4,9 +4,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * @author Griffin Stout
- *
  * Entity representing the users table
+ *
+ * @author Griffin Stout
  */
 @Entity
 @Table(name = "users")

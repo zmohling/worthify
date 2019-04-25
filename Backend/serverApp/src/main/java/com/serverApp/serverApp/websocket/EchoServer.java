@@ -1,7 +1,6 @@
 package com.serverApp.serverApp.websocket;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -10,9 +9,9 @@ import java.util.ArrayList;
 
 
 /**
- * @author Griffin Stout
- *
  * websocket server that handles all online users and their threads
+ *
+ * @author Griffin Stout
  */
 public class EchoServer implements Runnable {
 

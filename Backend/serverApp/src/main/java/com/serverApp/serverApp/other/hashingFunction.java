@@ -5,9 +5,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
+ * class to handle hashing for hashed passwords
+ *
  * @author Michael Davis
  *
- * class to handle hashing for hashed passwords
  */
 public class hashingFunction
 {

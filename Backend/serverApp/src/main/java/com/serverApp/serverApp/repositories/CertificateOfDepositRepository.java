@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author Michael Davis
- *
  * JPA repository for CertificateOfDeposit
+ *
+ * @author Michael Davis
  */
 @Repository
 public interface CertificateOfDepositRepository extends JpaRepository<CertificateOfDeposit, Long> {

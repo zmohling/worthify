@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
+ * JPA repository for Users
+ *
  * @author Griffin Stout and Michae Davis
  *
- * JPA repository for Users
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

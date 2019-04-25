@@ -13,9 +13,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * @author Griffin Stout
- *
  * class that uses an HTTP connection to retrieve a list of articles from a url
+ *
+ * @author Griffin Stout
  */
 public class ArticleRetrieval {
 

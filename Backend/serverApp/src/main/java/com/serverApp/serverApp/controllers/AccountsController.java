@@ -30,14 +30,15 @@ import java.sql.Date;
 import java.util.*;
 
 /**
+ * Rest Controller to handle anything to do with accounts coming/going to the android client
+ *<br>
+ * ENDPOINT /accounts/get/all for getting all of a specific user's accounts (see getAccounts())<br>
+ * ENDPOINT /accounts/fetch for implementing the APIs (see fetchAccounts())<br>
+ * ENDPOINT /accounts/add for adding an account to a user (see addAccounts())<br>
+ * ENDPOINT /accounts/edit for editing an account (see editAccounts())<br>
+ *
  * @author Michael Davis
  *
- * Rest Controller to handle anything to do with accounts coming/going to the android client
- *
- * ENDPOINT /accounts/get/all for getting all of a specific user's accounts (see getAccounts())
- * ENDPOINT /accounts/fetch for implementing the APIs (see fetchAccounts())
- * ENDPOINT /accounts/add for adding an account to a user (see addAccounts())
- * ENDPOINT /accounts/edit for editing an account (see editAccounts())
  */
 @RestController
 public class AccountsController {

@@ -18,17 +18,18 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Rest Controller for the articles table
+ * <br>
+ * ENDPOINT /article/updateDB for updating the articles in the DB (see fetchNewArticles())<br>
+ * ENDPOINT /article/getAll for getting every article in the DB (see getAll())<br>
+ * ENDPOINT /article/adminGetAll for getting every article (specialized for admin) (see adminGetAll())<br>
+ * ENDPOINT /article/getPersonal/{id} for getting the articles of a specific user (see getPersonal())<br>
+ * ENDPOINT /article/archive/{id} for archiving an article (see archiveArticle()<br>
+ * ENDPOINT /article/upvote/{userId}/{articleId} for upvoting an article (see upvoteArticle())<br>
+ * ENDPOINT /article/downvote/{userId}/{articleId} for downvoting an article (see downvoteArticle())<br>
+ *
  * @author Griffin Stout
  *
- * Rest Controller for the articles table
- *
- * ENDPOINT /article/updateDB for updating the articles in the DB (see fetchNewArticles())
- * ENDPOINT /article/getAll for getting every article in the DB (see getAll())
- * ENDPOINT /article/adminGetAll for getting every article (specialized for admin) (see adminGetAll())
- * ENDPOINT /article/getPersonal/{id} for getting the articles of a specific user (see getPersonal())
- * ENDPOINT /article/archive/{id} for archiving an article (see archiveArticle()
- * ENDPOINT /article/upvote/{userId}/{articleId} for upvoting an article (see upvoteArticle())
- * ENDPOINT /article/downvote/{userId}/{articleId} for downvoting an article (see downvoteArticle())
  */
 @RestController
 public class ArticleController {

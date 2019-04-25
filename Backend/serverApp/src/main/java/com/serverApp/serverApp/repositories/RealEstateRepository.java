@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
+ * JPA repository for RealEstate
+ *
  * @author Michael Davis
  *
- * JPA repository for RealEstate
  */
 @Repository
 public interface RealEstateRepository extends JpaRepository<RealEstate, Long> {

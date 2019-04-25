@@ -4,9 +4,9 @@ package com.serverApp.serverApp.models;
 import javax.persistence.*;
 
 /**
- * @author Griffin Stout
- *
  * Entity representing the vote table
+ *
+ * @author Griffin Stout
  */
 @Entity
 @Table(name = "vote")
