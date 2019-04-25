@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary_transparent">
+
+    <NumberPicker
+        android:id="@+id/modal_account_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:theme="@style/NetWorthrTheme.NumberPicker">
+    </NumberPicker>
+
+    <Button
+        android:id="@+id/modal_add_edit_account_continue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/modal_account_picker"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="10dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@drawable/greenbtn_bg"
+        android:text="Continue"
+        android:textColor="@color/text" />
+
+</RelativeLayout>

@@ -15,7 +15,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:windowSoftInputMode="adjustPan"
-            android:name=".activity.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,9 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.ProfileActivity" />
+        <activity android:name=".login_and_registration.LoginActivity" />
+        <activity android:name=".login_and_registration.RegisterActivity" />
     </application>
 
 </manifest>

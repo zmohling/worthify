@@ -3,11 +3,7 @@
     <string name="title_activity_main">NetWorthr</string>
     <string name="title_news">News</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_transactions">Transactions</string>
+    <string name="title_settings">Settings</string>
     <string-array name="account_types">
-        <item>Loan</item>
-        <item>Savings Account</item>
-        <item>Certificate of Deposit</item>
-        <item>Stock</item>
     </string-array>
 </resources>

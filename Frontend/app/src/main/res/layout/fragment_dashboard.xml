@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".fragment.DashboardFragment">
+    tools:context=".dashboard.DashboardFragment">
 
     <ScrollView
         android:id="@+id/scroll"
@@ -23,7 +23,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="60dp"
-                tools:context=".fragment.DashboardFragment">
+                tools:context=".dashboard.DashboardFragment">
 
                 <ImageView
                     android:id="@+id/graph"
