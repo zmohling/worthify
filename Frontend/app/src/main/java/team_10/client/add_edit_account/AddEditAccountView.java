@@ -3,6 +3,9 @@ package team_10.client.add_edit_account;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import team_10.client.R;
+import team_10.client.utility.TransactionsAdapter;
 
 /**
  * Main UI for the add and edit account screen.
@@ -21,7 +25,9 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
 
     private LinearLayout mAccountInputsView;
 
-    private LinearLayout mTransactionsView;
+    private RecyclerView mRecurringTransactionsView;
+
+    private RecyclerView mTransactionsView;
 
     private TextView mTitle;
 
@@ -70,6 +76,9 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                mPresenter.unsubscribe();
+
                 getActivity().onBackPressed();
             }
         });
@@ -82,7 +91,16 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
 
         mTitle = (TextView) root.findViewById(R.id.modal_add_edit_account_title);
 
-        // TODO: get linear layout for transactions
+        mAccountInputsView = (LinearLayout) root.findViewById(R.id.modal_add_edit_account_input_view_group);
+
+        mTransactionsView = (RecyclerView) root.findViewById(R.id.modal_add_edit_account_transaction_view_group);
+        mTransactionsView.setItemAnimator(new DefaultItemAnimator());
+        mTransactionsView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mRecurringTransactionsView = (RecyclerView) root.findViewById(
+                R.id.modal_add_edit_account_recurring_transaction_view_group);
+        mRecurringTransactionsView.setItemAnimator(new DefaultItemAnimator());
+        mRecurringTransactionsView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return root;
     }
@@ -99,18 +117,32 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
 
     @Override
     public void insertAccountInputsView(View view) {
-
-
-    }
-
-    @Override
-    public void insertTransactionsView(View view) {
-
+        mAccountInputsView.addView(view, 0);
     }
 
     @Override
     public void showAccountEmptyError() {
 
+    }
+
+    @Override
+    public void setTransactionRecyclerAdapter(TransactionsAdapter adapter) {
+        mTransactionsView.setAdapter(adapter);
+    }
+
+    @Override
+    public void setRecurringTransactionRecyclerAdapter(TransactionsAdapter adapter) {
+        mRecurringTransactionsView.setAdapter(adapter);
+    }
+
+    @Override
+    public void notifyDatasetChanged() {
+        if (mTransactionsView.getAdapter() == null ||
+                mRecurringTransactionsView.getAdapter() == null) {
+        } else {
+            mTransactionsView.getAdapter().notifyDataSetChanged();
+            mRecurringTransactionsView.getAdapter().notifyDataSetChanged();
+        }
     }
 
     @Override

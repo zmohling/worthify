@@ -2,6 +2,7 @@ package team_10.client.add_edit_account;
 
 import team_10.client.BasePresenter;
 import team_10.client.BaseView;
+import team_10.client.utility.TransactionsAdapter;
 
 /**
  * This specifies the contract between the view and the presenter.
@@ -13,10 +14,6 @@ public interface AddEditAccountContract {
      * new Account Types.
      */
     interface Presenter extends BasePresenter {
-
-        android.view.View getAccountInputsView();
-
-        android.view.View getTransactionsView();
 
         void saveAccount();
 
@@ -37,9 +34,13 @@ public interface AddEditAccountContract {
 
         void insertAccountInputsView(android.view.View view);
 
-        void insertTransactionsView(android.view.View view);
+        void setTransactionRecyclerAdapter(TransactionsAdapter adapter);
+
+        void setRecurringTransactionRecyclerAdapter(TransactionsAdapter adapter);
 
         void showAccountEmptyError();
+
+        void notifyDatasetChanged();
 
         boolean isActive();
     }

@@ -7,11 +7,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import team_10.client.activity.MainActivity;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.local.AccountsLocalDataSource;
 import team_10.client.data.source.remote.AccountsRemoteDataSource;
 import team_10.client.utility.AppExecutors;
+import team_10.client.utility.IO;
 
 public class AccountsRepository implements AccountsDataSource {
 
@@ -133,6 +133,41 @@ public class AccountsRepository implements AccountsDataSource {
         });
     }
 
+    @Override
+    public void getAccountCopy(@NonNull String accountID, @NonNull GetAccountCallback callback) {
+        getAccount(accountID, new GetAccountCallback() {
+            @Override
+            public void onAccountLoaded(Account account) {
+
+                List<Account> accountWrapperCollection = new ArrayList<Account>();
+
+                accountWrapperCollection.add(account);
+
+                Account deepCopyAccount = null;
+
+                if (!accountWrapperCollection.isEmpty()) {
+
+                    deepCopyAccount = IO.deserializeAccounts(
+                            IO.serializeAccounts(accountWrapperCollection)).get(0);
+
+                    if (deepCopyAccount != null)
+                        callback.onAccountLoaded(deepCopyAccount);
+                    else
+                        callback.onDataNotAvailable();
+
+                } else {
+                    callback.onDataNotAvailable();
+                }
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
+
+    }
+
     private Account getAccountWithID(String accountID) {
         if (mCachedAccounts.containsKey(accountID)) {
             return mCachedAccounts.get(accountID);
@@ -174,12 +209,13 @@ public class AccountsRepository implements AccountsDataSource {
     }
 
     @Override
-    public void refreshAccounts(@NonNull RefreshAccountsCallback callback) {
+    public void refreshAccounts(@NonNull LoadAccountsCallback callback) {
 
     }
 
     /**
      * Return a list of accounts that are currently stored in memory.
+     *
      * @return List of cached accounts
      */
     public List<Account> getCachedAccounts() {

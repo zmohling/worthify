@@ -9,17 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.TreeMap;
 
 import team_10.client.R;
+import team_10.client.activity.MainActivity;
 import team_10.client.data.models.Account;
 import team_10.client.object.account.UserInputField;
 
@@ -27,58 +24,47 @@ public abstract class InputFieldFactory {
     private static LayoutInflater inflater;
     private static Context context;
 
-    private static Map<Field, UserInputField> fields;
-    private static Account a_temp;
-
-    public static View getInputFieldView(final Account account, Context _context) {
-        context = _context;
+    public static View getInputFieldView(final Account account, final Field field) {
+        context = MainActivity.myContext;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        LinearLayout v = new LinearLayout(context);
-        v.setOrientation(LinearLayout.VERTICAL);
+        UserInputField userInputField = field.getAnnotation(UserInputField.class);
 
-        a_temp = account;
-        fields = new TreeMap<>(new Comparator<Field>() {
-            @Override
-            public int compare(Field o1, Field o2) {
-                return o1.getAnnotation(UserInputField.class).priority() -
-                        o2.getAnnotation(UserInputField.class).priority();
+        View v = null;
+
+        Class type = userInputField.inputType();
+
+        try {
+            if (String.class.isAssignableFrom(type)) {
+
+                v = getStringInputFieldView(account, field, userInputField);
+
+            } else if (Number.class.isAssignableFrom(type)) { // Other Numbers
+
+                v = getNumberInputFieldView(account, field, userInputField);
+
+            } else if (LocalDate.class.isAssignableFrom(type)) {
+
+                v = getDateInputFieldView(account, field, userInputField);
+
             }
-        });
-
-        for (Field field : account.getClass().getFields()) {
-            field.setAccessible(true);
-            if (field.isAnnotationPresent(UserInputField.class)) {
-                fields.put(field, field.getAnnotation(UserInputField.class));
-            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
-
-        for (Field field : fields.keySet()) {
-                Class type = fields.get(field).inputType();
-                if (String.class.isAssignableFrom(type)) {
-                    v.addView(getStringInputFieldView(field));
-                } else if (Number.class.isAssignableFrom(type)) { // Other Numbers
-                    v.addView(getNumberInputFieldView(field));
-                } else if (LocalDate.class.isAssignableFrom(type)) {
-                    v.addView(getDateInputFieldView(field));
-                }
-        }
-
 
         return v;
     }
 
-    private static View getStringInputFieldView(Field inputField) {
+    private static View getStringInputFieldView(final Account account, final Field field,
+                                                final UserInputField userInputField) throws IllegalAccessException {
         View v = inflater.inflate(R.layout.item_string_input_view, null);
-
-//        i_temp = inputField;
 
         // Title text
         final TextView textView = (TextView) v.findViewById(R.id.item_string_input_view_TITLE);
-        textView.setText(fields.get(inputField).name() + ":");
+        textView.setText(userInputField.name() + ":");
         // Hint text
         final EditText editText = (EditText) v.findViewById(R.id.item_string_input_view_INPUT);
-        //editText.setHint((inputField.ref == null) ? "Click to Edit" : inputField.ref.toString());
+        editText.setHint((field.get(account) == null) ? "Click to Edit" : field.get(account).toString());
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -87,25 +73,26 @@ public abstract class InputFieldFactory {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    inputField.set(a_temp, s.toString());
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                try {
+
+                    field.set(account, s.toString());
+
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         return v;
     }
 
-    private static View getNumberInputFieldView(Field inputField) {
+    private static View getNumberInputFieldView(final Account account, final Field field,
+                                                final UserInputField userInputField) throws IllegalAccessException {
         View v = inflater.inflate(R.layout.item_string_input_view, null);
-
-//        i_temp = inputField;
 
 //        if (inputField.type.isInstance(BigDecimal.class)) {
 //
@@ -113,10 +100,10 @@ public abstract class InputFieldFactory {
 
         // Title text
         final TextView textView = (TextView) v.findViewById(R.id.item_string_input_view_TITLE);
-        textView.setText(fields.get(inputField).name() + ":");
+        textView.setText(userInputField.name() + ":");
         // Hint text
         final EditText editText = (EditText) v.findViewById(R.id.item_string_input_view_INPUT);
-//        editText.setHint((inputField.ref == null) ? "Click to Edit" : inputField.ref.toString());
+        editText.setHint((field.get(account) == null) ? "Click to Edit" : field.get(account).toString());
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         editText.addTextChangedListener(new TextWatcher() {
@@ -126,28 +113,33 @@ public abstract class InputFieldFactory {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                i_temp.ref = s.toString();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                try {
+
+                    field.set(account, s.toString());
+
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         return v;
     }
 
-    private static View getDateInputFieldView(Field inputField) {
+    private static View getDateInputFieldView(final Account account, final Field field,
+                                              final UserInputField userInputField) throws IllegalAccessException {
         View v = inflater.inflate(R.layout.item_date_input_view, null);
-
-//        i_temp = inputField;
 
         // Title text
         final TextView textView = (TextView) v.findViewById(R.id.item_date_input_view_TITLE);
-        textView.setText(fields.get(inputField).name() + ":");
+        textView.setText(userInputField.name() + ":");
         // Hint text
         final EditText editText = (EditText) v.findViewById(R.id.item_date_input_view_INPUT);
-//        editText.setHint((inputField.ref == null) ? "Click to Edit" : inputField.ref.toString());
+        editText.setHint((field.get(account) == null) ? "Click to Edit" : field.get(account).toString());
 
         // Date Picker
         final Calendar myCalendar = Calendar.getInstance();
@@ -156,10 +148,16 @@ public abstract class InputFieldFactory {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-//                i_temp.ref = LocalDate.of(year, monthOfYear, dayOfMonth);
-//                editText.setHint(i_temp.ref.toString());
-            }
+                try {
 
+                    field.set(account, LocalDate.of(year, monthOfYear, dayOfMonth));
+                    editText.setHint(field.get(account).toString());
+
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+
+            }
         };
 
         editText.setOnClickListener(new View.OnClickListener() {

@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Random;
 
 import team_10.client.R;
+import team_10.client.add_edit_account.AddEditAccountPresenter;
+import team_10.client.add_edit_account.AddEditAccountView;
 import team_10.client.data.models.Account;
 import team_10.client.data.models.CertificateOfDeposit;
 import team_10.client.data.models.Loan;
@@ -53,6 +55,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     private OnFragmentInteractionListener mListener;
 
     AccountsRepository mAccountsRepository;
+    AddEditAccountPresenter mAddEditAccountPresenter;
     List<Account> _accounts;
 
 
@@ -163,7 +166,24 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 parent.finish();
                 break;
             case R.id.button_add_account:
-                startAccountModal(0, null);
+                //startAccountModal(0, null);
+
+                AddEditAccountView addEditAccountView = (AddEditAccountView) getActivity().getSupportFragmentManager()
+                        .findFragmentById(R.id.AddEditAccountView);
+
+                if (addEditAccountView == null) {
+                    addEditAccountView = addEditAccountView.newInstance();
+
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .add(R.id.AddEditAccountView, addEditAccountView)
+                            .commit();
+                }
+
+                mAddEditAccountPresenter = new AddEditAccountPresenter(null,
+                        CertificateOfDeposit.class, mAccountsRepository, addEditAccountView,
+                        true);
+
+
                 break;
         }
     }

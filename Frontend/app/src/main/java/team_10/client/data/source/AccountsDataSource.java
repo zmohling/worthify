@@ -29,16 +29,11 @@ public interface AccountsDataSource {
         void onDataNotAvailable();
     }
 
-    interface RefreshAccountsCallback {
-
-        void onAccountsRefreshed(List<Account> accounts);
-
-        void onServerNotAvailable();
-    }
-
     void getAccounts(@NonNull LoadAccountsCallback callback);
 
     void getAccount(@NonNull String accountID, @NonNull GetAccountCallback callback);
+
+    void getAccountCopy(@NonNull String accountID, @NonNull GetAccountCallback callback);
 
     void saveAccount(@NonNull Account account, @NonNull SaveAccountCallback callback); // will stomp on accounts with same ID
 
@@ -46,5 +41,6 @@ public interface AccountsDataSource {
 
     void deleteAllAccounts();
 
-    void refreshAccounts(@NonNull RefreshAccountsCallback callback);
+    void refreshAccounts(@NonNull LoadAccountsCallback callback);
+
 }
