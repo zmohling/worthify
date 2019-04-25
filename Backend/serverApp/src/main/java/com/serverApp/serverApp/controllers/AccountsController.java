@@ -189,13 +189,34 @@ public class AccountsController {
                 stock.setAccountID(id);
                 stock.setTicker(stockRepo.getStock(id).getTicker());
                 StockRetrieval stockRetrieval = new StockRetrieval();
-                String val = stockRetrieval.retrieveStock(stock.getTicker());
+                //String val = stockRetrieval.retrieve2yData(stock.getTicker());
                 if(i != 0) rString = rString + ",";
-                rString = rString + "\"" + id + "\" :" + val;
+                //rString = rString + "\"" + id + "\" :" + val;
             }
         }
         rString = rString + "}";
         return rString;
+    }
+
+    @RequestMapping("/gottem")
+    public String getStock(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
+        //Optional<String> headerCheck = checkHeader(header);
+        //if(headerCheck.isPresent()) {
+        //    return headerCheck.get();
+        //}
+        Stock stock = new Stock();
+        JSONObject obj = new JSONObject(string);
+        JSONArray accountsArr = obj.getJSONArray("accountID");
+        Type accountType = new TypeToken<ArrayList<String>>(){}.getType();
+        Gson g = new Gson();
+        stock.setAccountID(accountsArr.get(0).toString());
+        Accounts accounts = accountsRepo.getAccountsByAccountId(accountsArr.get(0).toString());
+        stock.setTicker(stockRepo.getStock(stock.getAccountID()).getTicker());
+        JSONObject obj2 = new JSONObject(accounts.getTransactions());
+        Date date = Date.valueOf(obj2.get("date").toString());
+        StockRetrieval stockRetrieval = new StockRetrieval();
+        String returnStr = stockRetrieval.retrieve2yData(stock.getTicker(), date);
+        return returnStr;
     }
 
     /**
