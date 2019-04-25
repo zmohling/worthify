@@ -157,4 +157,12 @@ public class AccountsRepository implements AccountsDataSource {
     public void refreshAccounts(@NonNull RefreshAccountsCallback callback) {
 
     }
+
+    /**
+     * Return a list of accounts that are currently stored in memory.
+     * @return List of cached accounts
+     */
+    public List<Account> getCachedAccounts() {
+        return new ArrayList<Account>(mCachedAccounts.values());
+    }
 }

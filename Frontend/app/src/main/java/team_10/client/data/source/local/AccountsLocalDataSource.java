@@ -40,12 +40,23 @@ public class AccountsLocalDataSource implements AccountsDataSource {
         Runnable readAccountsFromFile = new Runnable() {
             @Override
             public void run() {
-                final List<Account> accounts = IO.deserializeAccounts(IO.readAccountsFromFile(MainActivity.myContext));
+
+                final List<Account> accounts = new ArrayList<>();
+
+                String accountsStringFromFile = IO.readAccountsFromFile(MainActivity.myContext);
+
+                if (!accountsStringFromFile.isEmpty()) {
+                    List<Account> temp = IO.deserializeAccounts(accountsStringFromFile);
+
+                    if (temp != null) {
+                        accounts.addAll(temp);
+                    }
+                }
+
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (accounts.isEmpty()) {
-                            // This will be called if the table is new or just empty.
                             callback.onDataNotAvailable();
                         } else {
                             callback.onAccountsLoaded(accounts);
@@ -65,7 +76,34 @@ public class AccountsLocalDataSource implements AccountsDataSource {
 
     @Override
     public void saveAccount(@NonNull Account account, @NonNull SaveAccountCallback callback) {
-        final List<Account> myAccounts = new ArrayList<>();
+        final List<Account> cachedAccounts = new ArrayList<>();
+
+        cachedAccounts.addAll(AccountsRepository.getInstance(null,null).getCachedAccounts());
+
+        /* add new account */
+        cachedAccounts.add(account);
+
+        Runnable writeAccountsToFile = new Runnable() {
+            @Override
+            public void run() {
+
+                final List<Account> accounts = new ArrayList<>();
+
+                String serializedAccount = IO.serializeAccounts(cachedAccounts);
+
+                // TODO: MEEEEEE
+                IO.writeAccountsToFile(serializedAccount, MainActivity.myContext);
+
+                mAppExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+        };
+
+        mAppExecutors.diskIO().execute(readAccountsFromFile);
 
         AccountsRepository.getInstance(null, null).getAccounts(new LoadAccountsCallback() {
             @Override
