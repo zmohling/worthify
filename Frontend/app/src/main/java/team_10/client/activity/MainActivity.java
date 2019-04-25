@@ -21,17 +21,22 @@ import java.util.List;
 
 import team_10.client.R;
 import team_10.client.data.models.Account;
+import team_10.client.data.source.AccountsDataSource;
+import team_10.client.data.source.AccountsRepository;
+import team_10.client.data.source.local.AccountsLocalDataSource;
+import team_10.client.data.source.remote.AccountsRemoteDataSource;
 import team_10.client.fragment.DashboardFragment;
 import team_10.client.fragment.NewsArticle;
 import team_10.client.fragment.NewsFragment;
-import team_10.client.fragment.TransactionsFragment;
-import team_10.client.object.User;
 import team_10.client.settings.SharedPreferencesManager;
+import team_10.client.utility.AppExecutors;
 import team_10.client.utility.IO;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
-public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, TransactionsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener {
+
+    AccountsRepository mAccountsRepository;
 
     public static Context myContext;
 
@@ -56,10 +61,6 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
                     f = new DashboardFragment();
                     worked = loadFragment(f, "home");
                     break;
-                case R.id.navigation_transactions:
-                    f = new TransactionsFragment();
-                    worked = loadFragment(f, "other");
-                    break;
             }
 
             return worked;
@@ -81,17 +82,29 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         setContentView(R.layout.activity_main);
 
         myContext = this.getApplicationContext();
+        AppExecutors appExecutors = new AppExecutors();
+        mAccountsRepository = AccountsRepository.getInstance(AccountsRemoteDataSource.getInstance(appExecutors), AccountsLocalDataSource.getInstance(appExecutors));
 
         if (!SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         } else {
-            List<Account> aFromFile = IO.deserializeAccounts(IO.readAccountsFromFile(getApplicationContext()));
-            if (aFromFile != null)
-                User.setAccounts(aFromFile);
-            else
-                IO.getAccountsFromRemote(getApplicationContext());
-            System.out.println(IO.serializeAccounts(User.getAccounts()));
+            mAccountsRepository.getAccounts(new AccountsDataSource.LoadAccountsCallback() {
+                @Override
+                public void onAccountsLoaded(List<Account> accounts) {
+                    System.out.println(IO.serializeAccounts(accounts));
+                }
+
+                @Override
+                public void onDataNotAvailable() {
+                    IO.getAccountsFromRemote(getApplicationContext());
+                }
+            });
+//            if (aFromFile != null)
+//                User.setAccounts(aFromFile);
+//            else
+//                IO.getAccountsFromRemote(getApplicationContext());
+            //System.out.println(IO.serializeAccounts(User.getAccounts()));
         }
 
         new SocketConnection().execute();
@@ -115,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         }
 
         /* Write to file */
-        IO.writeAccountsToFile(IO.serializeAccounts(User.getAccounts()), getApplicationContext());
+        //IO.writeAccountsToFile(IO.serializeAccounts(User.getAccounts()), getApplicationContext());
     }
 
     private boolean loadFragment(Fragment fragment, String name) {

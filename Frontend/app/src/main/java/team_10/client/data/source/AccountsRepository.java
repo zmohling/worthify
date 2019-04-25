@@ -32,6 +32,7 @@ public class AccountsRepository implements AccountsDataSource {
                                                  AccountsDataSource accountsLocalDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new AccountsRepository(accountsRemoteDataSource, accountsLocalDataSource);
+            INSTANCE.mCachedAccounts = new LinkedHashMap<>();
         }
 
         return INSTANCE;
@@ -43,7 +44,7 @@ public class AccountsRepository implements AccountsDataSource {
 
     @Override
     public void getAccounts(@NonNull LoadAccountsCallback callback) {
-        if (mCachedAccounts != null && !mCacheIsDirty) {
+        if (mCachedAccounts != null && mCachedAccounts.size() > 0 && !mCacheIsDirty) {
             callback.onAccountsLoaded(new ArrayList<>(mCachedAccounts.values()));
             return;
         }

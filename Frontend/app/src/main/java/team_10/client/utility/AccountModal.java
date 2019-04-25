@@ -23,10 +23,11 @@ import java.util.List;
 
 import team_10.client.R;
 import team_10.client.constant.TYPE;
-import team_10.client.fragment.DashboardFragment;
-import team_10.client.object.User;
 import team_10.client.data.models.Account;
 import team_10.client.data.models.Transaction;
+import team_10.client.data.source.AccountsDataSource;
+import team_10.client.data.source.AccountsRepository;
+import team_10.client.fragment.DashboardFragment;
 
 public class AccountModal {
     private Context context;
@@ -137,13 +138,25 @@ public class AccountModal {
             @Override
             public void onClick(View v) {
 
-                User.addAccount(a_temp);
-                IO.sendAccountToRemote(a_temp, context);
+                AccountsRepository mAccountsRepository = AccountsRepository.getInstance(null, null);
+                mAccountsRepository.saveAccount(a_temp, new AccountsDataSource.SaveAccountCallback() {
+                    @Override
+                    public void onAccountSaved() {
+                        System.out.println("SAVED");
+                    }
+
+                    @Override
+                    public void onServerNotAvailable() {
+
+                    }
+                });
+                //User.addAccount(a_temp);
+                //IO.sendAccountToRemote(a_temp, context);
 
                 DashboardFragment.updateDashboardUI();
                 popupWindow.dismiss();
 
-                System.out.println(IO.serializeAccounts(User.getAccounts()));
+                // TODO: System.out.println(IO.serializeAccounts(User.getAccounts()));
             }
         });
     }
@@ -198,13 +211,27 @@ public class AccountModal {
             @Override
             public void onClick(View v) {
                 // Remove existing account and replace with our modified copy
-                User.removeAccount(a);
-                User.addAccount(a_temp);
+
+                AccountsRepository mAccountsRepository = AccountsRepository.getInstance(null, null);
+                mAccountsRepository.saveAccount(a_temp, new AccountsDataSource.SaveAccountCallback() {
+                    @Override
+                    public void onAccountSaved() {
+                        System.out.println("SAVED");
+                    }
+
+                    @Override
+                    public void onServerNotAvailable() {
+
+                    }
+                });
+
+//                User.removeAccount(a);
+//                User.addAccount(a_temp);
 
                 DashboardFragment.updateDashboardUI();
                 popupWindow.dismiss();
 
-                System.out.println(IO.serializeAccounts(User.getAccounts()));
+                // TODO: System.out.println(IO.serializeAccounts(User.getAccounts()));
             }
         });
     }

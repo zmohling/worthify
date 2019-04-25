@@ -186,7 +186,8 @@ public class IO {
                                 List<Account> l = deserializeAccounts(response);
 
                                 for (int i = 0; i < l.size(); i++)
-                                    User.addAccount(l.get(i));
+                                    // TODO
+                                    //User.addAccount(l.get(i));
 
                                 DashboardFragment.updateDashboardUI();
 
@@ -241,6 +242,6 @@ public class IO {
         };
 
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
-        User.setAccounts(returnVal);
+        // TODO: User.setAccounts(returnVal);
     }
 }

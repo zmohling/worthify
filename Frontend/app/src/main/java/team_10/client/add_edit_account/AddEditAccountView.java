@@ -77,12 +77,22 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
     }
 
     @Override
-    public void addInputField(View view) {
-        mInputFieldList.addView(view);
+    public void setTitle() {
+
     }
 
     @Override
-    public void addTransactionItem(View view) {
+    public void setAddConfirmButtonText() {
+
+    }
+
+    @Override
+    public void insertAccountInputsView(View view) {
+
+    }
+
+    @Override
+    public void insertTransactionsView(View view) {
 
     }
 }

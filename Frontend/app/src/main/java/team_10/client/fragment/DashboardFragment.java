@@ -14,14 +14,18 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import team_10.client.R;
-import team_10.client.object.User;
 import team_10.client.data.models.Account;
 import team_10.client.data.models.CertificateOfDeposit;
 import team_10.client.data.models.Loan;
 import team_10.client.data.models.SavingsAccount;
+import team_10.client.data.source.AccountsDataSource;
+import team_10.client.data.source.AccountsRepository;
+import team_10.client.object.User;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.AccountModal;
 import team_10.client.utility.CustomListAdapter;
@@ -47,6 +51,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     private static ListView lv;
 
     private OnFragmentInteractionListener mListener;
+
+    AccountsRepository mAccountsRepository;
+    List<Account> _accounts;
 
 
     public DashboardFragment() {
@@ -82,6 +89,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        _accounts = new ArrayList<>();
+
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         view.findViewById(R.id.buttonLogout).setOnClickListener(this);
@@ -89,16 +98,29 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         // ListView of Accounts with adapter
         lv = view.findViewById(R.id.list);
-        customAdapter = new CustomListAdapter(view.getContext(), R.layout.item_account_list_item, User.getAccounts());
+        customAdapter = new CustomListAdapter(view.getContext(), R.layout.item_account_list_item, _accounts);
         lv.setAdapter(customAdapter);
 
         // Start Account Modal in edit mode if ListView item (account) was clicked
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-                startAccountModal(1, User.getAccounts().get(position));
+                startAccountModal(1, _accounts.get(position));
             }
         });
 
+        mAccountsRepository = AccountsRepository.getInstance(null, null);
+        mAccountsRepository.getAccounts(new AccountsDataSource.LoadAccountsCallback() {
+            @Override
+            public void onAccountsLoaded(List<Account> accounts) {
+                _accounts = accounts;
+                updateDashboardUI();
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+        });
         updateDashboardUI();
 
         return view;
@@ -135,7 +157,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.buttonLogout:
                 IO.deleteAccountsFile(parent.getApplicationContext());
-                User.setAccounts(null);
+                // TODO: User.setAccounts(null);
                 User.setToken(null);
                 SharedPreferencesManager.getInstance(parent.getApplicationContext()).logout();
                 parent.finish();

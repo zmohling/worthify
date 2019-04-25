@@ -20,7 +20,7 @@ public enum TYPE {
     }
 
     public Class<Account> getTypeClass() {
-        String p = "team_10.client.object.account.";
+        String p = "team_10.client.data.models.";
         Class<Account> c = null;
 
         try {
