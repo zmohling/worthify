@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.TreeMap;
 
-import team_10.client.object.account.UserInputField;
+import team_10.client.data.UserInputField;
 
 /**
  * Abstract Account class for all account types. All transactions for all types that extend

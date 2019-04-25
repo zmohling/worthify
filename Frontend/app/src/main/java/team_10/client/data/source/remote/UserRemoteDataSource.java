@@ -2,10 +2,10 @@ package team_10.client.data.source.remote;
 
 import android.support.annotation.NonNull;
 
-import team_10.client.activity.MainActivity;
+import team_10.client.MainActivity;
 import team_10.client.data.source.UserDataSource;
-import team_10.client.settings.SharedPreferencesManager;
-import team_10.client.utility.AppExecutors;
+import team_10.client.data.source.local.SharedPreferencesManager;
+import team_10.client.utility.io.AppExecutors;
 
 public class UserRemoteDataSource implements UserDataSource {
 

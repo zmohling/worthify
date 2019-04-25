@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import team_10.client.object.User;
+import team_10.client.data.User;
 import team_10.client.data.models.Account;
 
 import static junit.framework.TestCase.assertEquals;

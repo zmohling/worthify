@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/card_bg"
-    tools:context="team_10.client.activity.MainActivity">
+    tools:context="team_10.client.MainActivity">
 
     <TextView
         android:id="@+id/account_title"

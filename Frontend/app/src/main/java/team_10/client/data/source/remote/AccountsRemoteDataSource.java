@@ -17,16 +17,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import team_10.client.activity.MainActivity;
+import team_10.client.MainActivity;
 import team_10.client.constant.URL;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.AccountsDataSource;
-import team_10.client.fragment.DashboardFragment;
-import team_10.client.object.User;
-import team_10.client.settings.SharedPreferencesManager;
-import team_10.client.utility.AppExecutors;
-import team_10.client.utility.IO;
-import team_10.client.utility.VolleySingleton;
+import team_10.client.dashboard.DashboardFragment;
+import team_10.client.data.User;
+import team_10.client.data.source.local.SharedPreferencesManager;
+import team_10.client.utility.io.AppExecutors;
+import team_10.client.utility.io.IO;
+import team_10.client.utility.io.VolleySingleton;
 
 public class AccountsRemoteDataSource implements AccountsDataSource {
 

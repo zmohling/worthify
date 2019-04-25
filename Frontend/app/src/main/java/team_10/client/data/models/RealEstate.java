@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import java.time.LocalDate;
 import java.util.Vector;
 
-import team_10.client.utility.VolleySingleton;
+import team_10.client.utility.io.VolleySingleton;
 
 import static team_10.client.constant.URL.ROOT_URL;
 

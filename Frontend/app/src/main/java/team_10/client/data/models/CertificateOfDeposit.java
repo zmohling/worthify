@@ -18,7 +18,7 @@ import java.util.Calendar;
 import java.util.Vector;
 
 import team_10.client.R;
-import team_10.client.object.account.UserInputField;
+import team_10.client.data.UserInputField;
 import team_10.client.utility.General;
 
 public class CertificateOfDeposit extends Account {

@@ -67,7 +67,7 @@
                         android:textSize="15dp"
                         android:layout_weight="1"
                         android:layout_marginHorizontal="5dp"
-                        android:text="@string/title_transactions" />
+                        android:text="Transactions" />
 
                     <Button
                         android:id="@+id/modal_add_edit_account_add_transaction"

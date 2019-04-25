@@ -7,8 +7,8 @@ import java.util.Map;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.local.UserLocalDataSource;
 import team_10.client.data.source.remote.UserRemoteDataSource;
-import team_10.client.object.User;
-import team_10.client.utility.AppExecutors;
+import team_10.client.data.User;
+import team_10.client.utility.io.AppExecutors;
 
 public class UserRepository implements UserDataSource {
 
