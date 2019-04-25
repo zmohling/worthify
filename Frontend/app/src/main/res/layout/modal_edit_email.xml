@@ -57,7 +57,7 @@
             android:layout_marginBottom="8dp"
             android:backgroundTint="@color/edit_text_color"
             android:layout_below="@+id/modal_edit_email_password"
-            android:hint="New email address"
+            android:hint="New Email"
             android:inputType="text"
             android:textAllCaps="true"
             android:textColor="@color/text"

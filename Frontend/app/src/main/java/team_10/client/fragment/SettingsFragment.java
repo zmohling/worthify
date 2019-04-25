@@ -1,5 +1,6 @@
 package team_10.client.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -47,6 +48,7 @@ import team_10.client.object.User;
 import team_10.client.object.account.Account;
 import team_10.client.object.account.Transaction;
 import team_10.client.settings.SharedPreferencesManager;
+import team_10.client.utility.IO;
 import team_10.client.utility.TransactionsAdapter;
 import team_10.client.utility.VolleySingleton;
 
@@ -60,7 +62,7 @@ import static team_10.client.settings.SharedPreferencesManager.getUser;
  * Use the {@link TransactionsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -108,7 +110,11 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        TextView emailName = view.findViewById(R.id.text_view_profile_name);
+        TextView firstName = view.findViewById(R.id.text_view_profile_first_name);
+        firstName.setText("" + getUser().getFirstName());
+        TextView lastName = view.findViewById(R.id.text_view_profile_last_name);
+        lastName.setText("" + getUser().getLastName());
+        TextView emailName = view.findViewById(R.id.text_view_profile_email);
         emailName.setText("Email Address: " + getUser().getEmail());
         TextView editEmail = view.findViewById(R.id.text_view_change_email);
         editEmail.setOnClickListener(new View.OnClickListener()
@@ -125,6 +131,23 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 editPasswordModal();
+            }
+        });
+        Button logoutButton = view.findViewById(R.id.buttonLogoutSettings);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity parent = getActivity();
+
+                switch (v.getId()) {
+                    case R.id.buttonLogoutSettings:
+                        IO.deleteAccountsFile(parent.getApplicationContext());
+                        User.setAccounts(null);
+                        User.setToken(null);
+                        SharedPreferencesManager.getInstance(parent.getApplicationContext()).logout();
+                        parent.finish();
+                        break;
+                }
             }
         });
 
