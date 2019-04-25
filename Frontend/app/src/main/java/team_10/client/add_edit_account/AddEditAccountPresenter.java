@@ -56,11 +56,9 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
     @Override
     public void subscribe() {
-        if (!isNewAccount() && mIsDataMissing) {
+         if (isNewAccount()) {
 
-            mAccountsRepository.getAccountCopy(mAccountID, this);
-
-        } else if (isNewAccount()) {
+            mAccountsRepository.newAccount(mType, this);
 
             if (mAddEditAccountView.isActive()) {
 
@@ -71,6 +69,8 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
             }
 
         } else {
+
+            mAccountsRepository.getAccountCopy(mAccountID, this);
 
             if (mAddEditAccountView.isActive()) {
 

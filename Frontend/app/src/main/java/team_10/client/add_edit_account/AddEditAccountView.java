@@ -70,6 +70,10 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
             @Override
             public void onClick(View v) {
                 mPresenter.saveAccount();
+
+                mPresenter.unsubscribe();
+
+                getActivity().onBackPressed();
             }
         });
 
@@ -80,6 +84,7 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
                 mPresenter.unsubscribe();
 
                 getActivity().onBackPressed();
+
             }
         });
     }
@@ -147,6 +152,6 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
 
     @Override
     public boolean isActive() {
-        return false;
+        return true;
     }
 }

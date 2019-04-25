@@ -2,7 +2,9 @@ package team_10.client.data.source.local;
 
 import android.support.annotation.NonNull;
 
+import team_10.client.activity.MainActivity;
 import team_10.client.data.source.UserDataSource;
+import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.AppExecutors;
 
 public class UserLocalDataSource implements UserDataSource {
@@ -11,16 +13,24 @@ public class UserLocalDataSource implements UserDataSource {
 
     private AppExecutors mAppExecutors;
 
+    private final SharedPreferencesManager mSharedPreferencesManager;
+
     // Prevent direct instantiation.
-    private UserLocalDataSource(@NonNull AppExecutors appExecutors) {
+    private UserLocalDataSource(@NonNull AppExecutors appExecutors,
+                                @NonNull SharedPreferencesManager sharedPreferencesManager) {
         mAppExecutors = appExecutors;
+        mSharedPreferencesManager = sharedPreferencesManager;
+
     }
 
     public static UserLocalDataSource getInstance(@NonNull AppExecutors appExecutors) {
         if (INSTANCE == null) {
             synchronized (UserLocalDataSource.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new UserLocalDataSource(appExecutors);
+
+                    SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance(MainActivity.myContext);
+
+                    INSTANCE = new UserLocalDataSource(appExecutors, sharedPreferencesManager);
                 }
             }
         }
@@ -42,12 +52,12 @@ public class UserLocalDataSource implements UserDataSource {
     }
 
     @Override
-    public String getUserID() {
-        return null;
+    public int getUserID() {
+        return 0;
     }
 
     @Override
-    public void setUserID(String userID) {
+    public void setUserID(int userID) {
 
     }
 
@@ -88,6 +98,11 @@ public class UserLocalDataSource implements UserDataSource {
 
     @Override
     public int getNumAccountsCreated() {
-        return 0;
+        return mSharedPreferencesManager.getNumberOfCreatedAccounts();
+    }
+
+    @Override
+    public void setNumAccountsCreated(int n) {
+        mSharedPreferencesManager.setNumberOfCreatedAccounts(n);
     }
 }

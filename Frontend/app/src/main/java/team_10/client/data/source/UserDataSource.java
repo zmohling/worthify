@@ -30,9 +30,9 @@ public interface UserDataSource {
 
     void removeUserData();
 
-    String getUserID();
+    int getUserID();
 
-    void setUserID(String userID);
+    void setUserID(int userID);
 
     String getAuthenticationToken();
 
@@ -49,4 +49,6 @@ public interface UserDataSource {
     void setPassword();
 
     int getNumAccountsCreated();
+
+    void setNumAccountsCreated(int n);
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.local.UserLocalDataSource;
 import team_10.client.data.source.remote.UserRemoteDataSource;
+import team_10.client.object.User;
 import team_10.client.utility.AppExecutors;
 
 public class UserRepository implements UserDataSource {
@@ -60,13 +61,12 @@ public class UserRepository implements UserDataSource {
     }
 
     @Override
-    public String getUserID() {
-        return null;
+    public int getUserID() {
+        return User.getID();
     }
 
     @Override
-    public void setUserID(String userID) {
-
+    public void setUserID(int userID) {
     }
 
     @Override
@@ -106,6 +106,11 @@ public class UserRepository implements UserDataSource {
 
     @Override
     public int getNumAccountsCreated() {
-        return 0;
+        return mUserLocalDataSource.getNumAccountsCreated();
+    }
+
+    @Override
+    public void setNumAccountsCreated(int n) {
+        mUserLocalDataSource.setNumAccountsCreated(n);
     }
 }

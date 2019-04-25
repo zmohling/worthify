@@ -21,15 +21,21 @@ public class AccountsRepository implements AccountsDataSource {
 
     private final AccountsDataSource mAccountsLocalDataSource;
 
+    private final UserDataSource mUserRepository;
+
     Map<String, Account> mCachedAccounts;
 
     boolean mCacheIsDirty = false;
 
     // Private constructor for Singleton pattern
     private AccountsRepository(@NonNull AccountsDataSource accountsRemoteDataSource,
-                               @NonNull AccountsDataSource accountsLocalDataSource) {
+                               @NonNull AccountsDataSource accountsLocalDataSource,
+                               @NonNull UserDataSource userDataSource) {
         mAccountsRemoteDataSource = accountsRemoteDataSource;
         mAccountsLocalDataSource = accountsLocalDataSource;
+        mUserRepository = userDataSource;
+
+        mCachedAccounts = new LinkedHashMap<>();
     }
 
     public static AccountsRepository getInstance() {
@@ -38,8 +44,9 @@ public class AccountsRepository implements AccountsDataSource {
 
             AccountsLocalDataSource accountsLocalDataSource = AccountsLocalDataSource.getInstance(appExecutors);
             AccountsRemoteDataSource accountsRemoteDataSource = AccountsRemoteDataSource.getInstance(appExecutors);
+            UserDataSource userDataSource = UserRepository.getInstance();
 
-            INSTANCE = new AccountsRepository(accountsRemoteDataSource, accountsLocalDataSource);
+            INSTANCE = new AccountsRepository(accountsRemoteDataSource, accountsLocalDataSource, userDataSource);
         }
 
         return INSTANCE;
@@ -74,6 +81,22 @@ public class AccountsRepository implements AccountsDataSource {
         }
     }
 
+    private void getAccountsFromRemoteDataSource(@NonNull final LoadAccountsCallback callback) {
+        mAccountsRemoteDataSource.getAccounts(new LoadAccountsCallback() {
+            @Override
+            public void onAccountsLoaded(List<Account> accounts) {
+                refreshCache(accounts);
+                refreshLocalDataSource(accounts);
+                callback.onAccountsLoaded(accounts);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
+    }
+
     private void refreshCache(List<Account> accounts) {
         if (mCachedAccounts == null) {
             mCachedAccounts = new LinkedHashMap<>();
@@ -88,7 +111,20 @@ public class AccountsRepository implements AccountsDataSource {
         mCacheIsDirty = false;
     }
 
-    private void getAccountsFromRemoteDataSource(LoadAccountsCallback callback) {
+    private void refreshLocalDataSource(List<Account> accounts) {
+        mAccountsLocalDataSource.deleteAllAccounts();
+
+        /* AccountsLocalDataSource.saveAccount first loads cached accounts, so   *
+         * it will work more efficiently to do this one instead of every account */
+        mAccountsLocalDataSource.saveAccount(accounts.get(0), new SaveAccountCallback() {
+            @Override
+            public void onAccountSaved() {
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+            }
+        });
 
     }
 
@@ -131,6 +167,48 @@ public class AccountsRepository implements AccountsDataSource {
                 });
             }
         });
+    }
+
+    @Override
+    public void newAccount(@NonNull Class<? extends Account> type, @NonNull GetAccountCallback callback) {
+
+        Account account = null;
+
+        UserDataSource userRepository = UserRepository.getInstance();
+
+        int numAccounts = userRepository.getNumAccountsCreated();
+        for (Account cachedAccount : mCachedAccounts.values()) {
+            int accountID = Integer.parseInt(cachedAccount.getID().substring(8));
+            if (accountID > numAccounts)
+                numAccounts = accountID;
+        }
+        mUserRepository.setNumAccountsCreated(numAccounts);
+
+        try {
+            account = type.newInstance();
+
+            if (account != null) {
+
+                int userID = userRepository.getUserID();
+                int num = userRepository.getNumAccountsCreated() + 1;
+                String accountID = String.format("%08d", userID) + String.format("%04d", (num++));
+
+                account.setID(accountID);
+
+                account.setIsActive(1);
+
+                callback.onAccountLoaded(account);
+            } else {
+                callback.onDataNotAvailable();
+            }
+
+        } catch (IllegalAccessException e) {
+            callback.onDataNotAvailable();
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            callback.onDataNotAvailable();
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -181,6 +259,7 @@ public class AccountsRepository implements AccountsDataSource {
         if (mCachedAccounts == null) {
             mCachedAccounts = new LinkedHashMap<>();
         }
+
         mCachedAccounts.put(account.getID(), account);
 
         mAccountsLocalDataSource.saveAccount(account, callback);
@@ -206,6 +285,9 @@ public class AccountsRepository implements AccountsDataSource {
 
     @Override
     public void deleteAllAccounts() {
+        mCacheIsDirty = true;
+        mCachedAccounts.clear();
+        mAccountsLocalDataSource.deleteAllAccounts();
     }
 
     @Override
@@ -218,7 +300,7 @@ public class AccountsRepository implements AccountsDataSource {
      *
      * @return List of cached accounts
      */
-    public List<Account> getCachedAccounts() {
-        return new ArrayList<Account>(mCachedAccounts.values());
+    public Map<String, Account> getCachedAccounts() {
+        return mCachedAccounts;
     }
 }

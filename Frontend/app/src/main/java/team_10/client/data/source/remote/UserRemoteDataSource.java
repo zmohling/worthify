@@ -2,7 +2,9 @@ package team_10.client.data.source.remote;
 
 import android.support.annotation.NonNull;
 
+import team_10.client.activity.MainActivity;
 import team_10.client.data.source.UserDataSource;
+import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.AppExecutors;
 
 public class UserRemoteDataSource implements UserDataSource {
@@ -11,16 +13,23 @@ public class UserRemoteDataSource implements UserDataSource {
 
     private AppExecutors mAppExecutors;
 
+    private final SharedPreferencesManager mSharedPreferencesManager;
+
     // Prevent direct instantiation.
-    private UserRemoteDataSource(@NonNull AppExecutors appExecutors) {
+    private UserRemoteDataSource(@NonNull AppExecutors appExecutors,
+                                 @NonNull SharedPreferencesManager sharedPreferencesManager) {
         mAppExecutors = appExecutors;
+        mSharedPreferencesManager = sharedPreferencesManager;
     }
 
     public static UserRemoteDataSource getInstance(@NonNull AppExecutors appExecutors) {
         if (INSTANCE == null) {
             synchronized (UserRemoteDataSource.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new UserRemoteDataSource(appExecutors);
+
+                    SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance(MainActivity.myContext);
+
+                    INSTANCE = new UserRemoteDataSource(appExecutors, sharedPreferencesManager);
                 }
             }
         }
@@ -43,12 +52,12 @@ public class UserRemoteDataSource implements UserDataSource {
     }
 
     @Override
-    public String getUserID() {
-        return null;
+    public int getUserID() {
+        return 0;
     }
 
     @Override
-    public void setUserID(String userID) {
+    public void setUserID(int userID) {
 
     }
 
@@ -90,5 +99,10 @@ public class UserRemoteDataSource implements UserDataSource {
     @Override
     public int getNumAccountsCreated() {
         return 0;
+    }
+
+    @Override
+    public void setNumAccountsCreated(int n) {
+
     }
 }

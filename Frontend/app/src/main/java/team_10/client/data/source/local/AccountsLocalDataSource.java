@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import team_10.client.activity.MainActivity;
 import team_10.client.data.models.Account;
@@ -75,13 +76,21 @@ public class AccountsLocalDataSource implements AccountsDataSource {
     }
 
     @Override
-    public void saveAccount(@NonNull Account account, @NonNull SaveAccountCallback callback) {
-        final List<Account> cachedAccounts = new ArrayList<>();
+    public void newAccount(@NonNull Class<? extends Account> type, @NonNull GetAccountCallback callback) {
 
-        cachedAccounts.addAll(AccountsRepository.getInstance().getCachedAccounts());
+    }
+
+    @Override
+    public void getAccountCopy(@NonNull String accountID, @NonNull GetAccountCallback callback) {
+
+    }
+
+    @Override
+    public void saveAccount(@NonNull Account account, @NonNull SaveAccountCallback callback) {
+        final Map<String, Account> cachedAccounts = AccountsRepository.getInstance().getCachedAccounts();
 
         /* add new account */
-        cachedAccounts.add(account);
+        cachedAccounts.put(account.getID(), account);
 
         Runnable writeAccountsToFile = new Runnable() {
             @Override
@@ -89,7 +98,7 @@ public class AccountsLocalDataSource implements AccountsDataSource {
 
                 final List<Account> accounts = new ArrayList<>();
 
-                String serializedAccount = IO.serializeAccounts(cachedAccounts);
+                String serializedAccount = IO.serializeAccounts(new ArrayList<>(cachedAccounts.values()));
 
                 // success == 0, failure will return nonzero
                 int failureCode = IO.writeAccountsToFile(serializedAccount, MainActivity.myContext);
@@ -121,7 +130,8 @@ public class AccountsLocalDataSource implements AccountsDataSource {
     }
 
     @Override
-    public void refreshAccounts(@NonNull RefreshAccountsCallback callback) {
+    public void refreshAccounts(@NonNull LoadAccountsCallback callback) {
 
     }
+
 }

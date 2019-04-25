@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,87 +14,46 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import team_10.client.R;
+import team_10.client.activity.MainActivity;
 import team_10.client.add_edit_account.AddEditAccountPresenter;
 import team_10.client.add_edit_account.AddEditAccountView;
 import team_10.client.data.models.Account;
-import team_10.client.data.models.CertificateOfDeposit;
 import team_10.client.data.models.Loan;
-import team_10.client.data.models.SavingsAccount;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.data.source.AccountsRepository;
 import team_10.client.object.User;
 import team_10.client.settings.SharedPreferencesManager;
-import team_10.client.utility.AccountModal;
 import team_10.client.utility.CustomListAdapter;
-import team_10.client.utility.IO;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DashboardFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DashboardFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DashboardFragment extends Fragment implements View.OnClickListener {
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;
+
 
     private View view;
     private static CustomListAdapter customAdapter;
     private static ListView lv;
+    private static List<Account> accounts;
 
     private OnFragmentInteractionListener mListener;
-
-    AccountsRepository mAccountsRepository;
-    AddEditAccountPresenter mAddEditAccountPresenter;
-    List<Account> _accounts;
+    private AccountsRepository mAccountsRepository;
+    private AddEditAccountPresenter mAddEditAccountPresenter;
 
 
-    public DashboardFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DashboardFragment.
-     */
-    public static DashboardFragment newInstance(String param1, String param2) {
-        DashboardFragment fragment = new DashboardFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public DashboardFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
+        mAccountsRepository = AccountsRepository.getInstance();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        _accounts = new ArrayList<>();
-
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         view.findViewById(R.id.buttonLogout).setOnClickListener(this);
@@ -101,38 +61,17 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         // ListView of Accounts with adapter
         lv = view.findViewById(R.id.list);
-        customAdapter = new CustomListAdapter(view.getContext(), R.layout.item_account_list_item, _accounts);
-        lv.setAdapter(customAdapter);
 
         // Start Account Modal in edit mode if ListView item (account) was clicked
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-                startAccountModal(1, _accounts.get(position));
+                startAddEditAccounts(accounts.get(position).getID(), null);
             }
         });
 
-        mAccountsRepository = AccountsRepository.getInstance();
-        mAccountsRepository.getAccounts(new AccountsDataSource.LoadAccountsCallback() {
-            @Override
-            public void onAccountsLoaded(List<Account> accounts) {
-                _accounts = accounts;
-                updateDashboardUI();
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-
-            }
-        });
         updateDashboardUI();
 
         return view;
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -159,53 +98,52 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         switch (v.getId()) {
             case R.id.buttonLogout:
-                IO.deleteAccountsFile(parent.getApplicationContext());
-                // TODO: User.setAccounts(null);
+                mAccountsRepository.deleteAllAccounts();
                 User.setToken(null);
                 SharedPreferencesManager.getInstance(parent.getApplicationContext()).logout();
                 parent.finish();
                 break;
             case R.id.button_add_account:
-                //startAccountModal(0, null);
 
-                AddEditAccountView addEditAccountView = (AddEditAccountView) getActivity().getSupportFragmentManager()
-                        .findFragmentById(R.id.AddEditAccountView);
-
-                if (addEditAccountView == null) {
-                    addEditAccountView = addEditAccountView.newInstance();
-
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .add(R.id.AddEditAccountView, addEditAccountView)
-                            .commit();
-                }
-
-                mAddEditAccountPresenter = new AddEditAccountPresenter(null,
-                        CertificateOfDeposit.class, mAccountsRepository, addEditAccountView,
-                        true);
-
+                startAddEditAccounts(null, Loan.class);
 
                 break;
         }
     }
 
-    /**
-     * Start Account Modal
-     *
-     * @param mode 0 = Add Mode, 1 = Edit Mode
-     * @param a    Account to edit, null otherwise
-     */
-    public void startAccountModal(int mode, Account a) {
-        if (mode == 0) {
-            new AccountModal(view).createAccountAddModal();
-        } else {
-            new AccountModal(view).createAccountEditModal(a);
-        }
+    public void startAddEditAccounts(@Nullable String accountID, @Nullable Class<? extends Account> type) {
+        AddEditAccountView addEditAccountView= new AddEditAccountView();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, addEditAccountView, "")
+                .addToBackStack(null)
+                .commit();
+
+
+        mAddEditAccountPresenter = new AddEditAccountPresenter(accountID,
+                type, mAccountsRepository, addEditAccountView,
+                true);
     }
 
     // Update ListView UI
     public static void updateDashboardUI() {
-        customAdapter.notifyDataSetChanged();
-        setListViewHeightBasedOnChildren(lv);
+
+        AccountsRepository.getInstance().getAccounts(new AccountsDataSource.LoadAccountsCallback() {
+            @Override
+            public void onAccountsLoaded(List<Account> accounts) {
+                customAdapter = new CustomListAdapter(MainActivity.myContext, R.layout.item_account_list_item, accounts);
+                lv.setAdapter(customAdapter);
+
+                DashboardFragment.accounts = accounts;
+
+                customAdapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren(lv);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+        });
     }
 
     // Update ListView height equal to total height of child views
@@ -227,36 +165,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + listView.getPaddingBottom();
         listView.setLayoutParams(params);
         listView.requestLayout();
-    }
-
-    // TODO: TEST METHOD; DELETE
-    private void createRandomTransaction(Account a) {
-        Random rand = new Random();
-        int i = rand.nextInt(4) + 1;
-
-        LocalDate now = (a.getTransactions().isEmpty()) ? LocalDate.now() : (LocalDate) a.getTransactions().keySet().toArray()[0];
-
-        for (; i > 0; i--) {
-            switch (a.getClass().getSimpleName()) {
-                case "Loan":
-                    ((Loan) a).addTransaction(now = now.minusMonths(rand.nextInt(3) + 1),
-                            ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
-                            (rand.nextDouble() % 0.02 + 0.02), 0);
-                    break;
-
-                case "SavingsAccount":
-                    ((SavingsAccount) a).addTransaction(now = now.minusMonths(rand.nextInt(3) + 1),
-                            ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
-                            (rand.nextDouble() % 0.02 + 0.02), 0);
-                    break;
-
-                case "CertificateOfDeposit":
-                    ((CertificateOfDeposit) a).addTransaction(now = now.minusMonths(rand.nextInt(3) + 1),
-                            ((rand.nextDouble() * 700) * ((rand.nextInt() % 4 == 0) ? -1 : 1) + 300),
-                            (rand.nextDouble() % 0.02 + 0.02), 0);
-                    break;
-            }
-        }
     }
 
     /**

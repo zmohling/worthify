@@ -11,11 +11,11 @@ public class SharedPreferencesManager {
     private static final String SHARED_PREF_NAME = "networthsharedpref";
     private static final String KEY_FIRSTNAME = "keyfirstname";
     private static final String KEY_LASTNAME = "keylastname";
-    //private static final String KEY_USERNAME = "keyusername";
     private static final String KEY_EMAIL = "keyemail";
     private static final String KEY_ID = "keyid";
     private static final String KEY_TYPE = "keytype";
     private static final String KEY_TOKEN = "keytoken";
+    private static final String KEY_NUM_ACCOUNTS = "keynumaccounts";
 
     private static SharedPreferencesManager mInstance;
     private static Context mCtx;
@@ -42,6 +42,18 @@ public class SharedPreferencesManager {
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putInt(KEY_TYPE, user.getType());
         editor.putString(KEY_TOKEN, user.getToken());
+        editor.apply();
+    }
+
+    public int getNumberOfCreatedAccounts() {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(KEY_NUM_ACCOUNTS, 0);
+    }
+
+    public void setNumberOfCreatedAccounts(int n) {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(KEY_NUM_ACCOUNTS, n);
         editor.apply();
     }
 

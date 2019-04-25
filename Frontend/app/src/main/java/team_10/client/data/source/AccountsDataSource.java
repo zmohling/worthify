@@ -33,6 +33,8 @@ public interface AccountsDataSource {
 
     void getAccount(@NonNull String accountID, @NonNull GetAccountCallback callback);
 
+    void newAccount(@NonNull Class<? extends Account> type, @NonNull GetAccountCallback callback);
+
     void getAccountCopy(@NonNull String accountID, @NonNull GetAccountCallback callback);
 
     void saveAccount(@NonNull Account account, @NonNull SaveAccountCallback callback); // will stomp on accounts with same ID

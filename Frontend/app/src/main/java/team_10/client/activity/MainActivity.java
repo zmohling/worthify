@@ -78,9 +78,9 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        myContext = this.getApplicationContext();
+        myContext = MainActivity.this;
         mAccountsRepository = AccountsRepository.getInstance();
-//        mAccountsRepository.deleteAllAccounts();
+        //mAccountsRepository.deleteAllAccounts();
 
         if (!SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
             mAccountsRepository.getAccounts(new AccountsDataSource.LoadAccountsCallback() {
                 @Override
                 public void onAccountsLoaded(List<Account> accounts) {
-                    System.out.println(IO.serializeAccounts(accounts));
+                    //System.out.println(IO.serializeAccounts(accounts));
                 }
 
                 @Override
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         //IO.writeAccountsToFile(IO.serializeAccounts(User.getAccounts()), getApplicationContext());
     }
 
-    private boolean loadFragment(Fragment fragment, String name) {
+    public boolean loadFragment(Fragment fragment, String name) {
         //switching fragment
         //fragment.getId();
         if (fragment != null) {
