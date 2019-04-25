@@ -3,6 +3,8 @@ package com.serverApp.serverApp.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Entity representing the stocks table
@@ -23,6 +25,12 @@ public class Stock implements Serializable {
 
     @Column(name = "ticker")
     private String ticker;
+
+    @Column(name = "dailyVal")
+    private ArrayList<Double> dailyVal;
+
+    @Column(name = "dailyDate")
+    private ArrayList<Double> dailyDate;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
