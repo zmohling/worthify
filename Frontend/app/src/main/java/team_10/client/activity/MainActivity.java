@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import team_10.client.R;
@@ -27,6 +29,7 @@ import team_10.client.fragment.SettingsFragment;
 import team_10.client.fragment.TransactionsFragment;
 import team_10.client.object.User;
 import team_10.client.object.account.Account;
+import team_10.client.object.account.Loan;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.IO;
 
@@ -78,17 +81,27 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         if (!SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         } else {
-            List<Account> aFromFile = IO.deserializeAccounts(IO.readAccountsFromFile(getApplicationContext()));
-            if (aFromFile != null)
-                User.setAccounts(aFromFile);
-            else
-                IO.getAccountsFromRemote(getApplicationContext());
-            System.out.println(IO.serializeAccounts(User.getAccounts()));
+            if(User.getToken() == "") {
+                Loan loan = new Loan();
+                loan.setID("1");
+                loan.setLabel("Student Loan");
+                loan.addTransaction(LocalDate.now(), 1000.0, 1.5, 1);
+                ArrayList<Account> accountsList = new ArrayList<>();
+                accountsList.add(loan);
+                User.setAccounts(accountsList);
+                System.out.println(IO.serializeAccounts(User.getAccounts()));
+            } else {
+                List<Account> aFromFile = IO.deserializeAccounts(IO.readAccountsFromFile(getApplicationContext()));
+                if (aFromFile != null)
+                    User.setAccounts(aFromFile);
+                else
+                    IO.getAccountsFromRemote(getApplicationContext());
+                System.out.println(IO.serializeAccounts(User.getAccounts()));
+            }
         }
 
         new SocketConnection().execute();
