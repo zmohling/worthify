@@ -18,21 +18,23 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 /**
+ * Rest Controller for the User table <br>
+ * <br>
+ * ENDPOINT /register for registering a user (see register()) <br>
+ * ENDPOINT /passwordChange for changing a password (see passwordChange()) <br>
+ * ENDPOINT /emailChange for changing an email (see emailChange()) <br>
+ * ENDPOINT /login for logging in (see login()) <br>
+ * ENDPOINT /getInfo/{auth} for getting the info of a user (see getAdminInfo())<br>
+ * ENDPOINT /users/listAll for listing all users (see listAll()) <br>
+ * ENDPOINT /users/numOnline for getting all of the online users (see numOnline()) <br>
+ * ENDPOINT /users/delete/{userId} for deleting a user <br>
+ *
  * @author Griffin Stout and Michael Davis
  *
- * Rest Controller for the User table
- *
- * ENDPOINT /register for registering a user (see register())
- * ENDPOINT /passwordChange for changing a password (see passwordChange())
- * ENDPOINT /emailChange for changing an email (see emailChange())
- * ENDPOINT /login for logging in (see login())
- * ENDPOINT /getInfo/{auth} for getting the info of a user (see getAdminInfo())
- * ENDPOINT /users/listAll for listing all users (see listAll())
- * ENDPOINT /users/numOnline for getting all of the online users (see numOnline())
- * ENDPOINT /users/delete/{userId} for deleting a user
  */
 @RestController
 public class UserController{
+
 
     EchoServer echoServer = new EchoServer(0000, false);
 

@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Griffin Stout
- *
  * Entity representing the articles table
+ *
+ * @author Griffin Stout
  */
 @Entity
 @Table(name="articles")

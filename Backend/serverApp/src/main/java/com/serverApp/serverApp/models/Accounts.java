@@ -4,9 +4,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * @author Michael Davis
- *
  * Entity representing the accounts table
+ *
+ * @author Michael Davis
  */
 @Entity
 @Table(name = "accounts")

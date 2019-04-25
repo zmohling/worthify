@@ -5,9 +5,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * @author Griffin Stout
- *
+
  * Entity representing the RealEstate table
+ *
+ * @author Griffin Stout
  */
 @Entity
 @Table(name = "real_estate")

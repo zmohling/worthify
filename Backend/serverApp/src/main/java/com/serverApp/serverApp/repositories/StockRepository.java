@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
+ * JPA repository for stocks
+ *
  * @author Michael Davis
  *
- * JPA repository for stocks
  */
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Long> {

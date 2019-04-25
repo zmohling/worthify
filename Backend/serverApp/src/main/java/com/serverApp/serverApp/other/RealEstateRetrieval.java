@@ -12,9 +12,10 @@ import java.net.URL;
 import java.util.Scanner;
 
 /**
+ * class to handle the realestate api (zillow)
+ *
  * @author Michael Davis
  *
- * class to handle the realestate api (zillow)
  */
 public class RealEstateRetrieval {
     public String retrieveRealEstate(RealEstate realEstate) throws IOException {

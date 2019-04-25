@@ -5,6 +5,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * class to handle the stock apis and return them
+ *
+ * @author Michael Davis
+ */
 public class StockRetrieval {
 
     public String retrieveStock(String ticker) throws java.io.IOException {

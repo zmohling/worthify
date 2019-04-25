@@ -15,9 +15,9 @@ import javax.persistence.PersistenceContexts;
 import java.util.List;
 
 /**
- * @author Griffin Stout
- *
  * Repository to make custom queries on the Article Table
+ *
+ * @author Griffin Stout
  */
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
