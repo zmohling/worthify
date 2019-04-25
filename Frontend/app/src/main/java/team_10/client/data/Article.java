@@ -17,11 +17,17 @@ public class Article {
         return url;
     }
 
-    public String getTitle() { return title; }
+    public String getTitle() {
+        return title;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public String getPictureUrl() { return pictureUrl; }
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
 
     private static int lastContactId = 0;
 }

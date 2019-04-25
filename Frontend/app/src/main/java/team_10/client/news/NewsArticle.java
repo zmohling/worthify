@@ -48,7 +48,6 @@ public class NewsArticle extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-
      * @return A new instance of fragment NewsArticle.
      */
     // TODO: Rename and change types and number of parameters
@@ -72,7 +71,7 @@ public class NewsArticle extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_news_article , container ,false);
+        View view = inflater.inflate(R.layout.fragment_news_article, container, false);
         //MainActivity.hideBottomNavigationView();
         //view.findViewById(R.id.navigation).setVisibility(View.GONE);
         webView = (WebView) view.findViewById(R.id.webview);
@@ -81,17 +80,14 @@ public class NewsArticle extends Fragment {
         webView.loadUrl(mParam1);
         urlName = mParam1;
         webView.setWebViewClient(new MyWebviewClient());
-        webView.setOnKeyListener(new View.OnKeyListener()
-        {
+        webView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((keyCode == KeyEvent.KEYCODE_BACK) && (event.getAction() == MotionEvent.ACTION_UP) && webView.canGoBack())
-                {
+                if ((keyCode == KeyEvent.KEYCODE_BACK) && (event.getAction() == MotionEvent.ACTION_UP) && webView.canGoBack()) {
                     webView.goBack();
                     return true;
                 }
-                if ((keyCode == KeyEvent.KEYCODE_BACK) && (event.getAction() == MotionEvent.ACTION_UP) && !webView.canGoBack() && getFragmentManager().getBackStackEntryCount() > 0)
-                {
+                if ((keyCode == KeyEvent.KEYCODE_BACK) && (event.getAction() == MotionEvent.ACTION_UP) && !webView.canGoBack() && getFragmentManager().getBackStackEntryCount() > 0) {
                     //MainActivity.showBottomNavigationView();
                     getFragmentManager().popBackStack();
                     return true;
@@ -145,10 +141,8 @@ public class NewsArticle extends Fragment {
 
     private class MyWebviewClient extends WebViewClient {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url)
-        {
-            if (Uri.parse(url).getHost().equals(Uri.parse(urlName).getHost()))
-            {
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (Uri.parse(url).getHost().equals(Uri.parse(urlName).getHost())) {
                 return false;
             }
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

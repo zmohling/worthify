@@ -155,7 +155,7 @@ public class IO {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<String, String>();
                 final String basicAuth = User.getToken();
                 params.put("Authorization", basicAuth);
 
@@ -190,7 +190,7 @@ public class IO {
                                     // TODO
                                     //User.addAccount(l.get(i));
 
-                                DashboardFragment.updateDashboardUI();
+                                    DashboardFragment.updateDashboardUI();
 
                                 System.out.println("Accounts Retrieval Successful");
                             } else {
@@ -232,7 +232,7 @@ public class IO {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<String, String>();
                 final String basicAuth = User.getToken();
                 params.put("Authorization", basicAuth);
 

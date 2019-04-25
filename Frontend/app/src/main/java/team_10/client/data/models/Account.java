@@ -28,7 +28,7 @@ public abstract class Account implements Serializable {
     public Account() {
         this.transactions = new TreeMap<>();
     }
-    
+
     public void addTransaction(LocalDate d, double value, int recurring) {
         addTransaction(d, value, transactions.size(), recurring);
     }
@@ -43,9 +43,13 @@ public abstract class Account implements Serializable {
         return (Transaction) transactions.remove(d);
     }
 
-    public void setTransactions(TreeMap tempTransactions) { this.transactions = tempTransactions; }
+    public void setTransactions(TreeMap tempTransactions) {
+        this.transactions = tempTransactions;
+    }
 
-    public TreeMap getTransactions() { return this.transactions; }
+    public TreeMap getTransactions() {
+        return this.transactions;
+    }
 
     public String getID() {
         return this.accountID;
@@ -63,9 +67,13 @@ public abstract class Account implements Serializable {
         this.label = label;
     }
 
-    public int isActive() { return this.isActive; }
+    public int isActive() {
+        return this.isActive;
+    }
 
-    public void setIsActive(int isActive) { this.isActive = isActive; }
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
+    }
 
     public abstract double getValue(LocalDate d);
 

@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
             // 1. Know how many fragments there are in the stack
             final int count = fragmentManager.getBackStackEntryCount();
             // 2. If the fragment is **not** "home type", save it to the stack
-            if( name.equals("other") && count == 0 ) {
+            if (name.equals("other") && count == 0) {
                 fragmentTransaction.addToBackStack(name);
             }
             // Commit !
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
                 @Override
                 public void onBackStackChanged() {
                     // If the stack decreases it means I clicked the back button
-                    if( fragmentManager.getBackStackEntryCount() <= count){
+                    if (fragmentManager.getBackStackEntryCount() <= count) {
                         // pop all the fragment and remove the listener
                         fragmentManager.popBackStack("other", POP_BACK_STACK_INCLUSIVE);
                         fragmentManager.removeOnBackStackChangedListener(this);

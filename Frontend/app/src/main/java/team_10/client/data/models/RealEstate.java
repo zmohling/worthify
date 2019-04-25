@@ -31,13 +31,11 @@ public class RealEstate extends Account {
         this.state = state;
     }
 
-    public void addTransaction(LocalDate d, double value)
-    {
+    public void addTransaction(LocalDate d, double value) {
         addTransaction(d, value, 0, transactions.size());
     }
 
-    public void addTransaction(LocalDate d, double value, int recurring, int transactionId)
-    {
+    public void addTransaction(LocalDate d, double value, int recurring, int transactionId) {
         Transaction t = new Transaction(value, transactionId, recurring, d);
         t.setAccount(this);
         transactions.put(d, t);

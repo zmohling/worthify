@@ -35,6 +35,7 @@ public class UserLocalDataSource implements UserDataSource {
         }
         return INSTANCE;
     }
+
     @Override
     public void getUserData(LoadUserDataCallback callback) {
 

@@ -76,8 +76,7 @@ public class NewsFragment extends Fragment {
         return fragment;
     }
 
-    public void editArticles()
-    {
+    public void editArticles() {
         String urlArticles = ROOT_URL + "article/getPersonal/" + SharedPreferencesManager.getUser().getID();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlArticles,
                 new Response.Listener<String>() {
@@ -87,10 +86,9 @@ public class NewsFragment extends Fragment {
                             JSONObject returned = new JSONObject(response);
                             int numArticles = returned.getInt("numArticles");
                             int i;
-                            for (i = 0; i < numArticles; i++)
-                            {
+                            for (i = 0; i < numArticles; i++) {
                                 try {
-                                    JSONObject userJson = returned.getJSONObject("article"+ i);
+                                    JSONObject userJson = returned.getJSONObject("article" + i);
                                     articles.add(new Article(userJson.getString("title"), userJson.getString("description"), userJson.getString("pictureUrl"), userJson.getString("url")));
 
                                 } catch (JSONException e) {
@@ -125,7 +123,7 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_news , container ,false);
+        View view = inflater.inflate(R.layout.fragment_news, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.rvArticles);
 
         articles = new ArrayList<Article>();

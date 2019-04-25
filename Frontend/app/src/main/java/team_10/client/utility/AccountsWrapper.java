@@ -10,7 +10,8 @@ import team_10.client.data.models.Account;
  */
 public class AccountsWrapper {
 
-    public AccountsWrapper() { }
+    public AccountsWrapper() {
+    }
 
     public AccountsWrapper(List<Account> accounts) {
         setAccounts(accounts);

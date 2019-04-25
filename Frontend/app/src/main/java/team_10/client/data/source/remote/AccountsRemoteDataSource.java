@@ -193,7 +193,7 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<String, String>();
                 final String basicAuth = User.getToken();
                 params.put("Authorization", basicAuth);
 

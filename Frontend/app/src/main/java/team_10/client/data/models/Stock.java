@@ -11,23 +11,32 @@ public class Stock extends Account {
     public int amount;
     public double valueOfStock;
 
-    public Stock() { }
+    public Stock() {
+    }
 
-    public String getTicker() { return ticker; }
-    public void setTicker(String symbol) { this.ticker = symbol; }
+    public String getTicker() {
+        return ticker;
+    }
 
-    public int getAmount() { return amount; }
-    public void setAmount(int amount) { this.amount = amount; }
+    public void setTicker(String symbol) {
+        this.ticker = symbol;
+    }
 
-    public void addTransaction(LocalDate d, double value, int amount)
-    {
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void addTransaction(LocalDate d, double value, int amount) {
         addTransaction(d, amount, 0, value, transactions.size());
     }
 
     public void addTransaction(LocalDate d, int amount, int recurring, double value, int transactionId) {
         this.amount = this.amount + amount;
-        if (this.amount < 0)
-        {
+        if (this.amount < 0) {
             this.amount = 0;
         }
         Transaction t = new Transaction(value, transactionId, recurring, d);
@@ -226,18 +235,15 @@ public class Stock extends Account {
         return null;
     }
 
-    private boolean waitForResponse()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            try{
+    private boolean waitForResponse() {
+        for (int i = 0; i < 10; i++) {
+            try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 break;
             }
-            if (valueOfStock != 0)
-            {
+            if (valueOfStock != 0) {
                 return true;
             }
         }

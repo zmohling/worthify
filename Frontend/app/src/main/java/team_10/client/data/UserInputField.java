@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface UserInputField {
     int priority();
+
     String name();
+
     Class inputType();
 }

@@ -41,7 +41,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     private AddEditAccountPresenter mAddEditAccountPresenter;
 
 
-    public DashboardFragment() { }
+    public DashboardFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,7 +113,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     }
 
     public void startAddEditAccounts(@Nullable String accountID, @Nullable Class<? extends Account> type) {
-        AddEditAccountView addEditAccountView= new AddEditAccountView();
+        AddEditAccountView addEditAccountView = new AddEditAccountView();
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, addEditAccountView, "")
                 .addToBackStack(null)

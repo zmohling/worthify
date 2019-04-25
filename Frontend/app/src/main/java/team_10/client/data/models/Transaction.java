@@ -32,7 +32,9 @@ public abstract class Transaction implements Serializable {
         return transactionID;
     }
 
-    public void setValue(int transactionID) { this.transactionID = transactionID; }
+    public void setValue(int transactionID) {
+        this.transactionID = transactionID;
+    }
 
     public Account getAccount() {
         return account;
@@ -42,11 +44,19 @@ public abstract class Transaction implements Serializable {
         this.account = account;
     }
 
-    public int getRecurring() { return recurring; }
+    public int getRecurring() {
+        return recurring;
+    }
 
-    public void setRecurring(int recurring) { this.recurring = recurring; }
+    public void setRecurring(int recurring) {
+        this.recurring = recurring;
+    }
 
-    public LocalDate getDate() { return date; }
+    public LocalDate getDate() {
+        return date;
+    }
 
-    public void setDate(LocalDate date) { this.date = date; }
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 }

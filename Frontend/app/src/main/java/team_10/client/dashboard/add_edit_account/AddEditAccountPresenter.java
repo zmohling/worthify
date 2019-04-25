@@ -56,7 +56,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
     @Override
     public void subscribe() {
-         if (isNewAccount()) {
+        if (isNewAccount()) {
 
             mAccountsRepository.newAccount(mType, this);
 

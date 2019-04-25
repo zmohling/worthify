@@ -24,7 +24,7 @@ public class UserRepository implements UserDataSource {
 
     // Private constructor for Singleton pattern
     private UserRepository(@NonNull UserDataSource userRemoteDataSource,
-                               @NonNull UserDataSource userLocalDataSource) {
+                           @NonNull UserDataSource userLocalDataSource) {
         mUserRemoteDataSource = userRemoteDataSource;
         mUserLocalDataSource = userLocalDataSource;
     }
@@ -45,6 +45,7 @@ public class UserRepository implements UserDataSource {
     public static void destroyInstance() {
         INSTANCE = null;
     }
+
     @Override
     public void getUserData(LoadUserDataCallback callback) {
 

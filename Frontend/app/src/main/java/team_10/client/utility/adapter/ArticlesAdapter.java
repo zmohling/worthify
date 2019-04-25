@@ -50,71 +50,69 @@ public class ArticlesAdapter extends
         }
     }
 
-        // Store a member variable for the contacts
-        private List<Article> mArticles;
-        private FragmentManager fragmentManager;
+    // Store a member variable for the contacts
+    private List<Article> mArticles;
+    private FragmentManager fragmentManager;
 
-        // Pass in the contact array into the constructor
-        public ArticlesAdapter(List<Article> articles, FragmentManager fragmentManagers) {
-            mArticles = articles;
-            fragmentManager = fragmentManagers;
+    // Pass in the contact array into the constructor
+    public ArticlesAdapter(List<Article> articles, FragmentManager fragmentManagers) {
+        mArticles = articles;
+        fragmentManager = fragmentManagers;
+    }
+
+    @Override
+    public ArticlesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+        // Inflate the custom layout
+        View contactView = inflater.inflate(R.layout.item_article, parent, false);
+
+        // Return a new holder instance
+        ViewHolder viewHolder = new ViewHolder(contactView);
+        return viewHolder;
+    }
+
+    // Involves populating data into the item through holder
+    @Override
+    public void onBindViewHolder(final ArticlesAdapter.ViewHolder viewHolder, int position) {
+        // Get the data model based on position
+        final Article article = mArticles.get(position);
+
+        // Set item views based on your views and data model
+        TextView textView = viewHolder.nameTextView;
+        textView.setText(article.getUrl());
+        viewHolder.titleTextView.setText(article.getTitle());
+        viewHolder.descriptionTextView.setText(article.getDescription());
+
+        ImageView imageViewHolder = viewHolder.imageView;
+
+        if (!article.getPictureUrl().equals("null")) {
+            Picasso.get().load(article.getPictureUrl()).into(imageViewHolder);
+        } else {
+            imageViewHolder.setVisibility(View.GONE);
         }
 
-        @Override
-        public ArticlesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            Context context = parent.getContext();
-            LayoutInflater inflater = LayoutInflater.from(context);
+        viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NewsArticle newsArticle = new NewsArticle().newInstance(article.getUrl());
 
-            // Inflate the custom layout
-            View contactView = inflater.inflate(R.layout.item_article, parent, false);
+                //Bundle args = new Bundle();
+                //args.putString("url", article.getUrl());
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.add(R.id.fragment_container, newsArticle);
+                transaction.addToBackStack(null);
+                transaction.commit();
 
-            // Return a new holder instance
-            ViewHolder viewHolder = new ViewHolder(contactView);
-            return viewHolder;
-        }
-
-        // Involves populating data into the item through holder
-        @Override
-        public void onBindViewHolder(final ArticlesAdapter.ViewHolder viewHolder, int position) {
-            // Get the data model based on position
-            final Article article = mArticles.get(position);
-
-            // Set item views based on your views and data model
-            TextView textView = viewHolder.nameTextView;
-            textView.setText(article.getUrl());
-            viewHolder.titleTextView.setText(article.getTitle());
-            viewHolder.descriptionTextView.setText(article.getDescription());
-
-            ImageView imageViewHolder = viewHolder.imageView;
-
-            if (!article.getPictureUrl().equals("null")) {
-                Picasso.get().load(article.getPictureUrl()).into(imageViewHolder);
             }
-            else
-            {
-                imageViewHolder.setVisibility(View.GONE);
-            }
+        });
+    }
 
-            viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    NewsArticle newsArticle = new NewsArticle().newInstance(article.getUrl());
-
-                    //Bundle args = new Bundle();
-                    //args.putString("url", article.getUrl());
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.add(R.id.fragment_container, newsArticle);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-
-                }
-            });
-        }
-
-        // Returns the total count of items in the list
-        @Override
-        public int getItemCount() {
-            return mArticles.size();
-        }
+    // Returns the total count of items in the list
+    @Override
+    public int getItemCount() {
+        return mArticles.size();
+    }
 }
 
