@@ -24,17 +24,11 @@ public abstract class Account implements Serializable {
     protected String accountID;
     protected int isActive;
     protected TreeMap<LocalDate, team_10.client.data.models.Transaction> transactions;
-    protected transient Context context;
 
     public Account() {
         this.transactions = new TreeMap<>();
     }
-
-    public Account(Context context) {
-        transactions = new TreeMap<>();
-        this.context = context;
-    }
-
+    
     public void addTransaction(LocalDate d, double value, int recurring) {
         addTransaction(d, value, transactions.size(), recurring);
     }

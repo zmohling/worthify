@@ -1,24 +1,42 @@
 package team_10.client.add_edit_account;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.View;
+
 import team_10.client.data.models.Account;
+import team_10.client.data.source.AccountsDataSource;
 
-public class AddEditAccountPresenter implements AddEditAccountContract.Presenter {
+public class AddEditAccountPresenter implements AddEditAccountContract.Presenter,
+        AccountsDataSource.GetAccountCallback {
 
-    private final Account mAccountModel;
+    private final AccountsDataSource mAccountsRepository;
 
     private final AddEditAccountContract.View mAddEditAccountView;
+
+    /**
+     * Accounts are immutable when not loaded into cache, so our view
+     * will manipulate this dummy account, which will be either discarded
+     * or added to the Accounts repository on "Add" or "Confirm" events
+     */
+    private Account mAccountModel;
+
+    private String mAccountID;
+
+    private boolean mIsDataMissing;
 
     //private final List<AddEditAccountContract.InputView> mInputViews;
 
     private boolean isDataMissing;
 
-    public AddEditAccountPresenter(Account account, AddEditAccountContract.View view) {
+    public AddEditAccountPresenter(@Nullable String accountID, @NonNull AccountsDataSource accountsRepository,
+                                   @NonNull AddEditAccountContract.View view, boolean shouldLoadDataFromRepo) {
 
-        this.mAccountModel = account;
+        this.mAccountID = accountID;
+        this.mAccountsRepository = accountsRepository;
         this.mAddEditAccountView = view;
+        this.isDataMissing = shouldLoadDataFromRepo;
         //this.mInputViews = new ArrayList<>();
-
-        isDataMissing = false;
 
         mAddEditAccountView.setPresenter(this);
     }
@@ -34,24 +52,18 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
     }
 
     @Override
-    public AddEditAccountContract.View getAccountInputsView() {
+    public View getAccountInputsView() {
         return null;
     }
 
     @Override
-    public AddEditAccountContract.View getTransactionsView() {
+    public View getTransactionsView() {
         return null;
     }
 
     @Override
     public void saveAccount() {
-        try {
-            mAccountModel.getClass().newInstance();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override
@@ -72,6 +84,16 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
     @Override
     public boolean isDataMissing() {
         return false;
+    }
+
+    @Override
+    public void onAccountLoaded(Account account) {
+
+    }
+
+    @Override
+    public void onDataNotAvailable() {
+
     }
 
     interface CallBack {

@@ -23,13 +23,10 @@ import team_10.client.R;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.data.source.AccountsRepository;
-import team_10.client.data.source.local.AccountsLocalDataSource;
-import team_10.client.data.source.remote.AccountsRemoteDataSource;
 import team_10.client.fragment.DashboardFragment;
 import team_10.client.fragment.NewsArticle;
 import team_10.client.fragment.NewsFragment;
 import team_10.client.settings.SharedPreferencesManager;
-import team_10.client.utility.AppExecutors;
 import team_10.client.utility.IO;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -82,8 +79,8 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         setContentView(R.layout.activity_main);
 
         myContext = this.getApplicationContext();
-        AppExecutors appExecutors = new AppExecutors();
-        mAccountsRepository = AccountsRepository.getInstance(AccountsRemoteDataSource.getInstance(appExecutors), AccountsLocalDataSource.getInstance(appExecutors));
+        mAccountsRepository = AccountsRepository.getInstance();
+//        mAccountsRepository.deleteAllAccounts();
 
         if (!SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
@@ -121,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         super.onPause();
 
         try {
-            serverSocket.close();
+            serverSocket.close(); // TODO: NullPointerException when trying to close a null socket
         } catch (IOException e) {
             System.out.println("ERROR: Did not close socket.");
             e.printStackTrace();

@@ -108,7 +108,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
         });
 
-        mAccountsRepository = AccountsRepository.getInstance(null, null);
+        mAccountsRepository = AccountsRepository.getInstance();
         mAccountsRepository.getAccounts(new AccountsDataSource.LoadAccountsCallback() {
             @Override
             public void onAccountsLoaded(List<Account> accounts) {

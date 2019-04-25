@@ -26,7 +26,7 @@ public interface AccountsDataSource {
 
         void onAccountSaved();
 
-        void onServerNotAvailable();
+        void onDataNotAvailable();
     }
 
     interface RefreshAccountsCallback {

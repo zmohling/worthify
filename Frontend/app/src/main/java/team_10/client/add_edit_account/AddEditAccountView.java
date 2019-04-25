@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import team_10.client.R;
 
@@ -18,9 +19,15 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
 
     private AddEditAccountContract.Presenter mPresenter;
 
-    private LinearLayout mInputFieldList;
+    private LinearLayout mAccountInputsView;
 
-    private LinearLayout mTransactionItemList;
+    private LinearLayout mTransactionsView;
+
+    private TextView mTitle;
+
+    private Button mSaveButton;
+
+    private Button mCancelButton;
 
     public static AddEditAccountView newInstance() {
         return new AddEditAccountView();
@@ -50,17 +57,17 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Button saveButton = (Button) getActivity().findViewById(R.id.modal_add_edit_account_save);
-        Button cancelButton = (Button) getActivity().findViewById(R.id.modal_add_edit_account_save);
+        mSaveButton = (Button) getActivity().findViewById(R.id.modal_add_edit_account_save);
+        mCancelButton = (Button) getActivity().findViewById(R.id.modal_add_edit_account_cancel);
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPresenter.saveAccount();
             }
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
@@ -72,27 +79,42 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_add_edit_account, container, false);
-        mInputFieldList = (LinearLayout) root.findViewById(R.id.modal_add_edit_account_input_view_group);
+
+        mTitle = (TextView) root.findViewById(R.id.modal_add_edit_account_title);
+
+        // TODO: get linear layout for transactions
+
         return root;
     }
 
     @Override
-    public void setTitle() {
-
+    public void setTitle(String title) {
+        mTitle.setText(title);
     }
 
     @Override
-    public void setAddConfirmButtonText() {
-
+    public void setAddConfirmButtonText(String text) {
+        mSaveButton.setText(text);
     }
 
     @Override
     public void insertAccountInputsView(View view) {
+
 
     }
 
     @Override
     public void insertTransactionsView(View view) {
 
+    }
+
+    @Override
+    public void showAccountEmptyError() {
+
+    }
+
+    @Override
+    public boolean isActive() {
+        return false;
     }
 }

@@ -78,7 +78,7 @@ public class AccountsLocalDataSource implements AccountsDataSource {
     public void saveAccount(@NonNull Account account, @NonNull SaveAccountCallback callback) {
         final List<Account> cachedAccounts = new ArrayList<>();
 
-        cachedAccounts.addAll(AccountsRepository.getInstance(null,null).getCachedAccounts());
+        cachedAccounts.addAll(AccountsRepository.getInstance().getCachedAccounts());
 
         /* add new account */
         cachedAccounts.add(account);
@@ -91,46 +91,23 @@ public class AccountsLocalDataSource implements AccountsDataSource {
 
                 String serializedAccount = IO.serializeAccounts(cachedAccounts);
 
-                // TODO: MEEEEEE
-                IO.writeAccountsToFile(serializedAccount, MainActivity.myContext);
+                // success == 0, failure will return nonzero
+                int failureCode = IO.writeAccountsToFile(serializedAccount, MainActivity.myContext);
 
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-
+                        if (failureCode == 0) {
+                            callback.onAccountSaved();
+                        } else {
+                            callback.onDataNotAvailable();
+                        }
                     }
                 });
             }
         };
 
-        mAppExecutors.diskIO().execute(readAccountsFromFile);
-
-        AccountsRepository.getInstance(null, null).getAccounts(new LoadAccountsCallback() {
-            @Override
-            public void onAccountsLoaded(List<Account> accounts) {
-                myAccounts.addAll(accounts);
-
-                Runnable writeAccountsToFile = new Runnable() {
-                    @Override
-                    public void run() {
-                        IO.writeAccountsToFile(IO.serializeAccounts(myAccounts), MainActivity.myContext);
-                        mAppExecutors.mainThread().execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                callback.onAccountSaved();
-                            }
-                        });
-                    }
-                };
-
-                mAppExecutors.diskIO().execute(writeAccountsToFile);
-            }
-
-            @Override
-            public void onDataNotAvailable() {
-
-            }
-        });
+        mAppExecutors.diskIO().execute(writeAccountsToFile);
     }
 
     @Override
@@ -140,7 +117,7 @@ public class AccountsLocalDataSource implements AccountsDataSource {
 
     @Override
     public void deleteAllAccounts() {
-
+        IO.deleteAccountsFile(MainActivity.myContext);
     }
 
     @Override

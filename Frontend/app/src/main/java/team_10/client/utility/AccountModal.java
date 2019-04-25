@@ -138,15 +138,16 @@ public class AccountModal {
             @Override
             public void onClick(View v) {
 
-                AccountsRepository mAccountsRepository = AccountsRepository.getInstance(null, null);
-                mAccountsRepository.saveAccount(a_temp, new AccountsDataSource.SaveAccountCallback() {
+                AccountsRepository acountsRepository = AccountsRepository.getInstance();
+
+                acountsRepository.saveAccount(a_temp, new AccountsDataSource.SaveAccountCallback() {
                     @Override
                     public void onAccountSaved() {
                         System.out.println("SAVED");
                     }
 
                     @Override
-                    public void onServerNotAvailable() {
+                    public void onDataNotAvailable() {
 
                     }
                 });
@@ -212,15 +213,15 @@ public class AccountModal {
             public void onClick(View v) {
                 // Remove existing account and replace with our modified copy
 
-                AccountsRepository mAccountsRepository = AccountsRepository.getInstance(null, null);
-                mAccountsRepository.saveAccount(a_temp, new AccountsDataSource.SaveAccountCallback() {
+                AccountsRepository accountsRepository = AccountsRepository.getInstance();
+                accountsRepository.saveAccount(a_temp, new AccountsDataSource.SaveAccountCallback() {
                     @Override
                     public void onAccountSaved() {
                         System.out.println("SAVED");
                     }
 
                     @Override
-                    public void onServerNotAvailable() {
+                    public void onDataNotAvailable() {
 
                     }
                 });

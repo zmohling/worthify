@@ -14,12 +14,16 @@ public interface AddEditAccountContract {
      */
     interface Presenter extends BasePresenter {
 
-        // Interactions with View
-        View getAccountInputsView();
-        View getTransactionsView();
+        android.view.View getAccountInputsView();
+
+        android.view.View getTransactionsView();
+
         void saveAccount();
+
         void cancel();
+
         void addTransaction();
+
         void deleteTransaction();
 
         boolean isDataMissing();
@@ -27,12 +31,16 @@ public interface AddEditAccountContract {
 
     interface View extends BaseView<Presenter> {
 
-        void setTitle();
+        void setTitle(String title);
 
-        void setAddConfirmButtonText();
+        void setAddConfirmButtonText(String text);
 
         void insertAccountInputsView(android.view.View view);
 
         void insertTransactionsView(android.view.View view);
+
+        void showAccountEmptyError();
+
+        boolean isActive();
     }
 }
