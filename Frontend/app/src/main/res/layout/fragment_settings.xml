@@ -4,17 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/background"
+    android:background="@color/primary_accent"
     tools:context=".fragment.SettingsFragment">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/main_transactions"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="10"
-        tools:context=".fragment.SettingsFragment">
+    <RelativeLayout
+        android:id="@+id/settings_background"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
         <TextView
             android:id="@+id/text_view_profile"
@@ -27,34 +23,79 @@
             android:layout_marginTop="10dp"
             android:text="@string/title_settings" />
 
-        <TextView
-            android:id="@+id/text_view_profile_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:textColor="@color/text"
-            android:layout_weight=".25"
-            android:layout_marginTop="10dp"
-            android:text="Email: " />
+        <View
+            android:id="@+id/bottom_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/text_view_profile"
+            android:layout_marginTop="30dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/background" />
 
-        <TextView
-            android:id="@+id/text_view_change_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:textColor="@color/text"
-            android:layout_weight=".25"
-            android:layout_marginTop="10dp"
-            android:text="Change your email address" />
-        <TextView
-            android:id="@+id/text_view_change_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:textColor="@color/text"
-            android:layout_weight=".25"
-            android:layout_marginTop="10dp"
-            android:text="Change your password" />
-    </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/text_view_profile"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/main_transactions"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="10"
+                android:background="@color/primary"
+                tools:context=".fragment.SettingsFragment">
+
+                <TextView
+                    android:id="@+id/text_view_profile_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:textColor="@color/text"
+                    android:layout_weight=".25"
+                    android:layout_marginTop="10dp"
+                    android:text="Email: " />
+
+                <TextView
+                    android:id="@+id/text_view_change_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:textColor="@color/text"
+                    android:layout_weight=".25"
+                    android:layout_marginTop="10dp"
+                    android:text="Change your email address" />
+                <TextView
+                    android:id="@+id/text_view_change_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:textColor="@color/text"
+                    android:layout_weight=".25"
+                    android:layout_marginTop="10dp"
+                    android:text="Change your password" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="100dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/greenbtn_bg"
+                android:text="Logout"
+                android:textColor="@color/text" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
 
 </FrameLayout>
