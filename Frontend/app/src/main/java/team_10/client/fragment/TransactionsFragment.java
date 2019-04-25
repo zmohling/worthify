@@ -22,7 +22,7 @@ import team_10.client.utility.TransactionsAdapter;
 import static team_10.client.settings.SharedPreferencesManager.getUser;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} subclass to list transactions.
  * Activities that contain this fragment must implement the
  * {@link TransactionsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
@@ -69,6 +69,9 @@ public class TransactionsFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Method to get transactions from accounts.
+     */
     public void editTransactions()
     {
         List<Account> usersAccounts = getUser().getAccounts();
@@ -78,6 +81,9 @@ public class TransactionsFragment extends Fragment {
         }
     }
 
+    /**
+     * Method to get recurring transactions from accounts.
+     */
     public void editRecurringTransactions()
     {
         List<Account> usersAccounts = getUser().getAccounts();

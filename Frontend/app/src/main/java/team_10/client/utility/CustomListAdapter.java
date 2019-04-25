@@ -14,6 +14,9 @@ import team_10.client.R;
 import team_10.client.constant.TYPE;
 import team_10.client.object.account.Account;
 
+/**
+ * List Adapter for the accounts on the dashboard fragment.
+ */
 public class CustomListAdapter extends ArrayAdapter {
 
     private int resourceLayout;

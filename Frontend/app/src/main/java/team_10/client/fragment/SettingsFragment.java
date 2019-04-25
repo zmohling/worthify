@@ -53,7 +53,7 @@ import team_10.client.utility.VolleySingleton;
 import static team_10.client.settings.SharedPreferencesManager.getUser;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} subclass that displays the users email and allows the user to change email and password or logout.
  * Activities that contain this fragment must implement the
  * {@link TransactionsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
@@ -137,7 +137,10 @@ public class SettingsFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-    
+
+    /**
+     * Method to have a modal popup for editing the user's email.
+     */
     public void editEmailModal() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View parent = this.getView();
@@ -298,7 +301,9 @@ public class SettingsFragment extends Fragment {
             }
         });
     }
-
+    /**
+     * Method to have a modal popup for editing the user's password.
+     */
     public void editPasswordModal()
     {
         LayoutInflater inflater = LayoutInflater.from(getContext());

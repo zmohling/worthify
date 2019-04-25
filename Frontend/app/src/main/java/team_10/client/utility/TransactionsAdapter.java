@@ -29,6 +29,9 @@ import team_10.client.fragment.NewsArticle;
 import team_10.client.object.Article;
 import team_10.client.object.account.Transaction;
 
+/**
+ * Adapter class that keeps track of transaction for recycler view.
+ */
 public class TransactionsAdapter extends
         RecyclerView.Adapter<TransactionsAdapter.ViewHolder> {
 

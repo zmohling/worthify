@@ -33,6 +33,9 @@ import team_10.client.constant.URL;
 import team_10.client.object.User;
 import team_10.client.utility.VolleySingleton;
 
+/**
+ * Stock account type.
+ */
 public class Stock extends Account {
     public String ticker;
     public int amount;
@@ -46,12 +49,31 @@ public class Stock extends Account {
         super(context);
     }
 
+    /**
+     * Ticker for the stock.
+     * @return String ticker
+     */
     public String getTicker() { return ticker; }
+
+    /**
+     * Set ticker for stock.
+     * @param symbol Stock symbol
+     */
     public void setTicker(String symbol) { this.ticker = symbol; }
 
+    /**
+     * Get amount of stock.
+     * @return stock amount
+     */
     public int getAmount() { return amount; }
     public void setAmount(int amount) { this.amount = amount; }
 
+    /**
+     * Overloaded addTransaction for stock
+     * @param d date
+     * @param value value
+     * @param amount amount of stock
+     */
     public void addTransaction(LocalDate d, double value, int amount)
     {
         addTransaction(d, amount, 0, value, transactions.size());
@@ -68,6 +90,11 @@ public class Stock extends Account {
         transactions.put(d, t);
     }
 
+    /**
+     * Overloaded getValue for stock account.
+     * @param d date
+     * @return double value
+     */
     public double getValue(LocalDate d) {
         Vector<LocalDate> transaction_dates = new Vector<LocalDate>(transactions.keySet());
         valueOfStock = 0;

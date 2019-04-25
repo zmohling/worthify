@@ -15,6 +15,9 @@ import java.util.Vector;
 import team_10.client.R;
 import team_10.client.utility.General;
 
+/**
+ * Savings Account account type.
+ */
 public class SavingsAccount extends Account {
 
     public SavingsAccount() {

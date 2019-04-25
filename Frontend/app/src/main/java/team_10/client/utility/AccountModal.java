@@ -28,6 +28,9 @@ import team_10.client.object.User;
 import team_10.client.object.account.Account;
 import team_10.client.object.account.Transaction;
 
+/**
+ * Class for accounts modals when adding or editing them.
+ */
 public class AccountModal {
     private Context context;
     private View parent, popupView;
@@ -44,6 +47,9 @@ public class AccountModal {
         initPopup();
     }
 
+    /**
+     * Initializes the popup modal.
+     */
     private void initPopup() {
         // inflate the layout of the popup window
         inflater = LayoutInflater.from(context);

@@ -28,7 +28,7 @@ import team_10.client.utility.IO;
 import team_10.client.utility.AccountModal;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} subclass that contains the graph and list of the user's accounts.
  * Activities that contain this fragment must implement the
  * {@link DashboardFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
@@ -54,8 +54,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * Use this factory method to create a new instance of this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
@@ -160,13 +159,17 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    // Update ListView UI
+    /**
+     * Update ListView UI
+     */
     public static void updateDashboardUI() {
         customAdapter.notifyDataSetChanged();
         setListViewHeightBasedOnChildren(lv);
     }
 
-    // Update ListView height equal to total height of child views
+    /**
+     *     Update ListView height equal to total height of child views
+     */
     private static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {

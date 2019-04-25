@@ -20,6 +20,9 @@ import java.util.Vector;
 import team_10.client.R;
 import team_10.client.utility.General;
 
+/**
+ * Certificate of deposit account types.
+ */
 public class CertificateOfDeposit extends Account {
 
     LocalDate maturityDate;
@@ -86,10 +89,18 @@ public class CertificateOfDeposit extends Account {
         return General.round(total, 2); // round to nearest cent
     }
 
+    /**
+     * Sets the certificate of deposit's maturity date.
+     * @param d date
+     */
     public void setMaturityDate(LocalDate d) {
         this.maturityDate = d;
     }
 
+    /**
+     * Gets certificate of deposit's maturity date.
+     * @return
+     */
     public LocalDate getMaturityDate() {
         return this.maturityDate;
     }

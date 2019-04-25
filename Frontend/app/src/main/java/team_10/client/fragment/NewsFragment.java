@@ -34,7 +34,7 @@ import team_10.client.utility.VolleySingleton;
 import static team_10.client.constant.URL.ROOT_URL;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} subclass to display cards of news articles that can be clicked on.
  * Activities that contain this fragment must implement the
  * {@link NewsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
@@ -80,6 +80,9 @@ public class NewsFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Method to get the user's articles from the server. Is recalled on pull down to refresh.
+     */
     public void editArticles()
     {
         String urlArticles = ROOT_URL + "article/getPersonal/" + SharedPreferencesManager.getUser().getID();

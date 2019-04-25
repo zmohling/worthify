@@ -19,6 +19,9 @@ import java.util.Set;
 import team_10.client.object.account.Account;
 import team_10.client.object.account.Transaction;
 
+/**
+ * Adapter for serialization/deserialization of accounts.
+ */
 public class AbstractAccountAdapter implements JsonSerializer<Account>, JsonDeserializer<Account> {
 
     private static final String PACKAGE = "team_10.client.object.account";

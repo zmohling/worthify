@@ -19,6 +19,9 @@ import team_10.client.R;
 import team_10.client.object.Article;
 import team_10.client.fragment.NewsArticle;
 
+/**
+ * Adapter class that keeps track of articles for recycler view.
+ */
 public class ArticlesAdapter extends
         RecyclerView.Adapter<ArticlesAdapter.ViewHolder> {
 

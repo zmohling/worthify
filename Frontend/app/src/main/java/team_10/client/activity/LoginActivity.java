@@ -30,6 +30,9 @@ import team_10.client.utility.VolleySingleton;
 
 import team_10.client.R;
 
+/**
+ * This is the activity the user first sees when it is not logged in or needs to register.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     EditText editTextEmail, editTextPassword;

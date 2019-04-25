@@ -32,6 +32,9 @@ import team_10.client.utility.IO;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
+/**
+ * This activity loads the dashboard fragment at start but also allows the user to switch to the news and settings fragments.
+ */
 public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener {
 
     private static BottomNavigationView bottomNav;

@@ -1,5 +1,8 @@
 package team_10.client.object;
 
+/**
+ * Class that stores an articles values for title, description, url, and picture url.
+ */
 public class Article {
     private String url;
     private String title;
@@ -13,14 +16,30 @@ public class Article {
         pictureUrl = pictureUrls;
     }
 
+    /**
+     * Gets the url.
+     * @return url
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * Gets the title.
+     * @return title
+     */
     public String getTitle() { return title; }
 
+    /**
+     * Gets the description.
+     * @return description
+     */
     public String getDescription() { return description; }
 
+    /**
+     * Gets the picture url.
+     * @return picture url
+     */
     public String getPictureUrl() { return pictureUrl; }
 
     private static int lastContactId = 0;
