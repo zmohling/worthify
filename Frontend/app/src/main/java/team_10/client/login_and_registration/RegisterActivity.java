@@ -20,22 +20,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import team_10.client.MainActivity;
+import team_10.client.R;
 import team_10.client.constant.URL;
 import team_10.client.data.User;
-import team_10.client.data.source.local.SharedPreferencesManager;
+import team_10.client.utility.io.SharedPreferencesManager;
 import team_10.client.utility.io.VolleySingleton;
-import team_10.client.R;
 
 /**
  * This activity allows users to register an account if they don't have on yet.
  */
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText editTextFirstName, editTextLastName, editTextEmail, editTextPassword;
+    EditText editTextName, editTextEmail, editTextPassword, editTextConfirmPassword;
     ProgressBar progressBar;
 
     @Override
@@ -52,12 +55,10 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        //editTextUsername = (EditText) findViewById(R.id.editTextUsername);
-        editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
-        editTextLastName = (EditText) findViewById(R.id.editTextLastName);
+        editTextName = (EditText) findViewById(R.id.editTextName);
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-
+        editTextConfirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
 
         findViewById(R.id.buttonRegister).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,10 +86,26 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser() throws JSONException {
-        final String firstName = editTextFirstName.getText().toString().trim();
-        final String lastName = editTextLastName.getText().toString().trim();
+        List<String> name = new ArrayList<String>(Arrays.asList(editTextName.getText().toString().trim().split("\\s+")));
+        ((ArrayList<String>) name).ensureCapacity(2);
+
+
+        StringBuffer lastNameBuffer = new StringBuffer();
+
+        for (int i = 1; i < name.size(); i++) {
+
+            if (i != 1)
+                lastNameBuffer.append(" ");
+
+            lastNameBuffer.append(name.get(i));
+
+        }
+
+        final String firstName = name.get(0);
+        final String lastName = lastNameBuffer.toString();
         final String email = editTextEmail.getText().toString().trim();
-        final String password = editTextPassword.getText().toString().trim();
+        final String password = editTextPassword.getText().toString();
+        final String confirmPassword = editTextConfirmPassword.getText().toString();
 
         Pattern emailRegex = Pattern.compile("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=" +
                 "?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[" +
@@ -99,15 +116,9 @@ public class RegisterActivity extends AppCompatActivity {
         Matcher m = emailRegex.matcher(editTextEmail.getText());
 
         //first we will do the validations
-        if (TextUtils.isEmpty(firstName)) {
-            editTextFirstName.setError("Invalid or Missing First Name");
-            editTextFirstName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(lastName)) {
-            editTextLastName.setError("Invalid or Missing Last Name");
-            editTextLastName.requestFocus();
+        if (TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName)) {
+            editTextName.setError("Invalid or Missing Name");
+            editTextName.requestFocus();
             return;
         }
 
@@ -122,6 +133,14 @@ public class RegisterActivity extends AppCompatActivity {
             editTextPassword.requestFocus();
             return;
         }
+
+        if (!(TextUtils.equals(password, confirmPassword))) {
+            editTextPassword.setError(null);
+            editTextConfirmPassword.setError("Passwords Do Not Match");
+            editTextConfirmPassword.requestFocus();
+            return;
+        }
+
         JSONObject json = new JSONObject();
         json.put("lastName", lastName);
         json.put("firstName", firstName);
@@ -168,6 +187,9 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+
+                            editTextEmail.setError("Email is Taken");
+                            editTextEmail.requestFocus();
                         }
                     }
                 },

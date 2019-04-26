@@ -2,14 +2,10 @@ package team_10.client.settings;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,9 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,11 +38,11 @@ import java.util.regex.Pattern;
 import team_10.client.R;
 import team_10.client.constant.URL;
 import team_10.client.data.User;
-import team_10.client.data.source.local.SharedPreferencesManager;
-import team_10.client.utility.io.IO;
+import team_10.client.data.source.UserRepository;
+import team_10.client.utility.io.SharedPreferencesManager;
 import team_10.client.utility.io.VolleySingleton;
 
-import static team_10.client.data.source.local.SharedPreferencesManager.getUser;
+import static team_10.client.utility.io.SharedPreferencesManager.getUser;
 
 /**
  * A {@link Fragment} subclass that displays the users email and allows the user to change email and password or logout.
@@ -132,9 +126,7 @@ public class SettingsFragment extends Fragment{
 
                 switch (v.getId()) {
                     case R.id.buttonLogoutSettings:
-                        IO.deleteAccountsFile(parent.getApplicationContext());
-                        User.setToken(null);
-                        SharedPreferencesManager.getInstance(parent.getApplicationContext()).logout();
+                        UserRepository.getInstance().removeUserData();
                         parent.finish();
                         break;
                 }

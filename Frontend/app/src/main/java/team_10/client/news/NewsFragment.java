@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 import team_10.client.R;
 import team_10.client.data.Article;
-import team_10.client.data.source.local.SharedPreferencesManager;
+import team_10.client.utility.io.SharedPreferencesManager;
 import team_10.client.utility.adapter.ArticlesAdapter;
 import team_10.client.utility.io.VolleySingleton;
 

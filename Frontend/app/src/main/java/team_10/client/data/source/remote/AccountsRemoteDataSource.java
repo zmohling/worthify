@@ -3,30 +3,23 @@ package team_10.client.data.source.remote;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.JsonObject;
 
-import java.io.UnsupportedEncodingException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import team_10.client.MainActivity;
 import team_10.client.constant.URL;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.AccountsDataSource;
-import team_10.client.dashboard.DashboardFragment;
-import team_10.client.data.User;
-import team_10.client.data.source.local.SharedPreferencesManager;
 import team_10.client.utility.io.AppExecutors;
 import team_10.client.utility.io.IO;
-import team_10.client.utility.io.VolleySingleton;
+import team_10.client.utility.io.SharedPreferencesManager;
+import team_10.client.utility.io.VolleyPostRequest;
 
 public class AccountsRemoteDataSource implements AccountsDataSource {
 
@@ -63,71 +56,35 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
         }
 
         final String finalRequestBody = requestBody;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_GET_ACCOUNTS,
+        VolleyPostRequest request = new VolleyPostRequest(finalRequestBody, URL.URL_GET_ACCOUNTS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            if (response.contains("\"accounts\":")) {
-                                List<Account> l = IO.deserializeAccounts(response);
 
-                                System.out.println("Fetched from server:\n" + IO.serializeAccounts(l));
+                            JSONObject object = new JSONObject(response);
 
-                                callback.onAccountsLoaded(l);
+                            if (object.has("accounts")) {
+                                List<Account> accounts = IO.deserializeAccounts(response);
 
-                                DashboardFragment.updateDashboardUI();
+                                System.out.println("Fetched from server:\n" + IO.serializeAccounts(accounts));
 
-                                System.out.println("Accounts Retrieval Successful");
-                            } else {
-                                System.out.println("Accounts Retrieval Unsuccessful");
+                                callback.onAccountsLoaded(accounts);
+
+                            } else if (object.has("error") &&
+                                    object.getBoolean("error")) {
+
+                                String message = object.getString("message");
+
+                                Toast.makeText(MainActivity.myContext, "Error: " + message, Toast.LENGTH_SHORT).show();
                             }
-                        } catch (Exception e) {
+                        } catch (JSONException e) {
                             e.printStackTrace();
-                            // gson catch exceptions
                         }
-
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.myContext,
-                                (error.getMessage() == null) ? "Error Syncing with Server" : "Error Syncing with Server: " + error.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                        System.out.println(error.toString());
-                        error.printStackTrace();
-                    }
-                }) {
+                });
 
-            @Override
-            public String getBodyContentType() {
-                return String.format("text/plain;charset=UTF-8");
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return finalRequestBody == null ? null : finalRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                            finalRequestBody, "utf-8");
-                    return null;
-                }
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                final String basicAuth = User.getToken();
-                params.put("Authorization", basicAuth);
-
-                return params;
-            }
-
-
-        };
-
-        VolleySingleton.getInstance(MainActivity.myContext).addToRequestQueue(stringRequest);
+        request.execute();
     }
 
 
@@ -153,55 +110,34 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
             ArrayList<Account> accountsList = new ArrayList<>();
             accountsList.add(account);
             requestBody = IO.serializeAccounts(accountsList);
-            System.out.println(requestBody);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        final String finalRequestBody = requestBody;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_ADD_ACCOUNTS,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println("Sent to server:\n" + finalRequestBody);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.myContext,
-                                (error.getMessage() == null) ? "Error Syncing with Server" : "Error Syncing with Server: " + error.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-
+        String finalRequestBody = requestBody;
+        VolleyPostRequest request = new VolleyPostRequest(requestBody, URL.URL_ADD_ACCOUNTS, new Response.Listener<String>() {
             @Override
-            public String getBodyContentType() {
-                return String.format("application/json; charset=utf-8");
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
+            public void onResponse(String response) {
                 try {
-                    return finalRequestBody == null ? null : finalRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                            finalRequestBody, "utf-8");
-                    return null;
+                    JSONObject object = new JSONObject(response);
+
+                    if (object.has("error") &&
+                            object.getBoolean("error")) {  // handle request specific errors
+
+                        String message = object.getString("message");
+
+                        Toast.makeText(MainActivity.myContext, "Error: " + message, Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        System.out.println("Successfully sent to server:\n" + finalRequestBody);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
+        });
 
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                final String basicAuth = User.getToken();
-                params.put("Authorization", basicAuth);
-
-                return params;
-            }
-        };
-
-        VolleySingleton.getInstance(MainActivity.myContext).addToRequestQueue(stringRequest);
+        request.execute();
     }
 
     @Override

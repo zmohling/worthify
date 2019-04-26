@@ -3,7 +3,6 @@ package team_10.client.dashboard.add_edit_account;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -95,14 +94,10 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
         mAccountsRepository.saveAccount(mAccountModel, new AccountsDataSource.SaveAccountCallback() {
             @Override
             public void onAccountSaved() {
-                String errorMessage = "Account Saved to Server";
-                Toast.makeText(MainActivity.myContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onDataNotAvailable() {
-                String errorMessage = "Error: No Connection to Server";
-                Toast.makeText(MainActivity.myContext, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
 

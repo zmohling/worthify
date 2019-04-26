@@ -3,8 +3,11 @@ package team_10.client.data.source.local;
 import android.support.annotation.NonNull;
 
 import team_10.client.MainActivity;
+import team_10.client.data.User;
+import team_10.client.data.source.AccountsRepository;
 import team_10.client.data.source.UserDataSource;
 import team_10.client.utility.io.AppExecutors;
+import team_10.client.utility.io.SharedPreferencesManager;
 
 public class UserLocalDataSource implements UserDataSource {
 
@@ -14,12 +17,15 @@ public class UserLocalDataSource implements UserDataSource {
 
     private final SharedPreferencesManager mSharedPreferencesManager;
 
+    private User mUser;
+
     // Prevent direct instantiation.
     private UserLocalDataSource(@NonNull AppExecutors appExecutors,
                                 @NonNull SharedPreferencesManager sharedPreferencesManager) {
         mAppExecutors = appExecutors;
         mSharedPreferencesManager = sharedPreferencesManager;
 
+        mUser = mSharedPreferencesManager.getUser();
     }
 
     public static UserLocalDataSource getInstance(@NonNull AppExecutors appExecutors) {
@@ -48,7 +54,11 @@ public class UserLocalDataSource implements UserDataSource {
 
     @Override
     public void removeUserData() {
+        AccountsRepository.getInstance().deleteAllAccounts();
 
+        User blankUser = new User(0, null,  null, null, 0, null);
+
+        mSharedPreferencesManager.logout();
     }
 
     @Override
@@ -63,7 +73,7 @@ public class UserLocalDataSource implements UserDataSource {
 
     @Override
     public String getAuthenticationToken() {
-        return null;
+        return User.getToken();
     }
 
     @Override

@@ -16,20 +16,18 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import team_10.client.data.models.Account;
-import team_10.client.data.source.AccountsDataSource;
-import team_10.client.data.source.AccountsRepository;
+
+import team_10.client.constant.URL;
 import team_10.client.dashboard.DashboardFragment;
+import team_10.client.data.source.AccountsRepository;
+import team_10.client.login_and_registration.LoginActivity;
 import team_10.client.news.NewsArticle;
 import team_10.client.news.NewsFragment;
-import team_10.client.login_and_registration.LoginActivity;
-import team_10.client.data.source.local.SharedPreferencesManager;
 import team_10.client.settings.SettingsFragment;
-import team_10.client.utility.io.IO;
+import team_10.client.utility.io.SharedPreferencesManager;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
@@ -41,10 +39,9 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     AccountsRepository mAccountsRepository;
 
     public static Context myContext;
+    public static Socket socket;
 
     private static BottomNavigationView bottomNav;
-    Socket serverSocket;
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -85,44 +82,19 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         myContext = MainActivity.this;
-        mAccountsRepository = AccountsRepository.getInstance();
-        //mAccountsRepository.deleteAllAccounts();
+
+        new SocketConnection().execute();
 
         if (!SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         } else {
-            mAccountsRepository.getAccounts(new AccountsDataSource.LoadAccountsCallback() {
-                @Override
-                public void onAccountsLoaded(List<Account> accounts) {
-                    //System.out.println(IO.serializeAccounts(accounts));
-                }
 
-                @Override
-                public void onDataNotAvailable() {
-                    IO.getAccountsFromRemote(getApplicationContext());
-                }
-            });
-//            if (aFromFile != null)
-//                User.setAccounts(aFromFile);
-//            else
-//                IO.getAccountsFromRemote(getApplicationContext());
-            //System.out.println(IO.serializeAccounts(User.getAccounts()));
+            mAccountsRepository = AccountsRepository.getInstance();
 
-            /*if(User.getToken() == "") {
-                Loan loan = new Loan();
-                loan.setID("1");
-                loan.setLabel("Student Loan");
-                loan.addTransaction(LocalDate.now(), 1000.0, 1.5, 1);
-                ArrayList<Account> accountsList = new ArrayList<>();
-                accountsList.add(loan);
-                User.setAccounts(accountsList);
-                System.out.println(IO.serializeAccounts(User.getAccounts()));
-            }*/
         }
-
-        new SocketConnection().execute();
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNav = navigation;
@@ -136,16 +108,20 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         super.onPause();
 
         try {
-            if (serverSocket != null)
-                serverSocket.close();
+            socket.close();
         } catch (IOException e) {
+
             System.out.println("ERROR: Did not close socket.");
+
             e.printStackTrace();
         }
+    }
 
-        /* Write to file */
-            //IO.writeAccountsToFile(IO.serializeAccounts(User.getAccounts()), getApplicationContext());
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        new SocketConnection().execute();
     }
 
     public boolean loadFragment(Fragment fragment, String name) {
@@ -189,27 +165,28 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     }
 
     private class SocketConnection extends AsyncTask<Void, Void, Void> {
-        String serverHostname = "cs309-jr-1.misc.iastate.edu";
         int serverPortNumber = 4444;
-
-        boolean isConnected = false;
 
         @Override
         protected Void doInBackground(Void... voids) {
+            socket = new Socket();
 
             try {
-                serverSocket = new Socket(serverHostname, serverPortNumber);
-                isConnected = true;
+                InetAddress serverAddr = InetAddress.getByName(URL.HOSTNAME);
+
+                InetSocketAddress address = new InetSocketAddress(serverAddr, serverPortNumber);
+
+                socket.connect(address, 1000);
 
             } catch (Exception e) {
-                isConnected = false;
+                e.printStackTrace();
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (isConnected) {
+            if (socket.isConnected()) {
                 Toast.makeText(getApplicationContext(), "Connection Successful", Toast.LENGTH_SHORT).show();
 
             } else {

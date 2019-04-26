@@ -27,11 +27,10 @@ import team_10.client.R;
 import team_10.client.constant.TYPE;
 import team_10.client.dashboard.add_edit_account.AddEditAccountPresenter;
 import team_10.client.dashboard.add_edit_account.AddEditAccountView;
-import team_10.client.data.User;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.data.source.AccountsRepository;
-import team_10.client.data.source.local.SharedPreferencesManager;
+import team_10.client.data.source.UserRepository;
 import team_10.client.utility.adapter.CustomListAdapter;
 
 /**
@@ -108,9 +107,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         switch (v.getId()) {
             case R.id.buttonLogout:
-                mAccountsRepository.deleteAllAccounts();
-                User.setToken(null);
-                SharedPreferencesManager.getInstance(parent.getApplicationContext()).logout();
+                UserRepository.getInstance().removeUserData();
                 parent.finish();
                 break;
             case R.id.button_add_account:

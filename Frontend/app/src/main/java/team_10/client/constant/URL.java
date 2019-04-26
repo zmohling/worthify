@@ -1,12 +1,13 @@
 package team_10.client.constant;
 
-import team_10.client.data.source.local.SharedPreferencesManager;
+import team_10.client.utility.io.SharedPreferencesManager;
 
 /**
  * Class that keeps track of urls used in http requests.
  */
 public class URL {
     public static final String ROOT_URL = "http://cs309-jr-1.misc.iastate.edu:8080/";
+    public static final String HOSTNAME = "cs309-jr-1.misc.iastate.edu";
 
     public static final String URL_REGISTER = ROOT_URL + "register";
     public static final String URL_LOGIN = ROOT_URL + "login";

@@ -20,17 +20,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import team_10.client.MainActivity;
+import team_10.client.R;
 import team_10.client.constant.URL;
 import team_10.client.data.User;
-import team_10.client.data.source.local.SharedPreferencesManager;
+import team_10.client.utility.io.SharedPreferencesManager;
+import team_10.client.utility.io.IO;
 import team_10.client.utility.io.VolleySingleton;
-
-import team_10.client.R;
 
 /**
  * This is the activity the user first sees when it is not logged in or needs to register.
@@ -203,6 +202,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
-        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        if (IO.isConnected()) {
+            VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        }
     }
 }

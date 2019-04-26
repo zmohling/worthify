@@ -4,10 +4,10 @@ import android.support.annotation.NonNull;
 
 import java.util.Map;
 
+import team_10.client.data.User;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.local.UserLocalDataSource;
 import team_10.client.data.source.remote.UserRemoteDataSource;
-import team_10.client.data.User;
 import team_10.client.utility.io.AppExecutors;
 
 public class UserRepository implements UserDataSource {
@@ -58,7 +58,7 @@ public class UserRepository implements UserDataSource {
 
     @Override
     public void removeUserData() {
-
+        mUserLocalDataSource.removeUserData();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class UserRepository implements UserDataSource {
 
     @Override
     public String getAuthenticationToken() {
-        return null;
+        return mUserLocalDataSource.getAuthenticationToken();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package team_10.client.utility.io;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -25,13 +26,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import team_10.client.MainActivity;
 import team_10.client.constant.URL;
 import team_10.client.dashboard.DashboardFragment;
 import team_10.client.data.User;
 import team_10.client.data.models.Account;
-import team_10.client.data.source.local.SharedPreferencesManager;
-import team_10.client.utility.adapter.AbstractAccountAdapter;
 import team_10.client.utility.AccountsWrapper;
+import team_10.client.utility.adapter.AbstractAccountAdapter;
 
 /**
  * Class for input and output with the server/database.
@@ -39,10 +40,25 @@ import team_10.client.utility.AccountsWrapper;
 public class IO {
     public static String filename = "accounts_store";
 
+    public static boolean isConnected() {
+        if (isNetworkAvailable() && MainActivity.socket.isConnected()) {
+            return true;
+        } else {
+            Toast.makeText(MainActivity.myContext, "Cannot Reach Server", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    private static boolean isNetworkAvailable() {
+        final ConnectivityManager connectivityManager = ((ConnectivityManager) MainActivity.myContext.getSystemService(Context.CONNECTIVITY_SERVICE));
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
+    }
+
     /**
      * Writes the user accounts to a file.
+     *
      * @param accounts user accounts
-     * @param context context
+     * @param context  context
      * @return int of success
      */
     public static int writeAccountsToFile(String accounts, Context context) {
@@ -64,6 +80,7 @@ public class IO {
 
     /**
      * Reads a user's accounts from a file.
+     *
      * @param context context
      * @return String of accounts
      */
@@ -94,6 +111,7 @@ public class IO {
 
     /**
      * Deletes the user's accounts file.
+     *
      * @param context context
      */
     public static void deleteAccountsFile(Context context) {
@@ -102,6 +120,7 @@ public class IO {
 
     /**
      * Serializes the user's accounts.
+     *
      * @param accounts user's accounts
      * @return string of serialized accounts
      */
@@ -119,6 +138,7 @@ public class IO {
 
     /**
      * Deserializes the user's accounts.
+     *
      * @param accounts user's accounts
      * @return list of accounts
      */
@@ -139,6 +159,7 @@ public class IO {
 
     /**
      * Sends a user's account to the server.
+     *
      * @param account account
      * @param context context
      */
@@ -164,9 +185,6 @@ public class IO {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context,
-                                (error.getMessage() == null) ? "Error Syncing with Server" : "Error Syncing with Server: " + error.getMessage(),
-                                Toast.LENGTH_SHORT).show();
                     }
                 }) {
 
@@ -201,6 +219,7 @@ public class IO {
 
     /**
      * Gets a user's accounts from the server.
+     *
      * @param context context
      */
     public static void getAccountsFromRemote(final Context context) {
@@ -243,9 +262,6 @@ public class IO {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context,
-                                (error.getMessage() == null) ? "Error Syncing with Server" : "Error Syncing with Server: " + error.getMessage(),
-                                Toast.LENGTH_SHORT).show();
                         System.out.println(error.toString());
                         error.printStackTrace();
                     }
