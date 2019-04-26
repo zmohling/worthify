@@ -127,15 +127,15 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
      */
     public void startAccountPickerPopup() {
         View popupView;
-        PopupWindow popupWindow;
+        final PopupWindow popupWindow;
         LayoutInflater inflater;
 
         inflater = LayoutInflater.from(MainActivity.myContext);
         popupView = inflater.inflate(R.layout.modal_wheel_picker, null);
 
-        List<String> accountTypes = TYPE.getAllAsStrings();
+        final List<String> accountTypes = TYPE.getAllAsStrings();
 
-        NumberPicker picker = popupView.findViewById(R.id.modal_account_picker);
+        final NumberPicker picker = popupView.findViewById(R.id.modal_account_picker);
         picker.setMinValue(0);
         picker.setMaxValue(accountTypes.size() - 1);
         picker.setDisplayedValues((accountTypes.toArray(new String[accountTypes.size()])));
