@@ -424,7 +424,8 @@ public class ArticleController {
             articleRepo.save(article);
             return "{\"error\":\"none\"," +
                     "\"userId\":\"" + userId +"\"," +
-                    "\"currentVote\":\"" + newVote + "\"}";
+                    "\"currentVote\":\"" + newVote + "\"," +
+                    "\"articleVotes\":\"" + article.getVotes() +"\"}";
 
         }
 
@@ -479,7 +480,8 @@ public class ArticleController {
             articleRepo.save(article);
             return "{\"error\":\"none\"," +
                     "\"userId\":\"" + userId +"\"," +
-                    "\"currentVote\":\"" + newVote + "\"}";
+                    "\"currentVote\":\"" + newVote + "\"," +
+                    "\"articleVotes\":\"" + article.getVotes() +"\"}";
 
         }
 
