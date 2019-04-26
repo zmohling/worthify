@@ -37,6 +37,8 @@ public class AccountsRepository implements AccountsDataSource {
         mUserRepository = userDataSource;
 
         mCachedAccounts = new LinkedHashMap<>();
+
+        // TODO: Fetch remote accounts on every boot
     }
 
     public static AccountsRepository getInstance() {
