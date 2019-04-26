@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,7 @@ public class IO {
 
                     boolean isSocketConnected = MainActivity.socket.isConnected();
 
-                    boolean isHostNameReachable = MainActivity.socket.getInetAddress().isReachable(250);
+                    boolean isHostNameReachable = InetAddress.getByName(URL.HOSTNAME).isReachable(250);
 
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override

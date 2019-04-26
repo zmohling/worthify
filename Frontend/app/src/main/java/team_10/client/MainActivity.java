@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 
         myContext = MainActivity.this;
 
+        socket = new Socket();
         new SocketConnection().execute();
 
         mAppExecutors = new AppExecutors();
@@ -179,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 
         @Override
         protected Void doInBackground(Void... voids) {
-            socket = new Socket();
 
             try {
                 InetAddress serverAddr = InetAddress.getByName(URL.HOSTNAME);
