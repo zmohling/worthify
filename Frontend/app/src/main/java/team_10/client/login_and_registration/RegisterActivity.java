@@ -30,6 +30,8 @@ import team_10.client.MainActivity;
 import team_10.client.R;
 import team_10.client.constant.URL;
 import team_10.client.data.User;
+import team_10.client.utility.io.HostReachableCallback;
+import team_10.client.utility.io.IO;
 import team_10.client.utility.io.SharedPreferencesManager;
 import team_10.client.utility.io.VolleySingleton;
 
@@ -83,6 +85,27 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        //if user pressed on continue without account
+        findViewById(R.id.nonUserLogin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //open register screen
+
+                //creating a new user object
+                User user = new User(
+                        -1,
+                        "user",
+                        "test",
+                        "sample@example.com",
+                        1,
+                        ""
+                );
+
+                SharedPreferencesManager.getInstance(getApplicationContext()).userLogin(user);
+                finish();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            }
+        });
     }
 
     private void registerUser() throws JSONException {
@@ -216,6 +239,11 @@ public class RegisterActivity extends AppCompatActivity {
             }
         };
 
-        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        IO.isConnected(new HostReachableCallback() {
+            @Override
+            public void onHostReachable() {
+                VolleySingleton.getInstance(RegisterActivity.this).addToRequestQueue(stringRequest);
+            }
+        });
     }
 }

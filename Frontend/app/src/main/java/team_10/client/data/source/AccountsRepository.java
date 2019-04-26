@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import team_10.client.MainActivity;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.local.AccountsLocalDataSource;
 import team_10.client.data.source.remote.AccountsRemoteDataSource;
@@ -40,7 +41,7 @@ public class AccountsRepository implements AccountsDataSource {
 
     public static AccountsRepository getInstance() {
         if (INSTANCE == null) {
-            AppExecutors appExecutors = new AppExecutors();
+            AppExecutors appExecutors = MainActivity.mAppExecutors;
 
             AccountsLocalDataSource accountsLocalDataSource = AccountsLocalDataSource.getInstance(appExecutors);
             AccountsRemoteDataSource accountsRemoteDataSource = AccountsRemoteDataSource.getInstance(appExecutors);

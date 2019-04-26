@@ -27,8 +27,9 @@ import team_10.client.MainActivity;
 import team_10.client.R;
 import team_10.client.constant.URL;
 import team_10.client.data.User;
-import team_10.client.utility.io.SharedPreferencesManager;
+import team_10.client.utility.io.HostReachableCallback;
 import team_10.client.utility.io.IO;
+import team_10.client.utility.io.SharedPreferencesManager;
 import team_10.client.utility.io.VolleySingleton;
 
 /**
@@ -202,8 +203,11 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
-        if (IO.isConnected()) {
-            VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
-        }
+        IO.isConnected(new HostReachableCallback() {
+            @Override
+            public void onHostReachable() {
+                VolleySingleton.getInstance(LoginActivity.this).addToRequestQueue(stringRequest);
+            }
+        });
     }
 }

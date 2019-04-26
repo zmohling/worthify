@@ -23,10 +23,12 @@ import java.net.Socket;
 import team_10.client.constant.URL;
 import team_10.client.dashboard.DashboardFragment;
 import team_10.client.data.source.AccountsRepository;
+import team_10.client.data.source.UserRepository;
 import team_10.client.login_and_registration.LoginActivity;
 import team_10.client.news.NewsArticle;
 import team_10.client.news.NewsFragment;
 import team_10.client.settings.SettingsFragment;
+import team_10.client.utility.io.AppExecutors;
 import team_10.client.utility.io.SharedPreferencesManager;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
@@ -36,10 +38,12 @@ import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
  */
 public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
 
-    AccountsRepository mAccountsRepository;
-
     public static Context myContext;
     public static Socket socket;
+
+    public static AccountsRepository mAccountsRepository;
+    public static UserRepository mUserRepository;
+    public static AppExecutors mAppExecutors;
 
     private static BottomNavigationView bottomNav;
 
@@ -87,10 +91,16 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 
         new SocketConnection().execute();
 
+        mAppExecutors = new AppExecutors();
+
+        /* Checked logged in state. Finish activity if not logged in, otherwise, *
+         * load the user's accounts and user data.                               */
         if (!SharedPreferencesManager.getInstance(this).isLoggedIn()) {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             finish();
         } else {
+
+            mUserRepository = UserRepository.getInstance();
 
             mAccountsRepository = AccountsRepository.getInstance();
 

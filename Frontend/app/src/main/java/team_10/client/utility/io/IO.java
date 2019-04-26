@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -40,13 +41,38 @@ import team_10.client.utility.adapter.AbstractAccountAdapter;
 public class IO {
     public static String filename = "accounts_store";
 
-    public static boolean isConnected() {
-        if (isNetworkAvailable() && MainActivity.socket.isConnected()) {
-            return true;
-        } else {
-            Toast.makeText(MainActivity.myContext, "Cannot Reach Server", Toast.LENGTH_SHORT).show();
-            return false;
-        }
+    public static void isConnected(HostReachableCallback callback) {
+
+        AppExecutors appExecutors = MainActivity.mAppExecutors;
+
+        Runnable resolveHostname = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    boolean isNetworkAvailable = isNetworkAvailable();
+
+                    boolean isSocketConnected = MainActivity.socket.isConnected();
+
+                    boolean isHostNameReachable = MainActivity.socket.getInetAddress().isReachable(250);
+
+                    appExecutors.mainThread().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isNetworkAvailable && isSocketConnected && isHostNameReachable) {
+                                callback.onHostReachable();
+                            } else {
+                                Toast.makeText(MainActivity.myContext, "Cannot Reach Server", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        appExecutors.diskIO().execute(resolveHostname);
     }
 
     private static boolean isNetworkAvailable() {
