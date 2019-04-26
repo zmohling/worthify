@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.util.Map;
 
+import team_10.client.MainActivity;
 import team_10.client.data.User;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.local.UserLocalDataSource;
@@ -31,7 +32,7 @@ public class UserRepository implements UserDataSource {
 
     public static UserRepository getInstance() {
         if (INSTANCE == null) {
-            AppExecutors appExecutors = new AppExecutors();
+            AppExecutors appExecutors = MainActivity.mAppExecutors;
 
             UserLocalDataSource userLocalDataSource = UserLocalDataSource.getInstance(appExecutors);
             UserRemoteDataSource userRemoteDataSource = UserRemoteDataSource.getInstance(appExecutors);

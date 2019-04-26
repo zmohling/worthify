@@ -38,14 +38,13 @@ public class VolleyPostRequest extends StringRequest {
         this.mRequestBody = requestBody;
     }
 
-    public boolean execute() {
-        if (IO.isConnected()) {
-            VolleySingleton.getInstance(MainActivity.myContext).addToRequestQueue(this);
-
-            return true;
-        } else {
-            return  false;
-        }
+    public void execute() {
+        IO.isConnected(new HostReachableCallback() {
+            @Override
+            public void onHostReachable() {
+                VolleySingleton.getInstance(MainActivity.myContext).addToRequestQueue(VolleyPostRequest.this);
+            }
+        });
     }
 
     @Override
