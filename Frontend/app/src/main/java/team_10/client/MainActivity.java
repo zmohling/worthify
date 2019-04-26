@@ -118,7 +118,8 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         super.onPause();
 
         try {
-            serverSocket.close(); // TODO: NullPointerException when trying to close a null socket
+            if (serverSocket != null)
+                serverSocket.close();
         } catch (IOException e) {
             System.out.println("ERROR: Did not close socket.");
             e.printStackTrace();
