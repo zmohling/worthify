@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,8 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import team_10.client.R;
@@ -31,7 +34,7 @@ import team_10.client.utility.io.VolleySingleton;
 import static team_10.client.constant.URL.ROOT_URL;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} subclass to display cards of news articles that can be clicked on.
  * Activities that contain this fragment must implement the
  * {@link NewsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
@@ -45,6 +48,7 @@ public class NewsFragment extends Fragment {
     ArrayList<Article> articles;
     ArticlesAdapter adapter;
     RecyclerView recyclerView;
+    SwipeRefreshLayout pullToRefresh;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -76,7 +80,12 @@ public class NewsFragment extends Fragment {
         return fragment;
     }
 
-    public void editArticles() {
+    /**
+     * Method to get the user's articles from the server. Is recalled on pull down to refresh.
+     */
+    public void editArticles()
+    {
+
         String urlArticles = ROOT_URL + "article/getPersonal/" + SharedPreferencesManager.getUser().getID();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlArticles,
                 new Response.Listener<String>() {
@@ -88,10 +97,12 @@ public class NewsFragment extends Fragment {
                             int i;
                             for (i = 0; i < numArticles; i++) {
                                 try {
-                                    JSONObject userJson = returned.getJSONObject("article" + i);
-                                    articles.add(new Article(userJson.getString("title"), userJson.getString("description"), userJson.getString("pictureUrl"), userJson.getString("url")));
+                                    JSONObject userJson = returned.getJSONObject("article"+ i);
+                                    articles.add(new Article(URLDecoder.decode(userJson.getString("title"), "UTF-8"), URLDecoder.decode(userJson.getString("description"), "UTF-8"), userJson.getString("pictureUrl"), userJson.getString("url")));
 
                                 } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (UnsupportedEncodingException e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -126,6 +137,8 @@ public class NewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.rvArticles);
 
+        pullToRefresh = (SwipeRefreshLayout) view.findViewById(R.id.pullToRefresh);
+
         articles = new ArrayList<Article>();
         adapter = new ArticlesAdapter(articles, getFragmentManager());
         recyclerView.setAdapter(adapter);
@@ -133,6 +146,15 @@ public class NewsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         editArticles();
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+                articles.clear();
+                editArticles();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
 
         return view;
     }

@@ -18,7 +18,7 @@ import team_10.client.R;
 import team_10.client.MainActivity;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A {@link Fragment} subclass to show a single article web view.
  * Activities that contain this fragment must implement the
  * {@link NewsArticle.OnFragmentInteractionListener} interface
  * to handle interaction events.

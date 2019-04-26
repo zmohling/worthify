@@ -34,6 +34,9 @@ import team_10.client.data.source.AccountsRepository;
 import team_10.client.data.source.local.SharedPreferencesManager;
 import team_10.client.utility.adapter.CustomListAdapter;
 
+/**
+ * A {@link Fragment} subclass that contains the graph and list of the user's accounts.
+ */
 public class DashboardFragment extends Fragment implements View.OnClickListener {
 
 
@@ -174,7 +177,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 true);
     }
 
-    // Update ListView UI
+    /**
+     * Update ListView UI
+     */
     public static void updateDashboardUI() {
 
         AccountsRepository.getInstance().getAccounts(new AccountsDataSource.LoadAccountsCallback() {
@@ -196,7 +201,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         });
     }
 
-    // Update ListView height equal to total height of child views
+    /**
+     *     Update ListView height equal to total height of child views
+     */
     private static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {

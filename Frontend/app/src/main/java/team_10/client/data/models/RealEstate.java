@@ -18,6 +18,9 @@ import team_10.client.utility.io.VolleySingleton;
 
 import static team_10.client.constant.URL.ROOT_URL;
 
+/**
+ * Real Estate account type.
+ */
 public class RealEstate extends Account {
     public String address;
     public String city;
@@ -31,7 +34,13 @@ public class RealEstate extends Account {
         this.state = state;
     }
 
-    public void addTransaction(LocalDate d, double value) {
+    /**
+     * Overloaded add transaction to account.
+     * @param d date
+     * @param value value
+     */
+    public void addTransaction(LocalDate d, double value)
+    {
         addTransaction(d, value, 0, transactions.size());
     }
 
@@ -41,6 +50,11 @@ public class RealEstate extends Account {
         transactions.put(d, t);
     }
 
+    /**
+     * Overloaded getValue method from account.
+     * @param d date
+     * @return double value
+     */
     public double getValue(LocalDate d) {
         Vector<LocalDate> transaction_dates = new Vector<LocalDate>(transactions.keySet());
 

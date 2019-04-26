@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import team_10.client.login_and_registration.LoginActivity;
 import team_10.client.data.User;
 
+/**
+ * Class that keeps track of users preferences and logged in states.
+ */
 public class SharedPreferencesManager {
     private static final String SHARED_PREF_NAME = "networthsharedpref";
     private static final String KEY_FIRSTNAME = "keyfirstname";
@@ -33,6 +36,11 @@ public class SharedPreferencesManager {
 
     //method to let the user login
     //this method will store the user data in shared preferences
+
+    /**
+     * Lets the user login and stores data.
+     * @param user user to login
+     */
     public void userLogin(User user) {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -58,12 +66,22 @@ public class SharedPreferencesManager {
     }
 
     //this method will checker whether user is already logged in or not
+
+    /**
+     * Checks whether the user is logged in.
+     * @return whether user is logged in
+     */
     public boolean isLoggedIn() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(KEY_EMAIL, null) != null;
     }
 
     //this method will give the logged in user
+
+    /**
+     * Gets the current user.
+     * @return user
+     */
     public static User getUser() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return new User(
@@ -77,6 +95,10 @@ public class SharedPreferencesManager {
     }
 
     //this method will logout the user
+
+    /**
+     * Method that logs out the user.
+     */
     public void logout() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

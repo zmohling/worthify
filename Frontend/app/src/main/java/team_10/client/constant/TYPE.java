@@ -5,6 +5,9 @@ import java.util.List;
 
 import team_10.client.data.models.Account;
 
+/**
+ * Enum for types of accounts.
+ */
 public enum TYPE {
     CERTIFICATEOFDEPOSIT("Certificate of Deposit", "CertificateOfDeposit"),
     LOAN("Loan", "Loan"),
@@ -19,6 +22,10 @@ public enum TYPE {
         this.className = className;
     }
 
+    /**
+     * Gets the type of the account.
+     * @return the type's account class
+     */
     public Class<Account> getTypeClass() {
         String p = "team_10.client.data.models.";
         Class<Account> c = null;
@@ -32,6 +39,11 @@ public enum TYPE {
         return c;
     }
 
+    /**
+     * Finds type that matches.
+     * @param s
+     * @return the type that matches s in the types list
+     */
     public static TYPE firstMatch(String s) {
         for (TYPE t : TYPE.values()) {
             if (t.simpleName.equals(s)) {
@@ -48,6 +60,10 @@ public enum TYPE {
         return simpleName;
     }
 
+    /**
+     * Gets all types and finds there strings.
+     * @return all types of accounts as a list of strings
+     */
     public static List<String> getAllAsStrings() {
         ArrayList<String> types = new ArrayList<>();
         TYPE[] t = TYPE.values();
