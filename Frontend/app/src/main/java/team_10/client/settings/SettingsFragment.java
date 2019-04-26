@@ -1,4 +1,4 @@
-package team_10.client.fragment;
+package team_10.client.settings;
 
 import android.app.Activity;
 import android.content.Context;
@@ -42,25 +42,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import team_10.client.R;
-import team_10.client.activity.MainActivity;
 import team_10.client.constant.URL;
-import team_10.client.object.User;
-import team_10.client.object.account.Account;
-import team_10.client.object.account.Transaction;
-import team_10.client.settings.SharedPreferencesManager;
-import team_10.client.utility.IO;
-import team_10.client.utility.TransactionsAdapter;
-import team_10.client.utility.VolleySingleton;
+import team_10.client.data.User;
+import team_10.client.data.source.local.SharedPreferencesManager;
+import team_10.client.utility.io.IO;
+import team_10.client.utility.io.VolleySingleton;
 
-import static team_10.client.settings.SharedPreferencesManager.getUser;
+import static team_10.client.data.source.local.SharedPreferencesManager.getUser;
 
 /**
  * A {@link Fragment} subclass that displays the users email and allows the user to change email and password or logout.
- * Activities that contain this fragment must implement the
- * {@link TransactionsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link TransactionsFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class SettingsFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
@@ -142,7 +133,6 @@ public class SettingsFragment extends Fragment{
                 switch (v.getId()) {
                     case R.id.buttonLogoutSettings:
                         IO.deleteAccountsFile(parent.getApplicationContext());
-                        User.setAccounts(null);
                         User.setToken(null);
                         SharedPreferencesManager.getInstance(parent.getApplicationContext()).logout();
                         parent.finish();
