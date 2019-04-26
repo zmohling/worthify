@@ -17,4 +17,6 @@ public class URL {
     public static final String URL_GET_API = ROOT_URL + "accounts/fetch";
     public static final String URL_EDIT_EMAIL = ROOT_URL + "emailChange";
     public static final String URL_EDIT_PASSWORD = ROOT_URL + "passwordChange";
+
+    public static final int SOCKET_PORT = 4444;
 }

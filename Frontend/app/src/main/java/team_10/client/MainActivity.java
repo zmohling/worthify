@@ -3,7 +3,6 @@ package team_10.client;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,14 +12,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import team_10.client.constant.URL;
 import team_10.client.dashboard.DashboardFragment;
 import team_10.client.data.source.AccountsRepository;
 import team_10.client.data.source.UserRepository;
@@ -90,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         myContext = MainActivity.this;
 
         socket = new Socket();
-        new SocketConnection().execute();
 
         mAppExecutors = new AppExecutors();
 
@@ -126,13 +120,6 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 
             e.printStackTrace();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        new SocketConnection().execute();
     }
 
     public boolean loadFragment(Fragment fragment, String name) {
@@ -173,35 +160,5 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-    }
-
-    private class SocketConnection extends AsyncTask<Void, Void, Void> {
-        int serverPortNumber = 4444;
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            try {
-                InetAddress serverAddr = InetAddress.getByName(URL.HOSTNAME);
-
-                InetSocketAddress address = new InetSocketAddress(serverAddr, serverPortNumber);
-
-                socket.connect(address, 1000);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (socket.isConnected()) {
-                Toast.makeText(getApplicationContext(), "Connection Successful", Toast.LENGTH_SHORT).show();
-
-            } else {
-                Toast.makeText(getApplicationContext(), "Connection Unsuccessful", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 }

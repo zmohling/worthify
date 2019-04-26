@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,27 +51,78 @@ public class IO {
         Runnable resolveHostname = new Runnable() {
             @Override
             public void run() {
+                boolean isNetworkAvailable = false,
+                        isSocketConnected = false,
+                        isHostnameReachable = false;
+
                 try {
-                    boolean isNetworkAvailable = isNetworkAvailable();
+                    isNetworkAvailable = isNetworkAvailable();
 
-                    boolean isSocketConnected = MainActivity.socket.isConnected();
+                    isSocketConnected = MainActivity.socket.isConnected();
 
-                    boolean isHostNameReachable = InetAddress.getByName(URL.HOSTNAME).isReachable(250);
-
-                    appExecutors.mainThread().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isNetworkAvailable && isSocketConnected && isHostNameReachable) {
-                                callback.onHostReachable();
-                            } else {
-                                Toast.makeText(MainActivity.myContext, "Cannot Reach Server", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                    isHostnameReachable = InetAddress.getByName(URL.HOSTNAME).isReachable(1000);
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                /* Socket 's are bad for knowing when a connection is no longer      *
+                 * active. This will force a connection refresh if socket is stale. */
+                if ((isHostnameReachable && !isSocketConnected)/*|| (!isHostNameReachable && isSocketConnected)*/) {
+
+                    if (MainActivity.socket != null) {
+                        try {
+                            MainActivity.socket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    MainActivity.socket = new Socket();
+
+                    try {
+                        InetAddress serverAddr = InetAddress.getByName(URL.HOSTNAME);
+
+                        InetSocketAddress address = new InetSocketAddress(serverAddr, URL.SOCKET_PORT);
+
+                        MainActivity.socket.connect(address, 1000);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        isSocketConnected = MainActivity.socket.isConnected();
+
+                        isHostnameReachable = InetAddress.getByName(URL.HOSTNAME).isReachable(1000);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (!isHostnameReachable && isSocketConnected) {
+                    if (MainActivity.socket != null) {
+                        try {
+                            MainActivity.socket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                boolean finalIsSocketConnected = isSocketConnected;
+                boolean finalIsHostNameReachable = isHostnameReachable;
+                boolean finalIsNetworkAvailable = isNetworkAvailable;
+                appExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (finalIsNetworkAvailable && finalIsSocketConnected && finalIsHostNameReachable) {
+                            callback.onHostReachable();
+                        } else {
+                            Toast.makeText(MainActivity.myContext, "Cannot Reach Server", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
             }
         };
 
