@@ -13,6 +13,9 @@ import java.util.List;
 import team_10.client.R;
 import team_10.client.data.models.Transaction;
 
+/**
+ * Adapter class that keeps track of transaction for recycler view.
+ */
 public class TransactionsAdapter extends
         RecyclerView.Adapter<TransactionsAdapter.ViewHolder> {
 

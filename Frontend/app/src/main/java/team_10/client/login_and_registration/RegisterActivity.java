@@ -30,7 +30,9 @@ import team_10.client.data.source.local.SharedPreferencesManager;
 import team_10.client.utility.io.VolleySingleton;
 import team_10.client.R;
 
-
+/**
+ * This activity allows users to register an account if they don't have on yet.
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     EditText editTextFirstName, editTextLastName, editTextEmail, editTextPassword;

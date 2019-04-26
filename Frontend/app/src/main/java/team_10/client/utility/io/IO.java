@@ -33,9 +33,18 @@ import team_10.client.data.source.local.SharedPreferencesManager;
 import team_10.client.utility.adapter.AbstractAccountAdapter;
 import team_10.client.utility.AccountsWrapper;
 
+/**
+ * Class for input and output with the server/database.
+ */
 public class IO {
     public static String filename = "accounts_store";
 
+    /**
+     * Writes the user accounts to a file.
+     * @param accounts user accounts
+     * @param context context
+     * @return int of success
+     */
     public static int writeAccountsToFile(String accounts, Context context) {
         String fileContents = accounts;
         FileOutputStream outputStream;
@@ -53,6 +62,11 @@ public class IO {
         return 0;
     }
 
+    /**
+     * Reads a user's accounts from a file.
+     * @param context context
+     * @return String of accounts
+     */
     public static String readAccountsFromFile(Context context) {
         StringBuffer accounts = new StringBuffer();
         try {
@@ -78,10 +92,19 @@ public class IO {
         return accounts.toString();
     }
 
+    /**
+     * Deletes the user's accounts file.
+     * @param context context
+     */
     public static void deleteAccountsFile(Context context) {
         context.deleteFile(filename);
     }
 
+    /**
+     * Serializes the user's accounts.
+     * @param accounts user's accounts
+     * @return string of serialized accounts
+     */
     public static String serializeAccounts(List<Account> accounts) {
         GsonBuilder b = new GsonBuilder();
         b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
@@ -94,6 +117,11 @@ public class IO {
         return (g.toJson(a, AccountsWrapper.class));
     }
 
+    /**
+     * Deserializes the user's accounts.
+     * @param accounts user's accounts
+     * @return list of accounts
+     */
     public static List<Account> deserializeAccounts(String accounts) {
         GsonBuilder b = new GsonBuilder();
         b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
@@ -109,6 +137,11 @@ public class IO {
         }
     }
 
+    /**
+     * Sends a user's account to the server.
+     * @param account account
+     * @param context context
+     */
     public static void sendAccountToRemote(final Account account, final Context context) {
         String requestBody = null;
         try {
@@ -166,6 +199,10 @@ public class IO {
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 
+    /**
+     * Gets a user's accounts from the server.
+     * @param context context
+     */
     public static void getAccountsFromRemote(final Context context) {
         List<Account> returnVal = new ArrayList<>();
         String requestBody = null;

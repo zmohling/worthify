@@ -11,6 +11,9 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Adapter that serializes/deserializes local dates.
+ */
 public class LocalDateAdapter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
 
     public JsonElement serialize(LocalDate date, Type typeOfSrc, JsonSerializationContext context) {

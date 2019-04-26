@@ -17,8 +17,9 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-
 import team_10.client.data.models.Account;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.data.source.AccountsRepository;
@@ -27,11 +28,15 @@ import team_10.client.news.NewsArticle;
 import team_10.client.news.NewsFragment;
 import team_10.client.login_and_registration.LoginActivity;
 import team_10.client.data.source.local.SharedPreferencesManager;
+import team_10.client.settings.SettingsFragment;
 import team_10.client.utility.io.IO;
 
 import static android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE;
 
-public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener {
+/**
+ * This activity loads the dashboard fragment at start but also allows the user to switch to the news and settings fragments.
+ */
+public class MainActivity extends AppCompatActivity implements DashboardFragment.OnFragmentInteractionListener, NewsFragment.OnFragmentInteractionListener, NewsArticle.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
 
     AccountsRepository mAccountsRepository;
 
@@ -58,6 +63,9 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
                     f = new DashboardFragment();
                     worked = loadFragment(f, "home");
                     break;
+                case R.id.navigation_settings:
+                    f = new SettingsFragment();
+                    worked = loadFragment(f, "other");
             }
 
             return worked;
@@ -77,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         myContext = MainActivity.this;
         mAccountsRepository = AccountsRepository.getInstance();
         //mAccountsRepository.deleteAllAccounts();
@@ -102,6 +109,17 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 //            else
 //                IO.getAccountsFromRemote(getApplicationContext());
             //System.out.println(IO.serializeAccounts(User.getAccounts()));
+
+            /*if(User.getToken() == "") {
+                Loan loan = new Loan();
+                loan.setID("1");
+                loan.setLabel("Student Loan");
+                loan.addTransaction(LocalDate.now(), 1000.0, 1.5, 1);
+                ArrayList<Account> accountsList = new ArrayList<>();
+                accountsList.add(loan);
+                User.setAccounts(accountsList);
+                System.out.println(IO.serializeAccounts(User.getAccounts()));
+            }*/
         }
 
         new SocketConnection().execute();
@@ -126,7 +144,8 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         }
 
         /* Write to file */
-        //IO.writeAccountsToFile(IO.serializeAccounts(User.getAccounts()), getApplicationContext());
+            //IO.writeAccountsToFile(IO.serializeAccounts(User.getAccounts()), getApplicationContext());
+
     }
 
     public boolean loadFragment(Fragment fragment, String name) {

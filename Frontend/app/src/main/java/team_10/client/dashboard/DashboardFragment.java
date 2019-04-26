@@ -34,6 +34,9 @@ import team_10.client.data.source.AccountsRepository;
 import team_10.client.data.source.local.SharedPreferencesManager;
 import team_10.client.utility.adapter.CustomListAdapter;
 
+/**
+ * A {@link Fragment} subclass that contains the graph and list of the user's accounts.
+ */
 public class DashboardFragment extends Fragment implements View.OnClickListener {
 
 
@@ -124,15 +127,15 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
      */
     public void startAccountPickerPopup() {
         View popupView;
-        PopupWindow popupWindow;
+        final PopupWindow popupWindow;
         LayoutInflater inflater;
 
         inflater = LayoutInflater.from(MainActivity.myContext);
         popupView = inflater.inflate(R.layout.modal_wheel_picker, null);
 
-        List<String> accountTypes = TYPE.getAllAsStrings();
+        final List<String> accountTypes = TYPE.getAllAsStrings();
 
-        NumberPicker picker = popupView.findViewById(R.id.modal_account_picker);
+        final NumberPicker picker = popupView.findViewById(R.id.modal_account_picker);
         picker.setMinValue(0);
         picker.setMaxValue(accountTypes.size() - 1);
         picker.setDisplayedValues((accountTypes.toArray(new String[accountTypes.size()])));
@@ -174,7 +177,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 true);
     }
 
-    // Update ListView UI
+    /**
+     * Update ListView UI
+     */
     public static void updateDashboardUI() {
 
         AccountsRepository.getInstance().getAccounts(new AccountsDataSource.LoadAccountsCallback() {
@@ -196,7 +201,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         });
     }
 
-    // Update ListView height equal to total height of child views
+    /**
+     *     Update ListView height equal to total height of child views
+     */
     private static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
