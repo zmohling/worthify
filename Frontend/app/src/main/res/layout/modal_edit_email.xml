@@ -44,7 +44,7 @@
             android:backgroundTint="@color/edit_text_color"
             android:layout_below="@+id/modal_edit_email_email"
             android:hint="Password"
-            android:inputType="text"
+            android:inputType="textPassword"
             android:textAllCaps="true"
             android:textColor="@color/text"
             android:textColorHint="@color/text" />
