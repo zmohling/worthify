@@ -20,11 +20,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import team_10.client.constant.URL;
 import team_10.client.object.User;
+import team_10.client.object.account.Account;
+import team_10.client.object.account.Loan;
 import team_10.client.settings.SharedPreferencesManager;
 import team_10.client.utility.VolleySingleton;
 
@@ -75,6 +78,28 @@ public class LoginActivity extends AppCompatActivity {
                 //open register screen
                 finish();
                 startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+            }
+        });
+
+        //if user pressed on continue without account
+        findViewById(R.id.nonUserLogin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //open register screen
+
+                //creating a new user object
+                User user = new User(
+                        -1,
+                        "user",
+                        "test",
+                        "sample@example.com",
+                        1,
+                        ""
+                );
+
+                SharedPreferencesManager.getInstance(getApplicationContext()).userLogin(user);
+                finish();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
     }
