@@ -17,16 +17,11 @@ import com.google.gson.*;
 
 import com.serverApp.serverApp.repositories.AccountsRepository;
 
-import java.io.BufferedReader;
-import java.io.File;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -152,26 +147,22 @@ public class AccountsController {
 
     /**
      * implements various APIs to get data for dynamic accounts
-     * @param string user
      * @param header verification
      * @return updated account variables
      * @throws IOException IOException
      */
-    @RequestMapping("/accounts/fetch")
-    public String fetchAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
+    @RequestMapping("/accounts/fetch/now")
+    public String fetchAccounts(@RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
         Optional<String> headerCheck = checkHeader(header);
         if(headerCheck.isPresent()) {
             return headerCheck.get();
         }
-        System.out.println(string);
-        JSONObject obj = new JSONObject(string);
-        JSONArray accountsArr = obj.getJSONArray("accountID");
-        Type accountType = new TypeToken<ArrayList<String>>(){}.getType();
-        Gson g = new Gson();
+        long userId = userRepo.getUserID(header.get());
+        Accounts[] apiAccountsList = accountsRepo.getAPIAccounts(userId);
 
         String rString = "{";
-        for(int i = 0; i < accountsArr.length(); i++) {
-            String id = accountsArr.get(i).toString();
+        for(int i = 0; i < apiAccountsList.length; i++) {
+            String id = apiAccountsList[i].getAccountId();
             String type = accountsRepo.getAccountsByAccountId(id).getType();
 
             if(type.equals("RealEstate")) {
@@ -189,33 +180,47 @@ public class AccountsController {
                 stock.setAccountID(id);
                 stock.setTicker(stockRepo.getStock(id).getTicker());
                 StockRetrieval stockRetrieval = new StockRetrieval();
-                //String val = stockRetrieval.retrieve2yData(stock.getTicker());
+                String val = stockRetrieval.retrieveStock(stock.getTicker());
                 if(i != 0) rString = rString + ",";
-                //rString = rString + "\"" + id + "\" :" + val;
+                rString = rString + "\"" + id + "\" :" + val;
             }
         }
         rString = rString + "}";
         return rString;
     }
 
-    @RequestMapping("/gottem")
-    public String getStock(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
-        //Optional<String> headerCheck = checkHeader(header);
-        //if(headerCheck.isPresent()) {
-        //    return headerCheck.get();
-        //}
+    @RequestMapping("/accounts/fetch/history")
+    public String getStock(@RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
+        Optional<String> headerCheck = checkHeader(header);
+        if(headerCheck.isPresent()) {
+            return headerCheck.get();
+        }
         Stock stock = new Stock();
-        JSONObject obj = new JSONObject(string);
-        JSONArray accountsArr = obj.getJSONArray("accountID");
-        Type accountType = new TypeToken<ArrayList<String>>(){}.getType();
-        Gson g = new Gson();
-        stock.setAccountID(accountsArr.get(0).toString());
-        Accounts accounts = accountsRepo.getAccountsByAccountId(accountsArr.get(0).toString());
-        stock.setTicker(stockRepo.getStock(stock.getAccountID()).getTicker());
-        JSONObject obj2 = new JSONObject(accounts.getTransactions());
-        Date date = Date.valueOf(obj2.get("date").toString());
-        StockRetrieval stockRetrieval = new StockRetrieval();
-        String returnStr = stockRetrieval.retrieve2yData(stock.getTicker(), date);
+        long userId = userRepo.getUserID(header.get());
+        Accounts[] apiAccountsList = accountsRepo.getAPIAccounts(userId);
+        String returnStr = "{";
+        boolean outerfirst = true;
+        for(int i = 0; i < apiAccountsList.length; i++) {
+            if(!outerfirst && apiAccountsList[i].getType().equals("Stock")) returnStr = returnStr + ",";
+            else outerfirst = false;
+            boolean first = true;
+            System.out.println(apiAccountsList[i].getType());
+            if(apiAccountsList[i].getType().equals("Stock")) {
+                if(!first) returnStr = returnStr + ",";
+                else first = false;
+                returnStr = returnStr + "\"" + apiAccountsList[i].getAccountId() + "\"" + ": {";
+                stock.setAccountID(apiAccountsList[i].getAccountId());
+                Accounts accounts = accountsRepo.getAccountsByAccountId(apiAccountsList[i].getAccountId());
+                stock.setTicker(stockRepo.getStock(stock.getAccountID()).getTicker());
+                JSONObject obj2 = new JSONObject(accounts.getTransactions());
+                Date date = Date.valueOf(obj2.get("date").toString());
+                StockRetrieval stockRetrieval = new StockRetrieval();
+                returnStr = returnStr + stockRetrieval.retrieve5yData(stock.getTicker(), date);
+                //returnStr = returnStr + "\"" + Date.valueOf(LocalDate.now()) + "\":" + stockRetrieval.retrieveStock(stock.getTicker());
+                returnStr = returnStr + "}";
+            }
+        }
+        returnStr = returnStr + "}";
         return returnStr;
     }
 
