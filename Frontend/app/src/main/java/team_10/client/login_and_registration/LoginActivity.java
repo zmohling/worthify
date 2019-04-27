@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                         "test",
                         "sample@example.com",
                         1,
-                        ""
+                        " "
                 );
 
                 SharedPreferencesManager.getInstance(getApplicationContext()).userLogin(user);
