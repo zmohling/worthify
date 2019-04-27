@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import team_10.client.MainActivity;
+import team_10.client.constant.PERIOD;
 import team_10.client.data.models.Account;
+import team_10.client.data.models.Transaction;
 import team_10.client.data.source.local.AccountsLocalDataSource;
 import team_10.client.data.source.remote.AccountsRemoteDataSource;
 import team_10.client.utility.io.AppExecutors;
@@ -296,6 +298,11 @@ public class AccountsRepository implements AccountsDataSource {
     @Override
     public void refreshAccounts(@NonNull LoadAccountsCallback callback) {
 
+    }
+
+    @Override
+    public List<Transaction> getValues(@NonNull PERIOD period) {
+        return null;
     }
 
     /**

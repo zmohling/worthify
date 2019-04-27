@@ -4,7 +4,9 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import team_10.client.constant.PERIOD;
 import team_10.client.data.models.Account;
+import team_10.client.data.models.Transaction;
 
 public interface AccountsDataSource {
 
@@ -44,5 +46,7 @@ public interface AccountsDataSource {
     void deleteAllAccounts();
 
     void refreshAccounts(@NonNull LoadAccountsCallback callback);
+
+    List<Transaction> getValues(@NonNull PERIOD period);
 
 }
