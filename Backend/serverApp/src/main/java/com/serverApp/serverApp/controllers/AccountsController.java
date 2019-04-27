@@ -144,52 +144,7 @@ public class AccountsController {
         return rString;
     }
 
-
-    /**
-     * implements various APIs to get data for dynamic accounts
-     * @param header verification
-     * @return updated account variables
-     * @throws IOException IOException
-     */
-    @RequestMapping("/accounts/fetch/now")
-    public String fetchAccounts(@RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
-        Optional<String> headerCheck = checkHeader(header);
-        if(headerCheck.isPresent()) {
-            return headerCheck.get();
-        }
-        long userId = userRepo.getUserID(header.get());
-        Accounts[] apiAccountsList = accountsRepo.getAPIAccounts(userId);
-
-        String rString = "{";
-        for(int i = 0; i < apiAccountsList.length; i++) {
-            String id = apiAccountsList[i].getAccountId();
-            String type = accountsRepo.getAccountsByAccountId(id).getType();
-
-            if(type.equals("RealEstate")) {
-                RealEstate realEstate = new RealEstate();
-                realEstate.setAccountId(id);
-                realEstate.setState(realEstateRepo.getRealEstate(realEstate.getAccountId()).getState());
-                realEstate.setAddress(realEstateRepo.getRealEstate(realEstate.getAccountId()).getAddress());
-                realEstate.setCity(realEstateRepo.getRealEstate(realEstate.getAccountId()).getCity());
-                RealEstateRetrieval realEstateRetrieval = new RealEstateRetrieval();
-                String val = realEstateRetrieval.retrieveRealEstate(realEstate);
-                if(i != 0) rString = rString + ",";
-                rString = rString + "\"" + id + "\" :" + val;
-            } else if (type.equals("Stock")) {
-                Stock stock = new Stock();
-                stock.setAccountID(id);
-                stock.setTicker(stockRepo.getStock(id).getTicker());
-                StockRetrieval stockRetrieval = new StockRetrieval();
-                String val = stockRetrieval.retrieveStock(stock.getTicker());
-                if(i != 0) rString = rString + ",";
-                rString = rString + "\"" + id + "\" :" + val;
-            }
-        }
-        rString = rString + "}";
-        return rString;
-    }
-
-    @RequestMapping("/accounts/fetch/history")
+    @RequestMapping("/accounts/fetch")
     public String getStock(@RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
         Optional<String> headerCheck = checkHeader(header);
         if(headerCheck.isPresent()) {
