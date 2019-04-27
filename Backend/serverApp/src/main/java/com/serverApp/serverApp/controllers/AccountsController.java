@@ -195,30 +195,41 @@ public class AccountsController {
         if(headerCheck.isPresent()) {
             return headerCheck.get();
         }
-        Stock stock = new Stock();
         long userId = userRepo.getUserID(header.get());
         Accounts[] apiAccountsList = accountsRepo.getAPIAccounts(userId);
         String returnStr = "{";
         boolean outerfirst = true;
         for(int i = 0; i < apiAccountsList.length; i++) {
-            if(!outerfirst && apiAccountsList[i].getType().equals("Stock")) returnStr = returnStr + ",";
+            if(!outerfirst) returnStr = returnStr + ",";
             else outerfirst = false;
             boolean first = true;
             System.out.println(apiAccountsList[i].getType());
+            if(!first) returnStr = returnStr + ",";
+            else first = false;
+            returnStr = returnStr + "\"" + apiAccountsList[i].getAccountId() + "\"" + ": {";
             if(apiAccountsList[i].getType().equals("Stock")) {
-                if(!first) returnStr = returnStr + ",";
-                else first = false;
-                returnStr = returnStr + "\"" + apiAccountsList[i].getAccountId() + "\"" + ": {";
+                Stock stock = new Stock();
                 stock.setAccountID(apiAccountsList[i].getAccountId());
                 Accounts accounts = accountsRepo.getAccountsByAccountId(apiAccountsList[i].getAccountId());
-                stock.setTicker(stockRepo.getStock(stock.getAccountID()).getTicker());
-                JSONObject obj2 = new JSONObject(accounts.getTransactions());
-                Date date = Date.valueOf(obj2.get("date").toString());
+                stock = stockRepo.getStock(stock.getAccountID());
+                if(stock.getDate() == null) {
+                    JSONObject obj2 = new JSONObject(accounts.getTransactions());
+                    Date date = Date.valueOf(obj2.get("date").toString());
+                    stock.setDate(date);
+                }
                 StockRetrieval stockRetrieval = new StockRetrieval();
-                returnStr = returnStr + stockRetrieval.retrieve5yData(stock.getTicker(), date);
-                //returnStr = returnStr + "\"" + Date.valueOf(LocalDate.now()) + "\":" + stockRetrieval.retrieveStock(stock.getTicker());
-                returnStr = returnStr + "}";
+                returnStr = returnStr + stockRetrieval.retrieve5yData(stock.getTicker(), stock.getDate());
+                if(!first && !Date.valueOf(LocalDate.now()).equals(stock.getDate())) returnStr = returnStr + ",";
+                stock.setDate(Date.valueOf(LocalDate.now()));
+                stockRepo.editDate(stock.getDate(), stock.getAccountID());
+                returnStr = returnStr + "\"" + Date.valueOf(LocalDate.now()) + "\": \"" + stockRetrieval.retrieveStock(stock.getTicker()) + "\"";
+            } else {
+                RealEstate realEstate = new RealEstate();
+                realEstate = realEstateRepo.getRealEstate(apiAccountsList[i].getAccountId());
+                RealEstateRetrieval realEstateRetrieval = new RealEstateRetrieval();
+                returnStr = returnStr + "\"" + Date.valueOf(LocalDate.now()) + "\": \"" + realEstateRetrieval.retrieveRealEstate(realEstate) + "\"";
             }
+                returnStr = returnStr + "}";
         }
         returnStr = returnStr + "}";
         return returnStr;
