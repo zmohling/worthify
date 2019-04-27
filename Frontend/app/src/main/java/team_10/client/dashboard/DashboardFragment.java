@@ -40,7 +40,6 @@ import team_10.client.utility.adapter.CustomListAdapter;
  */
 public class DashboardFragment extends Fragment implements View.OnClickListener {
 
-
     private View view;
     private static CustomListAdapter customAdapter;
     private static ListView lv;
@@ -48,8 +47,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
     private OnFragmentInteractionListener mListener;
     private AccountsRepository mAccountsRepository;
-    private AddEditAccountPresenter mAddEditAccountPresenter;
 
+    private AddEditAccountPresenter mAddEditAccountPresenter;
 
     public DashboardFragment() {
     }
@@ -164,6 +163,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
     }
 
+    /* Load AddEditAccounts view */
     public void startAddEditAccounts(@Nullable String accountID, @NonNull TYPE type) {
         Objects.requireNonNull(type);
 
@@ -172,7 +172,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 .replace(R.id.container, addEditAccountView, "")
                 .addToBackStack(null)
                 .commit();
-
 
         mAddEditAccountPresenter = new AddEditAccountPresenter(accountID,
                 type, mAccountsRepository, addEditAccountView,

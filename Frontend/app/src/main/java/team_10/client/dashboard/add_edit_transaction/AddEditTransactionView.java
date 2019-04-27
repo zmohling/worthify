@@ -61,8 +61,8 @@ public class AddEditTransactionView extends Fragment implements AddEditTransacti
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mSaveButton = (Button) getActivity().findViewById(R.id.modal_add_edit_account_save);
-        mCancelButton = (Button) getActivity().findViewById(R.id.modal_add_edit_account_cancel);
+        mSaveButton = (Button) getActivity().findViewById(R.id.modal_add_edit_transaction_save);
+        mCancelButton = (Button) getActivity().findViewById(R.id.modal_add_edit_transaction_cancel);
         mRecurringSpinner = (Spinner) getActivity().findViewById(R.id.modal_add_edit_transaction_spinner);
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {

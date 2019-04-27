@@ -130,6 +130,10 @@ public class AccountsRepository implements AccountsDataSource {
     private void refreshLocalDataSource(List<Account> accounts) {
         mAccountsLocalDataSource.deleteAllAccounts();
 
+        if (accounts.isEmpty()) {
+            return;
+        }
+
         /* AccountsLocalDataSource.saveAccount first loads cached accounts, so   *
          * it will work more efficiently to do this one instead of every account */
         mAccountsLocalDataSource.saveAccount(accounts.get(0), new SaveAccountCallback() {
@@ -360,6 +364,3 @@ public class AccountsRepository implements AccountsDataSource {
     }
 }
 
-class Wrapper {
-    Map<String, Map<LocalDate, Double>> wrapper;
-}
