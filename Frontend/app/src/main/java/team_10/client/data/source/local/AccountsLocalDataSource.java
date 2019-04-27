@@ -2,6 +2,7 @@ package team_10.client.data.source.local;
 
 import android.support.annotation.NonNull;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,6 @@ import team_10.client.MainActivity;
 import team_10.client.constant.PERIOD;
 import team_10.client.constant.TYPE;
 import team_10.client.data.models.Account;
-import team_10.client.data.models.Transaction;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.data.source.AccountsRepository;
 import team_10.client.utility.io.AppExecutors;
@@ -138,8 +138,7 @@ public class AccountsLocalDataSource implements AccountsDataSource {
     }
 
     @Override
-    public List<Transaction> getValues(@NonNull PERIOD period) {
+    public Map<LocalDate, Double> getValues(@NonNull PERIOD period) {
         return null;
     }
-
 }

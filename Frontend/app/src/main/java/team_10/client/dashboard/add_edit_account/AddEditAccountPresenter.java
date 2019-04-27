@@ -64,7 +64,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
                 mAddEditAccountView.setTitle("Add: " + mType.toString());
 
-                mAddEditAccountView.setAddConfirmButtonText("Add");
+                mAddEditAccountView.setSaveButtonText("Add");
 
             }
 
@@ -76,7 +76,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
                 mAddEditAccountView.setTitle("Edit: " + mType.toString());
 
-                mAddEditAccountView.setAddConfirmButtonText("Save");
+                mAddEditAccountView.setSaveButtonText("Save");
 
             }
 

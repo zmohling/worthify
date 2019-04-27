@@ -12,7 +12,10 @@ public class URL {
     public static final String URL_REGISTER = ROOT_URL + "register";
     public static final String URL_LOGIN = ROOT_URL + "login";
     public static final String URL_ADD_ACCOUNTS = ROOT_URL + "accounts/add";
+    public static final String URL_EDIT_ACCOUNTS = ROOT_URL + "accounts/edit";
     public static final String URL_GET_ACCOUNTS = ROOT_URL + "accounts/get/all";
+    public static final String URL_FETCH_ACCOUNTS_NOW = ROOT_URL + "accounts/fetch/now";
+    public static final String URL_FETCH_ACCOUNTS_HISTORY = ROOT_URL + "accounts/fetch/history";
     public static final String URL_GET_ARTICLES = ROOT_URL + "article/getPersonal/" + SharedPreferencesManager.getUser().getID();
     public static final String URL_GET_API = ROOT_URL + "accounts/fetch";
     public static final String URL_EDIT_EMAIL = ROOT_URL + "emailChange";

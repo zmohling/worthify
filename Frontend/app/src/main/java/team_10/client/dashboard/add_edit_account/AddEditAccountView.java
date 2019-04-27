@@ -116,7 +116,7 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
     }
 
     @Override
-    public void setAddConfirmButtonText(String text) {
+    public void setSaveButtonText(String text) {
         mSaveButton.setText(text);
     }
 

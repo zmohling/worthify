@@ -9,15 +9,16 @@ import com.google.gson.JsonObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import team_10.client.MainActivity;
 import team_10.client.constant.PERIOD;
 import team_10.client.constant.TYPE;
 import team_10.client.constant.URL;
 import team_10.client.data.models.Account;
-import team_10.client.data.models.Transaction;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.utility.io.AppExecutors;
 import team_10.client.utility.io.IO;
@@ -159,7 +160,7 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
     }
 
     @Override
-    public List<Transaction> getValues(@NonNull PERIOD period) {
+    public Map<LocalDate, Double> getValues(@NonNull PERIOD period) {
         return null;
     }
 }

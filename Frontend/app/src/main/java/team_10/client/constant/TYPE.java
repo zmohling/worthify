@@ -1,5 +1,7 @@
 package team_10.client.constant;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,35 +16,28 @@ import team_10.client.data.models.Stock;
  * Enum for types of accounts.
  */
 public enum TYPE {
-    CERTIFICATEOFDEPOSIT("Certificate of Deposit", CertificateOfDeposit.class),
-    LOAN("Loan", Loan.class),
-    SAVINGSACCOUNT("Savings Account", SavingsAccount.class),
-    REALESTATE("Real Estate", RealEstate.class),
-    STOCK("Stock", Stock.class);
+    CERTIFICATEOFDEPOSIT("Certificate of Deposit", CertificateOfDeposit.class, false),
+    LOAN("Loan", Loan.class, false),
+    SAVINGSACCOUNT("Savings Account", SavingsAccount.class, false),
+    REALESTATE("Real Estate", RealEstate.class, true),
+    STOCK("Stock", Stock.class, true);
 
-    private String simpleName;
+    private String displayName;
     private Class<? extends Account> clazz;
+    private boolean isValueOnNetwork;
 
-    TYPE(String simpleName, Class<? extends Account> clazz) {
-        this.simpleName = simpleName;
+    TYPE(@NonNull String displayName, @NonNull Class<? extends Account> clazz, @NonNull boolean isValueOnNetwork) {
+        this.displayName = displayName;
         this.clazz = clazz;
+        this.isValueOnNetwork = isValueOnNetwork;
     }
 
     /**
      * Gets the type of the account.
      * @return the type's account class
      */
-    public Class<Account> getTypeClass() {
-        String p = "team_10.client.data.models.";
-        Class<Account> c = null;
-
-        try {
-            c = (Class<Account>) Class.forName(p + clazz.getSimpleName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return c;
+    public Class<? extends Account> getTypeClass() {
+        return this.clazz;
     }
 
     /**
@@ -52,7 +47,7 @@ public enum TYPE {
      */
     public static TYPE getType(String s) {
         for (TYPE t : TYPE.values()) {
-            if (t.simpleName.equals(s)) {
+            if (t.displayName.equals(s)) {
                 return t;
             }
         }
@@ -76,13 +71,20 @@ public enum TYPE {
         return null;
     }
 
+    /**
+     * Overrides Object's toString() method and
+     * returns the TYPE's display name.
+     * @return Name of type suited for displaying to the user.
+     */
     @Override
-    public String toString() {
-        return simpleName;
+    public @NonNull String toString() {
+        return this.displayName;
     }
 
-    public Class<? extends Account> getClazz() {
-        return clazz;
+    public @NonNull boolean isValueOnNetwork() { return this.isValueOnNetwork; }
+
+    public @NonNull Class<? extends Account> getClazz() {
+        return this.clazz;
     }
 
     /**

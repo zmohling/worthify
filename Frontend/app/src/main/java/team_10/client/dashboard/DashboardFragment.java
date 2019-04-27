@@ -115,7 +115,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             case R.id.button_add_account:
 
                 startAccountPickerPopup();
-                //startAddEditAccounts(null, Loan.class);
+
+                // TODO: dialog to warn user about adding accounts w/o internet connection
 
                 break;
         }

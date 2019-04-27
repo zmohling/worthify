@@ -10,8 +10,11 @@ public abstract class Transaction implements Serializable {
     protected double value;
     protected int transactionID;
     protected transient Account account;
-    protected int recurring;
     protected LocalDate date;
+
+    /* This value will be zero if not recurring. If nonzero, the recurring period can *
+     * be looked on with the PERIOD enum.                                             */
+    protected int recurring;
 
     public Transaction() {
     }
