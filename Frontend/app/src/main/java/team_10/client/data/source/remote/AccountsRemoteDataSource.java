@@ -13,8 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import team_10.client.MainActivity;
+import team_10.client.constant.PERIOD;
+import team_10.client.constant.TYPE;
 import team_10.client.constant.URL;
 import team_10.client.data.models.Account;
+import team_10.client.data.models.Transaction;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.utility.io.AppExecutors;
 import team_10.client.utility.io.IO;
@@ -94,7 +97,7 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
     }
 
     @Override
-    public void newAccount(@NonNull Class<? extends Account> type, @NonNull GetAccountCallback callback) {
+    public void newAccount(@NonNull TYPE type, @NonNull GetAccountCallback callback) {
 
     }
 
@@ -153,5 +156,10 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
     @Override
     public void refreshAccounts(@NonNull LoadAccountsCallback callback) {
 
+    }
+
+    @Override
+    public List<Transaction> getValues(@NonNull PERIOD period) {
+        return null;
     }
 }

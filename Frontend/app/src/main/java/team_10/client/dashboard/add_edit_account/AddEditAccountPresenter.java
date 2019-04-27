@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import team_10.client.MainActivity;
+import team_10.client.constant.TYPE;
 import team_10.client.dashboard.DashboardFragment;
 import team_10.client.data.UserInputField;
 import team_10.client.data.models.Account;
@@ -33,13 +34,13 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
      */
     private Account mAccountModel;
 
-    private Class<? extends Account> mType;
+    private TYPE mType;
 
     private String mAccountID;
 
     private boolean mIsDataMissing;
 
-    public AddEditAccountPresenter(@Nullable String accountID, @Nullable Class<? extends Account> type,
+    public AddEditAccountPresenter(@Nullable String accountID, @NonNull TYPE type,
                                    @NonNull AccountsDataSource accountsRepository,
                                    @NonNull AddEditAccountContract.View view,
                                    boolean shouldLoadDataFromRepo) {
@@ -61,7 +62,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
             if (mAddEditAccountView.isActive()) {
 
-                mAddEditAccountView.setTitle("ADD");
+                mAddEditAccountView.setTitle("Add: " + mType.toString());
 
                 mAddEditAccountView.setAddConfirmButtonText("Add");
 
@@ -73,7 +74,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
             if (mAddEditAccountView.isActive()) {
 
-                mAddEditAccountView.setTitle("EDIT");
+                mAddEditAccountView.setTitle("Edit: " + mType.toString());
 
                 mAddEditAccountView.setAddConfirmButtonText("Save");
 
@@ -126,7 +127,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
     @Override
     public void onAccountLoaded(Account account) {
         mAccountModel = account;
-        mType = account.getClass();
+        mType = TYPE.getType(account.getClass());
         mAccountID = account.getID();
 
         if (mAddEditAccountView.isActive()) {
@@ -160,7 +161,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
         fields = new TreeMap<>((o1, o2) -> o1.getAnnotation(UserInputField.class).priority() -
                 o2.getAnnotation(UserInputField.class).priority());
 
-        for (Field field : mType.getFields()) {
+        for (Field field : mType.getClazz().getFields()) {
 
             field.setAccessible(true);
 

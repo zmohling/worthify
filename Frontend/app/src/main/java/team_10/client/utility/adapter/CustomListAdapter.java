@@ -44,7 +44,7 @@ public class CustomListAdapter extends ArrayAdapter {
         if (a != null) {
             String s = a.getClass().getSimpleName();
 
-            TYPE t = TYPE.firstMatch(s);
+            TYPE t = TYPE.getType(a.getClass());
             if (t != null) {
                 s = t.toString();
             }

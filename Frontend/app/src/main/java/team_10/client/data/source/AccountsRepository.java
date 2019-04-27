@@ -9,6 +9,7 @@ import java.util.Map;
 
 import team_10.client.MainActivity;
 import team_10.client.constant.PERIOD;
+import team_10.client.constant.TYPE;
 import team_10.client.data.models.Account;
 import team_10.client.data.models.Transaction;
 import team_10.client.data.source.local.AccountsLocalDataSource;
@@ -175,7 +176,7 @@ public class AccountsRepository implements AccountsDataSource {
     }
 
     @Override
-    public void newAccount(@NonNull Class<? extends Account> type, @NonNull GetAccountCallback callback) {
+    public void newAccount(@NonNull TYPE type, @NonNull GetAccountCallback callback) {
 
         Account account = null;
 
@@ -190,7 +191,7 @@ public class AccountsRepository implements AccountsDataSource {
         mUserRepository.setNumAccountsCreated(numAccounts);
 
         try {
-            account = type.newInstance();
+            account = type.getClazz().newInstance();
 
             if (account != null) {
 

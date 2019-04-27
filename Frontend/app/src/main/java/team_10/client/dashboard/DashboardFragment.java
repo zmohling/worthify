@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -21,6 +22,7 @@ import android.widget.NumberPicker;
 import android.widget.PopupWindow;
 
 import java.util.List;
+import java.util.Objects;
 
 import team_10.client.MainActivity;
 import team_10.client.R;
@@ -74,7 +76,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         // Start Account Modal in edit mode if ListView item (account) was clicked
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-                startAddEditAccounts(accounts.get(position).getID(), accounts.get(position).getClass());
+                startAddEditAccounts(accounts.get(position).getID(), TYPE.getType(accounts.get(position).getClass()));
             }
         });
 
@@ -151,9 +153,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             @Override
             public void onClick(View v) {
 
-                TYPE t = TYPE.firstMatch(accountTypes.get(picker.getValue()));
+                TYPE t = TYPE.getType(accountTypes.get(picker.getValue()));
 
-                startAddEditAccounts(null, t.getTypeClass());
+                startAddEditAccounts(null, t);
 
                 popupWindow.dismiss();
             }
@@ -161,7 +163,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
     }
 
-    public void startAddEditAccounts(@Nullable String accountID, @Nullable Class<? extends Account> type) {
+    public void startAddEditAccounts(@Nullable String accountID, @NonNull TYPE type) {
+        Objects.requireNonNull(type);
+
         AddEditAccountView addEditAccountView = new AddEditAccountView();
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, addEditAccountView, "")

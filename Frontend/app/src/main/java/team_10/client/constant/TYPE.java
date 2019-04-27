@@ -4,22 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import team_10.client.data.models.Account;
+import team_10.client.data.models.CertificateOfDeposit;
+import team_10.client.data.models.Loan;
+import team_10.client.data.models.RealEstate;
+import team_10.client.data.models.SavingsAccount;
+import team_10.client.data.models.Stock;
 
 /**
  * Enum for types of accounts.
  */
 public enum TYPE {
-    CERTIFICATEOFDEPOSIT("Certificate of Deposit", "CertificateOfDeposit"),
-    LOAN("Loan", "Loan"),
-    SAVINGSACCOUNT("Savings Account", "SavingsAccount"),
-    STOCK("Stock", "Stock");
+    CERTIFICATEOFDEPOSIT("Certificate of Deposit", CertificateOfDeposit.class),
+    LOAN("Loan", Loan.class),
+    SAVINGSACCOUNT("Savings Account", SavingsAccount.class),
+    REALESTATE("Real Estate", RealEstate.class),
+    STOCK("Stock", Stock.class);
 
     private String simpleName;
-    private String className;
+    private Class<? extends Account> clazz;
 
-    TYPE(String simpleName, String className) {
+    TYPE(String simpleName, Class<? extends Account> clazz) {
         this.simpleName = simpleName;
-        this.className = className;
+        this.clazz = clazz;
     }
 
     /**
@@ -31,7 +37,7 @@ public enum TYPE {
         Class<Account> c = null;
 
         try {
-            c = (Class<Account>) Class.forName(p + className);
+            c = (Class<Account>) Class.forName(p + clazz.getSimpleName());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -44,7 +50,7 @@ public enum TYPE {
      * @param s
      * @return the type that matches s in the types list
      */
-    public static TYPE firstMatch(String s) {
+    public static TYPE getType(String s) {
         for (TYPE t : TYPE.values()) {
             if (t.simpleName.equals(s)) {
                 return t;
@@ -55,9 +61,28 @@ public enum TYPE {
         return null;
     }
 
+    /**
+     * Returns TYPE enum member for clazz
+     * @param clazz Class which will be used to find it's coordinating TYPE
+     * @return TYPE
+     */
+    public static TYPE getType(Class<? extends Account> clazz) {
+        for (TYPE t : TYPE.values()) {
+            if (t.clazz.equals(clazz)) {
+                return t;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public String toString() {
         return simpleName;
+    }
+
+    public Class<? extends Account> getClazz() {
+        return clazz;
     }
 
     /**
