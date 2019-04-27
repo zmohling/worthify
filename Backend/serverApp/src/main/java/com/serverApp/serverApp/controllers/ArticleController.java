@@ -34,11 +34,11 @@ import java.util.List;
 @RestController
 public class ArticleController {
 
-    private ArrayList<String> keywords = new ArrayList<> (Arrays.asList("interest rates", "student loans", "saving", "savings account", "CD", "CD rates"));
+    private ArrayList<String> keywords = new ArrayList<> (Arrays.asList("real estate", "interest rates", "student loans", "saving", "savings account", "CD", "CD rates"));
     private String[] loanKeywords = {"interest rates", "student loans"};
     private String[] savingsAccountKeywords = {"saving", "savings account"};
     private String[] certificateOfDepositKeywords = {"CD", "CD rates"};
-    private String[] realEstateKeywords = {"Real Estate"};
+    private String[] realEstateKeywords = {"real estate"};
     private String[] StockKeyWords;
 
     /**
@@ -308,9 +308,9 @@ public class ArticleController {
                 case "Stock":
                     Stock stock = stockRepo.getStock(accounts[i].getAccountId());
                     for(int j = 0; j < tickers.size(); j++) {
-                        if(tickers.get(i) == stock.getTicker()) {
-                            keywords.add(tickers.get(i));
-                            tickers.remove(i);
+                        if(tickers.get(j).equals(stock.getTicker())) {
+                            keywords.add(tickers.get(j));
+                            tickers.remove(j);
                         }
                     }
                 default:
@@ -318,7 +318,6 @@ public class ArticleController {
                     break;
             }
         }
-
         ArrayList<Article> articles = new ArrayList<>();
         for (int i = 0; i < keywords.size(); i++) {
             articles.addAll(Arrays.asList(articleRepo.getAllArticlesWithKeyword(keywords.get(i))));
