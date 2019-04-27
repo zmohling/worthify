@@ -9,10 +9,14 @@ import com.google.gson.JsonObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import team_10.client.MainActivity;
+import team_10.client.constant.PERIOD;
+import team_10.client.constant.TYPE;
 import team_10.client.constant.URL;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.AccountsDataSource;
@@ -94,7 +98,7 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
     }
 
     @Override
-    public void newAccount(@NonNull Class<? extends Account> type, @NonNull GetAccountCallback callback) {
+    public void newAccount(@NonNull TYPE type, @NonNull GetAccountCallback callback) {
 
     }
 
@@ -153,5 +157,10 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
     @Override
     public void refreshAccounts(@NonNull LoadAccountsCallback callback) {
 
+    }
+
+    @Override
+    public Map<LocalDate, Double> getValues(@NonNull PERIOD period) {
+        return null;
     }
 }

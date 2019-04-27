@@ -30,7 +30,7 @@ public interface AddEditAccountContract {
 
         void setTitle(String title);
 
-        void setAddConfirmButtonText(String text);
+        void setSaveButtonText(String text);
 
         void insertAccountInputsView(android.view.View view);
 

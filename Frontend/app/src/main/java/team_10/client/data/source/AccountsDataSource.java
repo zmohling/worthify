@@ -2,8 +2,12 @@ package team_10.client.data.source;
 
 import android.support.annotation.NonNull;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
+import team_10.client.constant.PERIOD;
+import team_10.client.constant.TYPE;
 import team_10.client.data.models.Account;
 
 public interface AccountsDataSource {
@@ -33,7 +37,7 @@ public interface AccountsDataSource {
 
     void getAccount(@NonNull String accountID, @NonNull GetAccountCallback callback);
 
-    void newAccount(@NonNull Class<? extends Account> type, @NonNull GetAccountCallback callback);
+    void newAccount(@NonNull TYPE type, @NonNull GetAccountCallback callback);
 
     void getAccountCopy(@NonNull String accountID, @NonNull GetAccountCallback callback);
 
@@ -44,5 +48,7 @@ public interface AccountsDataSource {
     void deleteAllAccounts();
 
     void refreshAccounts(@NonNull LoadAccountsCallback callback);
+
+    Map<LocalDate, Double> getValues(@NonNull PERIOD period);
 
 }

@@ -31,6 +31,8 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
 
     private TextView mTitle;
 
+    private Button mAddTransactionButton;
+
     private Button mSaveButton;
 
     private Button mCancelButton;
@@ -65,6 +67,7 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
 
         mSaveButton = (Button) getActivity().findViewById(R.id.modal_add_edit_account_save);
         mCancelButton = (Button) getActivity().findViewById(R.id.modal_add_edit_account_cancel);
+        mAddTransactionButton = (Button) getActivity().findViewById(R.id.modal_add_edit_account_add_transaction);
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +87,14 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
                 mPresenter.unsubscribe();
 
                 getActivity().onBackPressed();
+
+                System.out.println("TOUCH");
+            }
+        });
+
+        mAddTransactionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });
@@ -116,7 +127,7 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
     }
 
     @Override
-    public void setAddConfirmButtonText(String text) {
+    public void setSaveButtonText(String text) {
         mSaveButton.setText(text);
     }
 

@@ -2,15 +2,24 @@ package team_10.client.data.source;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import team_10.client.MainActivity;
+import team_10.client.constant.PERIOD;
+import team_10.client.constant.TYPE;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.local.AccountsLocalDataSource;
 import team_10.client.data.source.remote.AccountsRemoteDataSource;
+import team_10.client.utility.General;
+import team_10.client.utility.adapter.AbstractAccountAdapter;
 import team_10.client.utility.io.AppExecutors;
 import team_10.client.utility.io.IO;
 
@@ -27,6 +36,10 @@ public class AccountsRepository implements AccountsDataSource {
     Map<String, Account> mCachedAccounts;
 
     boolean mCacheIsDirty = false;
+
+    // Binary value for if account data has been queued
+    // to send to the server
+    boolean mAccountDataQueued = false;
 
     // Private constructor for Singleton pattern
     private AccountsRepository(@NonNull AccountsDataSource accountsRemoteDataSource,
@@ -117,6 +130,10 @@ public class AccountsRepository implements AccountsDataSource {
     private void refreshLocalDataSource(List<Account> accounts) {
         mAccountsLocalDataSource.deleteAllAccounts();
 
+        if (accounts.isEmpty()) {
+            return;
+        }
+
         /* AccountsLocalDataSource.saveAccount first loads cached accounts, so   *
          * it will work more efficiently to do this one instead of every account */
         mAccountsLocalDataSource.saveAccount(accounts.get(0), new SaveAccountCallback() {
@@ -173,7 +190,7 @@ public class AccountsRepository implements AccountsDataSource {
     }
 
     @Override
-    public void newAccount(@NonNull Class<? extends Account> type, @NonNull GetAccountCallback callback) {
+    public void newAccount(@NonNull TYPE type, @NonNull GetAccountCallback callback) {
 
         Account account = null;
 
@@ -188,7 +205,7 @@ public class AccountsRepository implements AccountsDataSource {
         mUserRepository.setNumAccountsCreated(numAccounts);
 
         try {
-            account = type.newInstance();
+            account = type.getClazz().newInstance();
 
             if (account != null) {
 
@@ -298,6 +315,45 @@ public class AccountsRepository implements AccountsDataSource {
 
     }
 
+    @Override
+    public Map<LocalDate, Double> getValues(@NonNull PERIOD period) {
+
+        Map<String, Map<LocalDate, Double>> wrapper = new HashMap<>();
+        Map<LocalDate, Double> dailyTotalValues = new HashMap<>();
+
+        dailyTotalValues.put(LocalDate.now().minusDays(4), General.round(100.055, 2));
+        dailyTotalValues.put(LocalDate.now().minusDays(3), General.round(105.22255, 2));
+        dailyTotalValues.put(LocalDate.now().minusDays(2), General.round(120.314, 2));
+        dailyTotalValues.put(LocalDate.now(), General.round(150.01, 2));
+
+        wrapper.put("000006820006", dailyTotalValues);
+
+        Map<LocalDate, Double> dailyTotalValues1 = new HashMap<>();
+
+        dailyTotalValues1.put(LocalDate.now().minusDays(3), General.round(9505.6666, 2));
+        dailyTotalValues1.put(LocalDate.now().minusDays(2), General.round(10022, 2));
+        dailyTotalValues1.put(LocalDate.now().minusDays(1), General.round(11000.99, 2));
+        dailyTotalValues1.put(LocalDate.now(), General.round(11000.99, 2));
+
+        wrapper.put("000006820007", dailyTotalValues1);
+
+        Map<LocalDate, Double> dailyTotalValues2 = new HashMap<>();
+
+        dailyTotalValues2.put(LocalDate.now(), General.round(21.2001, 2));
+
+        wrapper.put("000006820008", dailyTotalValues2);
+
+        GsonBuilder b = new GsonBuilder();
+        b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
+        b.setPrettyPrinting();
+        Gson g = b.create();
+
+        System.out.println(g.toJson(wrapper));
+
+        return  dailyTotalValues;
+
+    }
+
     /**
      * Return a list of accounts that are currently stored in memory.
      *
@@ -307,3 +363,4 @@ public class AccountsRepository implements AccountsDataSource {
         return mCachedAccounts;
     }
 }
+
