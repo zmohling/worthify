@@ -17,16 +17,11 @@ import com.google.gson.*;
 
 import com.serverApp.serverApp.repositories.AccountsRepository;
 
-import java.io.BufferedReader;
-import java.io.File;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -149,73 +144,49 @@ public class AccountsController {
         return rString;
     }
 
-
-    /**
-     * implements various APIs to get data for dynamic accounts
-     * @param string user
-     * @param header verification
-     * @return updated account variables
-     * @throws IOException IOException
-     */
     @RequestMapping("/accounts/fetch")
-    public String fetchAccounts(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
+    public String getStock(@RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
         Optional<String> headerCheck = checkHeader(header);
         if(headerCheck.isPresent()) {
             return headerCheck.get();
         }
-        System.out.println(string);
-        JSONObject obj = new JSONObject(string);
-        JSONArray accountsArr = obj.getJSONArray("accountID");
-        Type accountType = new TypeToken<ArrayList<String>>(){}.getType();
-        Gson g = new Gson();
-
-        String rString = "{";
-        for(int i = 0; i < accountsArr.length(); i++) {
-            String id = accountsArr.get(i).toString();
-            String type = accountsRepo.getAccountsByAccountId(id).getType();
-
-            if(type.equals("RealEstate")) {
-                RealEstate realEstate = new RealEstate();
-                realEstate.setAccountId(id);
-                realEstate.setState(realEstateRepo.getRealEstate(realEstate.getAccountId()).getState());
-                realEstate.setAddress(realEstateRepo.getRealEstate(realEstate.getAccountId()).getAddress());
-                realEstate.setCity(realEstateRepo.getRealEstate(realEstate.getAccountId()).getCity());
-                RealEstateRetrieval realEstateRetrieval = new RealEstateRetrieval();
-                String val = realEstateRetrieval.retrieveRealEstate(realEstate);
-                if(i != 0) rString = rString + ",";
-                rString = rString + "\"" + id + "\" :" + val;
-            } else if (type.equals("Stock")) {
+        long userId = userRepo.getUserID(header.get());
+        Accounts[] apiAccountsList = accountsRepo.getAPIAccounts(userId);
+        String returnStr = "{";
+        boolean outerfirst = true;
+        for(int i = 0; i < apiAccountsList.length; i++) {
+            if(!outerfirst) returnStr = returnStr + ",";
+            else outerfirst = false;
+            boolean first = true;
+            System.out.println(apiAccountsList[i].getType());
+            if(!first) returnStr = returnStr + ",";
+            else first = false;
+            returnStr = returnStr + "\"" + apiAccountsList[i].getAccountId() + "\"" + ": {";
+            if(apiAccountsList[i].getType().equals("Stock")) {
                 Stock stock = new Stock();
-                stock.setAccountID(id);
-                stock.setTicker(stockRepo.getStock(id).getTicker());
+                stock.setAccountID(apiAccountsList[i].getAccountId());
+                Accounts accounts = accountsRepo.getAccountsByAccountId(apiAccountsList[i].getAccountId());
+                stock = stockRepo.getStock(stock.getAccountID());
+                if(stock.getDate() == null) {
+                    JSONObject obj2 = new JSONObject(accounts.getTransactions());
+                    Date date = Date.valueOf(obj2.get("date").toString());
+                    stock.setDate(date);
+                }
                 StockRetrieval stockRetrieval = new StockRetrieval();
-                //String val = stockRetrieval.retrieve2yData(stock.getTicker());
-                if(i != 0) rString = rString + ",";
-                //rString = rString + "\"" + id + "\" :" + val;
+                returnStr = returnStr + stockRetrieval.retrieve5yData(stock.getTicker(), stock.getDate());
+                if(!first && !Date.valueOf(LocalDate.now()).equals(stock.getDate())) returnStr = returnStr + ",";
+                stock.setDate(Date.valueOf(LocalDate.now()));
+                stockRepo.editDate(stock.getDate(), stock.getAccountID());
+                returnStr = returnStr + "\"" + Date.valueOf(LocalDate.now()) + "\": \"" + stockRetrieval.retrieveStock(stock.getTicker()) + "\"";
+            } else {
+                RealEstate realEstate = new RealEstate();
+                realEstate = realEstateRepo.getRealEstate(apiAccountsList[i].getAccountId());
+                RealEstateRetrieval realEstateRetrieval = new RealEstateRetrieval();
+                returnStr = returnStr + "\"" + Date.valueOf(LocalDate.now()) + "\": \"" + realEstateRetrieval.retrieveRealEstate(realEstate) + "\"";
             }
+                returnStr = returnStr + "}";
         }
-        rString = rString + "}";
-        return rString;
-    }
-
-    @RequestMapping("/gottem")
-    public String getStock(@RequestBody String string, @RequestHeader(value = "Authorization") Optional<String> header) throws IOException {
-        //Optional<String> headerCheck = checkHeader(header);
-        //if(headerCheck.isPresent()) {
-        //    return headerCheck.get();
-        //}
-        Stock stock = new Stock();
-        JSONObject obj = new JSONObject(string);
-        JSONArray accountsArr = obj.getJSONArray("accountID");
-        Type accountType = new TypeToken<ArrayList<String>>(){}.getType();
-        Gson g = new Gson();
-        stock.setAccountID(accountsArr.get(0).toString());
-        Accounts accounts = accountsRepo.getAccountsByAccountId(accountsArr.get(0).toString());
-        stock.setTicker(stockRepo.getStock(stock.getAccountID()).getTicker());
-        JSONObject obj2 = new JSONObject(accounts.getTransactions());
-        Date date = Date.valueOf(obj2.get("date").toString());
-        StockRetrieval stockRetrieval = new StockRetrieval();
-        String returnStr = stockRetrieval.retrieve2yData(stock.getTicker(), date);
+        returnStr = returnStr + "}";
         return returnStr;
     }
 

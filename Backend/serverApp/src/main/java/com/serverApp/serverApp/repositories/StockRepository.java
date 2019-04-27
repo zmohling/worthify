@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+
 /**
  * JPA repository for stocks
  *
@@ -23,4 +25,9 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     @Modifying
     @Query(value = "UPDATE stocks SET ticker = ?1 WHERE accountID = ?2", nativeQuery = true)
     void editStock(String ticker, String accountID);
+
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE stocks SET date = ?1 WHERE accountID = ?2", nativeQuery = true)
+    void editDate(Date date, String accountID);
 }

@@ -41,7 +41,7 @@ public class StockRetrieval {
         return content.toString();
     }
 
-    public String retrieve2yData(String ticker, Date date) throws java.io.IOException {
+    public String retrieve5yData(String ticker, Date date) throws java.io.IOException {
         URL accountURL;
         String url = "https://api.iextrading.com/1.0/stock/"
                 + ticker + "/chart/5y";
@@ -58,7 +58,7 @@ public class StockRetrieval {
         in.close();
         JsonParser jsonParser = new JsonParser();
         JsonArray arr = jsonParser.parse(content.toString()).getAsJsonArray();
-        String returnStr = "[ {";
+        String returnStr = "";
         boolean first = true;
         for(int i = 0; i < arr.size(); i++) {
             Date iterDate = java.sql.Date.valueOf(LocalDate.parse(arr.get(i).getAsJsonObject().get("date").getAsString()));
@@ -70,7 +70,6 @@ public class StockRetrieval {
                 first = false;
             }
         }
-        returnStr = returnStr + "} ]";
         return returnStr;
     }
 }
