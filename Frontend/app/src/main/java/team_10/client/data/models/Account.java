@@ -32,7 +32,6 @@ public abstract class Account implements Serializable {
         this.transactions = new TreeMap<>();
     }
 
-
     /**
      * Add a transaction to account
      * @param d date
@@ -52,8 +51,12 @@ public abstract class Account implements Serializable {
      */
     public void addTransaction(LocalDate d, double value, int transactionID, int recurring) {
         Transaction t = new Transaction(value, transactionID, recurring, d);
+        addTransaction(t);
+    }
+
+    public void addTransaction(team_10.client.data.models.Transaction t) {
         t.setAccount(this);
-        transactions.put(d, t);
+        transactions.put(t.date, t);
     }
 
     /**
@@ -117,6 +120,7 @@ public abstract class Account implements Serializable {
         this.isActive = isActive;
     }
 
+    public abstract team_10.client.data.models.Transaction getTransaction();
 
     /**
      * Gets the value of the account.
@@ -134,7 +138,10 @@ public abstract class Account implements Serializable {
 
 
     private class Transaction extends team_10.client.data.models.Transaction {
-        private Transaction(double value, int transactionID, int recurring, LocalDate date) {
+
+        Transaction() { }
+
+        Transaction(double value, int transactionID, int recurring, LocalDate date) {
             super(value, transactionID, recurring, date);
         }
     }

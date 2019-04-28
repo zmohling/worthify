@@ -12,8 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import team_10.client.R;
+import team_10.client.dashboard.add_edit_transaction.AddEditTransactionContract;
+import team_10.client.dashboard.add_edit_transaction.AddEditTransactionView;
 import team_10.client.utility.adapter.TransactionsAdapter;
 
 /**
@@ -72,11 +75,16 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.saveAccount();
 
-                mPresenter.unsubscribe();
+                if (!mPresenter.isDataMissing()) {
 
-                getActivity().onBackPressed();
+                    mPresenter.saveAccount();
+
+                    mPresenter.unsubscribe();
+
+                    getActivity().onBackPressed();
+
+                }
             }
         });
 
@@ -87,17 +95,21 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
                 mPresenter.unsubscribe();
 
                 getActivity().onBackPressed();
-
-                System.out.println("TOUCH");
             }
         });
 
         mAddTransactionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mPresenter.addTransaction();
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
     }
 
     @Override
@@ -137,8 +149,14 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
     }
 
     @Override
-    public void showAccountEmptyError() {
+    public AddEditTransactionContract.View showAddEditTransactionView() {
+        AddEditTransactionView addEditTransactionView = new AddEditTransactionView();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, addEditTransactionView, "")
+                .addToBackStack("")
+                .commit();
 
+        return addEditTransactionView;
     }
 
     @Override
@@ -149,6 +167,11 @@ public class AddEditAccountView extends Fragment implements AddEditAccountContra
     @Override
     public void setRecurringTransactionRecyclerAdapter(TransactionsAdapter adapter) {
         mRecurringTransactionsView.setAdapter(adapter);
+    }
+
+    @Override
+    public void showNullFieldError() {
+        Toast.makeText(getContext(), "Error: Missing Fields", Toast.LENGTH_SHORT).show();
     }
 
     @Override

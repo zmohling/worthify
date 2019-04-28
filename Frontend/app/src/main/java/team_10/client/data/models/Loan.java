@@ -13,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Vector;
 
 import team_10.client.R;
+import team_10.client.data.UserInputField;
 import team_10.client.utility.General;
 
 /**
@@ -113,13 +114,20 @@ public class Loan extends Account {
         return v;
     }
 
+    public team_10.client.data.models.Transaction getTransaction() { return new Transaction(); }
 
     /**
      * Loan specific Transaction object.
      */
     private class Transaction extends team_10.client.data.models.Transaction {
+        @UserInputField(
+                priority = 2,
+                name = "Interest Rate",
+                inputType = Number.class
+        )
+        Double interestRate;
 
-        double interestRate;
+        Transaction() { }
 
         Transaction(double value, double interestRate, int transactionID, int recurring, LocalDate date) {
             this.value = value;

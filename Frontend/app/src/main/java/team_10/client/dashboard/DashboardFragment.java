@@ -183,6 +183,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         mAddEditAccountPresenter = new AddEditAccountPresenter(accountID,
                 type, mAccountsRepository, addEditAccountView,
                 true);
+
+
     }
 
     /**

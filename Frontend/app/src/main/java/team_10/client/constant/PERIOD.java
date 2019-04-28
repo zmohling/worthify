@@ -28,6 +28,11 @@ public enum PERIOD {
         return this.daysPerPeriod;
     }
 
+    @Override
+    public @NonNull String toString() {
+        return this.displayName;
+    }
+
     public static List<String> getAllAsStrings() {
         ArrayList<String> periods = new ArrayList<>();
         PERIOD[] p = PERIOD.values();

@@ -21,6 +21,7 @@ import team_10.client.constant.URL;
 import team_10.client.data.User;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.AccountsDataSource;
+import team_10.client.data.source.AccountsRepository;
 import team_10.client.utility.io.AppExecutors;
 import team_10.client.utility.io.IO;
 import team_10.client.utility.io.SharedPreferencesManager;
@@ -109,6 +110,14 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
 
     @Override
     public void saveAccount(@NonNull Account account, @NonNull SaveAccountCallback callback) {
+
+        // Sending edited accounts to server requires specific URL
+        String URL = (AccountsRepository.getInstance().getCachedAccounts().containsKey(account.getID()))
+                ? team_10.client.constant.URL.URL_EDIT_ACCOUNTS
+                : team_10.client.constant.URL.URL_ADD_ACCOUNTS;
+
+        System.out.println(URL);
+
         String requestBody = null;
         try {
             ArrayList<Account> accountsList = new ArrayList<>();
@@ -119,7 +128,7 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
         }
 
         String finalRequestBody = requestBody;
-        VolleyPostRequest request = new VolleyPostRequest(requestBody, URL.URL_ADD_ACCOUNTS, new Response.Listener<String>() {
+        VolleyPostRequest request = new VolleyPostRequest(requestBody, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

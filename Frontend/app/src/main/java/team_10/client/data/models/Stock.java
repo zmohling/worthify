@@ -250,7 +250,12 @@ public class Stock extends Account {
         return false;
     }
 
+    public team_10.client.data.models.Transaction getTransaction() { return new Transaction(); }
+
+
     private class Transaction extends team_10.client.data.models.Transaction {
+
+        Transaction() { }
 
         Transaction(double value, int transactionID, int recurring, LocalDate date) {
             this.value = value;

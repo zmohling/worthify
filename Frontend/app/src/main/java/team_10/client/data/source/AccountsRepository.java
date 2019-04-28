@@ -280,9 +280,28 @@ public class AccountsRepository implements AccountsDataSource {
             mCachedAccounts = new LinkedHashMap<>();
         }
 
-        mCachedAccounts.put(account.getID(), account);
+        /* Cheap implementation to know if account is new or not for remote */
+        if (mCachedAccounts.containsKey(account.getID())) {
 
-        mAccountsLocalDataSource.saveAccount(account, callback);
+            mCachedAccounts.put(account.getID(), account);
+
+            mAccountsLocalDataSource.saveAccount(account, callback);
+
+            sendAccountToRemoteDataSource(account, callback);
+
+        } else {
+
+
+            sendAccountToRemoteDataSource(account, callback);
+
+            mCachedAccounts.put(account.getID(), account);
+
+            mAccountsLocalDataSource.saveAccount(account, callback);
+        }
+
+    }
+
+    private void sendAccountToRemoteDataSource(Account account, SaveAccountCallback callback) {
         mAccountsRemoteDataSource.saveAccount(account, new SaveAccountCallback() {
             @Override
             public void onAccountSaved() {
@@ -291,7 +310,7 @@ public class AccountsRepository implements AccountsDataSource {
 
             @Override
             public void onDataNotAvailable() {
-                callback.onDataNotAvailable();
+
             }
         });
     }

@@ -9,6 +9,9 @@ public interface AddEditTransactionContract {
 
         void saveTransaction();
 
+        void setRecurring(int recurring);
+
+        boolean isDataMissing();
 
     }
 
@@ -19,6 +22,8 @@ public interface AddEditTransactionContract {
         void setSaveButtonText(String text);
 
         void insertAccountInputsView(android.view.View view);
+
+        void showNullFieldError();
 
         boolean isActive();
 

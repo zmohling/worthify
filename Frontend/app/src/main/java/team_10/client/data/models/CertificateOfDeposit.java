@@ -177,13 +177,21 @@ public class CertificateOfDeposit extends Account {
         return linearLayout;
     }
 
+    public team_10.client.data.models.Transaction getTransaction() { return new Transaction(); }
+
 
     /**
      * Loan specific Transaction object.
      */
     private class Transaction extends team_10.client.data.models.Transaction {
+        @UserInputField(
+                priority = 2,
+                name = "APR",
+                inputType = Number.class
+        )
+        Double annualPercentReturn;
 
-        double annualPercentReturn;
+        Transaction() { }
 
         Transaction(double value, double annualPercentReturn, int transactionID, int recurring, LocalDate date) {
             this.value = value;

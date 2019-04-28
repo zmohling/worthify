@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -13,6 +14,8 @@ import java.util.TreeMap;
 import team_10.client.MainActivity;
 import team_10.client.constant.TYPE;
 import team_10.client.dashboard.DashboardFragment;
+import team_10.client.dashboard.add_edit_transaction.AddEditTransactionContract;
+import team_10.client.dashboard.add_edit_transaction.AddEditTransactionPresenter;
 import team_10.client.data.UserInputField;
 import team_10.client.data.models.Account;
 import team_10.client.data.models.Transaction;
@@ -111,17 +114,20 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
     @Override
     public void addTransaction() {
+        AddEditTransactionContract.View view = mAddEditAccountView.showAddEditTransactionView();
+
+        AddEditTransactionContract.Presenter presenter = new AddEditTransactionPresenter(null,
+                mAccountModel, mAccountsRepository, view, this, true);
+    }
+
+    @Override
+    public void editTransaction() {
 
     }
 
     @Override
     public void deleteTransaction() {
 
-    }
-
-    @Override
-    public boolean isDataMissing() {
-        return mIsDataMissing;
     }
 
     @Override
@@ -143,16 +149,16 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
     @Override
     public void onDataNotAvailable() {
-        mAddEditAccountView.showAccountEmptyError();
     }
 
     private boolean isNewAccount() {
         return mAccountID == null;
     }
 
-    private void generateAccountInputsView() {
 
-        Map<Field, UserInputField> fields;
+    private Map<Field, UserInputField> fields;
+
+    private void generateAccountInputsView() {
 
         LinearLayout v = new LinearLayout(MainActivity.myContext);
 
@@ -181,7 +187,27 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
         mAddEditAccountView.insertAccountInputsView(v);
     }
 
-    private void initializeTransactionViews() {
+    @Override
+    public boolean isDataMissing() {
+        mIsDataMissing = false;
+
+        for (Field field : fields.keySet()) {
+            try {
+                if (field.get(mAccountModel) == null) {
+
+                    mAddEditAccountView.showNullFieldError();
+
+                    mIsDataMissing = true;
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return mIsDataMissing;
+    }
+
+    public void initializeTransactionViews() {
         TransactionsAdapter adapter = new TransactionsAdapter(
                 getTransactions(mAccountModel)
         );
@@ -204,6 +230,14 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
         } catch (NullPointerException e) {
         }
 
+        Iterator<Transaction> transactionIterator = transactions.listIterator();
+        while (transactionIterator.hasNext()) {
+            Transaction t = transactionIterator.next();
+
+            if (t.getRecurring() != 0)
+                transactionIterator.remove();
+        }
+
         return transactions;
     }
 
@@ -215,11 +249,14 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
         } catch (NullPointerException e) {
         }
 
-        for (int i = 0; i < transactions.size(); i++) {
-            if (transactions.get(i).getRecurring() == 0) {
-                transactions.remove(i);
-            }
+        Iterator<Transaction> transactionIterator = transactions.listIterator();
+        while (transactionIterator.hasNext()) {
+            Transaction t = transactionIterator.next();
+
+            if (t.getRecurring() == 0)
+                transactionIterator.remove();
         }
+
         return transactions;
     }
 }
