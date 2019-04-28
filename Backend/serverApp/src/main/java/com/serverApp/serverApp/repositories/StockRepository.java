@@ -21,6 +21,9 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     @Query(value = "SELECT DISTINCT * FROM stocks WHERE accountID = ?1", nativeQuery = true)
     Stock getStock(String userId);
 
+    @Query(value = "SELECT DISTINCT ticker FROM stocks", nativeQuery = true)
+    String[] getTickers();
+
     @Transactional
     @Modifying
     @Query(value = "UPDATE stocks SET ticker = ?1 WHERE accountID = ?2", nativeQuery = true)
