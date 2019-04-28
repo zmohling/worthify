@@ -34,6 +34,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.renderer.LineChartRenderer;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -118,10 +119,11 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         chart.setData(lineData);
         chart.setAutoScaleMinMaxEnabled(true);
         chart.getXAxis().setDrawGridLines(false);
-        chart.getAxisLeft().setDrawGridLines(false);
+        chart.getAxisRight().setEnabled(false);
         chart.getLegend().setEnabled(false);
         chart.getDescription().setEnabled(false);
-        chart.setViewPortOffsets(0f, 0f, 0f, 0f);
+        chart.setMinOffset(0f);
+        //chart.setViewPortOffsets(0f, 0f, 0f, 0f);
         chart.getAxisLeft().setTextSize(12);
         chart.getXAxis().setEnabled(false);
         chart.getAxisLeft().setTextColor(Color.parseColor("#80FFFFFF"));
