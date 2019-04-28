@@ -66,7 +66,7 @@
             <ImageView
                 android:id="@+id/contact_downvote"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:src="@drawable/downvote_no_vote" />
@@ -74,7 +74,7 @@
             <ImageView
                 android:id="@+id/contact_upvote"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:src="@drawable/upvote_no_vote" />
