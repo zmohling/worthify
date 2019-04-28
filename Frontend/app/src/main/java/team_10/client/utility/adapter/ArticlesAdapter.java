@@ -175,11 +175,11 @@ public class ArticlesAdapter extends
                                     viewHolder.votesTextView.setText("Votes: " + articleVotes);
                                     if (currentVote.equals("1"))
                                     {
-                                        viewHolder.downVote.setImageResource(R.drawable.upvote_vote);
+                                        viewHolder.upVote.setImageResource(R.drawable.upvote_vote);
                                     }
                                     else
                                     {
-                                        viewHolder.downVote.setImageResource(R.drawable.upvote_no_vote);
+                                        viewHolder.upVote.setImageResource(R.drawable.upvote_no_vote);
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
