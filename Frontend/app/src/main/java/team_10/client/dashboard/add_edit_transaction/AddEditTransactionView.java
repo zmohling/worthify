@@ -1,8 +1,10 @@
 package team_10.client.dashboard.add_edit_transaction;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -61,18 +64,28 @@ public class AddEditTransactionView extends Fragment implements AddEditTransacti
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mTitle = (TextView) getActivity().findViewById(R.id.modal_add_edit_transaction_title);
+
+        mTransactionInputsView = (LinearLayout) getActivity().findViewById(R.id.modal_add_edit_transaction_input_view_group);
+
         mSaveButton = (Button) getActivity().findViewById(R.id.modal_add_edit_transaction_save);
+
         mCancelButton = (Button) getActivity().findViewById(R.id.modal_add_edit_transaction_cancel);
+
         mRecurringSpinner = (Spinner) getActivity().findViewById(R.id.modal_add_edit_transaction_spinner);
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.saveTransaction();
 
-                mPresenter.unsubscribe();
+                if (!mPresenter.isDataMissing()) {
 
-                getActivity().onBackPressed();
+                    mPresenter.saveTransaction();
+
+                    mPresenter.unsubscribe();
+
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
             }
         });
 
@@ -82,7 +95,7 @@ public class AddEditTransactionView extends Fragment implements AddEditTransacti
 
                 mPresenter.unsubscribe();
 
-                getActivity().onBackPressed();
+                getActivity().getSupportFragmentManager().popBackStack();
 
             }
         });
@@ -90,7 +103,10 @@ public class AddEditTransactionView extends Fragment implements AddEditTransacti
         mRecurringSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+                ((TextView) parent.getChildAt(0)).setGravity(Gravity.CENTER);
 
+                mPresenter.setRecurring(position);
             }
 
             @Override
@@ -98,6 +114,13 @@ public class AddEditTransactionView extends Fragment implements AddEditTransacti
 
             }
         });
+
+        /* Init spinner */
+        List<String> periods = PERIOD.getAllAsStrings();
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(MainActivity.myContext,
+                android.R.layout.simple_spinner_item, periods);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        mRecurringSpinner.setAdapter(dataAdapter);
     }
 
 
@@ -106,33 +129,27 @@ public class AddEditTransactionView extends Fragment implements AddEditTransacti
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_add_edit_transaction, container, false);
 
-        mTitle = (TextView) root.findViewById(R.id.modal_add_edit_transaction_title);
-
-        mTransactionInputsView = (LinearLayout) root.findViewById(R.id.modal_add_edit_transaction_input_view_group);
-
-        /* Init spinner */
-        List<String> periods = PERIOD.getAllAsStrings();
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(MainActivity.myContext,
-                android.R.layout.simple_spinner_item, periods);
-        dataAdapter.setDropDownViewResource(R.layout.item_spinner_item);
-        mRecurringSpinner.setAdapter(dataAdapter);
-
         return root;
     }
 
     @Override
     public void setTitle(String title) {
-
+        this.mTitle.setText(title);
     }
 
     @Override
     public void setSaveButtonText(String text) {
-
+        this.mSaveButton.setText(text);
     }
 
     @Override
     public void insertAccountInputsView(View view) {
+        mTransactionInputsView.addView(view, 0);
+    }
 
+    @Override
+    public void showNullFieldError() {
+        Toast.makeText(getContext(), "Error: Missing Fields", Toast.LENGTH_SHORT).show();
     }
 
     @Override

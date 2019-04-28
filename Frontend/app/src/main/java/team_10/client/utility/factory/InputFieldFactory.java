@@ -15,16 +15,15 @@ import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.Calendar;
 
-import team_10.client.R;
 import team_10.client.MainActivity;
-import team_10.client.data.models.Account;
+import team_10.client.R;
 import team_10.client.data.UserInputField;
 
 public abstract class InputFieldFactory {
     private static LayoutInflater inflater;
     private static Context context;
 
-    public static View getInputFieldView(final Account account, final Field field) {
+    public static View getInputFieldView(final Object account, final Field field) {
         context = MainActivity.myContext;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -55,7 +54,7 @@ public abstract class InputFieldFactory {
         return v;
     }
 
-    private static View getStringInputFieldView(final Account account, final Field field,
+    private static View getStringInputFieldView(final Object account, final Field field,
                                                 final UserInputField userInputField) throws IllegalAccessException {
         View v = inflater.inflate(R.layout.item_string_input_view, null);
 
@@ -90,7 +89,7 @@ public abstract class InputFieldFactory {
         return v;
     }
 
-    private static View getNumberInputFieldView(final Account account, final Field field,
+    private static View getNumberInputFieldView(final Object account, final Field field,
                                                 final UserInputField userInputField) throws IllegalAccessException {
         View v = inflater.inflate(R.layout.item_string_input_view, null);
 
@@ -119,9 +118,11 @@ public abstract class InputFieldFactory {
             public void afterTextChanged(Editable s) {
                 try {
 
-                    field.set(account, s.toString());
+                    field.set(account, Double.parseDouble(s.toString()));
 
                 } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -130,7 +131,7 @@ public abstract class InputFieldFactory {
         return v;
     }
 
-    private static View getDateInputFieldView(final Account account, final Field field,
+    private static View getDateInputFieldView(final Object account, final Field field,
                                               final UserInputField userInputField) throws IllegalAccessException {
         View v = inflater.inflate(R.layout.item_date_input_view, null);
 

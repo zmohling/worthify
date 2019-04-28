@@ -3,14 +3,28 @@ package team_10.client.data.models;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import team_10.client.data.UserInputField;
+
 /**
  * Transaction class that each account type implements.
  */
 public abstract class Transaction implements Serializable {
-    protected double value;
+    @UserInputField(
+            priority = 0,
+            name = "Value",
+            inputType = Number.class
+    )
+    protected Double value;
+
+    @UserInputField(
+            priority = 1,
+            name = "Date",
+            inputType = LocalDate.class
+    )
+    protected LocalDate date;
+
     protected int transactionID;
     protected transient Account account;
-    protected LocalDate date;
 
     /* This value will be zero if not recurring. If nonzero, the recurring period can *
      * be looked on with the PERIOD enum.                                             */

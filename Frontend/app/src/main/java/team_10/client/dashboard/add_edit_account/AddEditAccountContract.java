@@ -2,6 +2,7 @@ package team_10.client.dashboard.add_edit_account;
 
 import team_10.client.BasePresenter;
 import team_10.client.BaseView;
+import team_10.client.dashboard.add_edit_transaction.AddEditTransactionContract;
 import team_10.client.utility.adapter.TransactionsAdapter;
 
 /**
@@ -21,6 +22,8 @@ public interface AddEditAccountContract {
 
         void addTransaction();
 
+        void editTransaction();
+
         void deleteTransaction();
 
         boolean isDataMissing();
@@ -38,7 +41,9 @@ public interface AddEditAccountContract {
 
         void setRecurringTransactionRecyclerAdapter(TransactionsAdapter adapter);
 
-        void showAccountEmptyError();
+        void showNullFieldError();
+
+        AddEditTransactionContract.View showAddEditTransactionView();
 
         void notifyDatasetChanged();
 
