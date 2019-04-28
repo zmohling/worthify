@@ -94,30 +94,33 @@ public class SettingsFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        TextView firstName = view.findViewById(R.id.text_view_profile_first_name);
-        firstName.setText("" + getUser().getFirstName());
-        TextView lastName = view.findViewById(R.id.text_view_profile_last_name);
-        lastName.setText("" + getUser().getLastName());
-        TextView emailName = view.findViewById(R.id.text_view_profile_email);
-        emailName.setText("" + getUser().getEmail());
-        TextView editEmail = view.findViewById(R.id.text_view_change_email);
-        editEmail.setOnClickListener(new View.OnClickListener()
-        {
+        View view;
+        if(getUser().getToken() != "") {
+            view = inflater.inflate(R.layout.fragment_settings, container, false);
+            TextView firstName = view.findViewById(R.id.text_view_profile_first_name);
+            firstName.setText("" + getUser().getFirstName());
+            TextView lastName = view.findViewById(R.id.text_view_profile_last_name);
+            lastName.setText("" + getUser().getLastName());
+            TextView emailName = view.findViewById(R.id.text_view_profile_email);
+            emailName.setText("" + getUser().getEmail());
+            TextView editEmail = view.findViewById(R.id.text_view_change_email);
+            editEmail.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                editEmailModal();
-            }
-        });
-        TextView editPassword = view.findViewById(R.id.text_view_change_password);
-        editPassword.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v) {
-                editPasswordModal();
-            }
-        });
+                @Override
+                public void onClick(View v) {
+                    editEmailModal();
+                }
+            });
+            TextView editPassword = view.findViewById(R.id.text_view_change_password);
+            editPassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editPasswordModal();
+                }
+            });
+        } else {
+            view = inflater.inflate(R.layout.fragment_non_user_settings, container, false);
+        }
         Button logoutButton = view.findViewById(R.id.buttonLogoutSettings);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
