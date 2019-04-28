@@ -35,13 +35,17 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
 import team_10.client.MainActivity;
 import team_10.client.R;
+import team_10.client.constant.PERIOD;
 import team_10.client.constant.TYPE;
 import team_10.client.dashboard.add_edit_account.AddEditAccountPresenter;
 import team_10.client.dashboard.add_edit_account.AddEditAccountView;
@@ -86,7 +90,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         view.findViewById(R.id.buttonLogout).setOnClickListener(this);
         view.findViewById(R.id.button_add_account).setOnClickListener(this);
 
-        List<Entry> entries = new ArrayList<Entry>();
+        List<Entry> entries = new ArrayList<>();
         Random rand = new Random();
         int last = 0;
         for(int i = 0; i < 100; i++) {
@@ -96,7 +100,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 last = last + Math.abs(rand.nextInt() % 6);
                 e.setY(last);
             } else {
-                last = last + rand.nextInt()%6;
+                last = last + rand.nextInt() % 6;
                 e.setY(last);
             }
             entries.add(e);
