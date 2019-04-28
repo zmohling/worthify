@@ -113,14 +113,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         dataset.setDrawCircles(false);
         dataset.setFillAlpha(25);
         dataset.setHighlightEnabled(false);
-        if(entries.get(entries.size()-1).getY() < entries.get(entries.size()-2).getY())
-        {
-            dataset.setColor(Color.parseColor("#FF3232"));
-            dataset.setFillColor(Color.parseColor("#FF3232"));
-        } else if(entries.get(entries.size()-1).getY() >= entries.get(entries.size()-2).getY()) {
-            dataset.setColor(Color.parseColor("#16A085"));
-            dataset.setFillColor(Color.parseColor("#16A085"));
-        }
+        dataset.setColor(Color.parseColor("#16A085"));
+        dataset.setFillColor(Color.parseColor("#16A085"));
         LineData lineData = new LineData(dataset);
         chart.setData(lineData);
         //chart.setAutoScaleMinMaxEnabled(true);
@@ -133,7 +127,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         //chart.setViewPortOffsets(0f, 0f, 0f, 0f);
         chart.getAxisLeft().setTextSize(12);
         chart.getXAxis().setEnabled(false);
+        chart.getAxisLeft().setDrawAxisLine(false);
+        chart.getAxisLeft().setDrawGridLinesBehindData(true);
         chart.getAxisLeft().setTextColor(Color.parseColor("#80FFFFFF"));
+        chart.getAxisLeft().setCenterAxisLabels(true);
         chart.getAxisLeft().setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
 
 
