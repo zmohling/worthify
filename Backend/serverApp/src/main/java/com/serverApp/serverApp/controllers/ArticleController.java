@@ -350,6 +350,9 @@ public class ArticleController {
                                 + "\"votes\":\""
                                 + articles.get(i).getVotes()
                                 + "\","
+                                + "\"vote\":\""
+                                + getUserVote(id, articles.get(i))
+                                + "\","
                                 + "\"description\":\""
                                 + URLEncoder.encode(articles.get(i).getDescription(), "UTF-8")
                                 + "\","
@@ -375,6 +378,9 @@ public class ArticleController {
                                 + "\","
                                 + "\"votes\":\""
                                 + articles.get(i).getVotes()
+                                + "\","
+                                + "\"vote\":\""
+                                + getUserVote(id, articles.get(i))
                                 + "\","
                                 + "\"description\":\""
                                 + URLEncoder.encode(articles.get(i).getDescription(), "UTF-8")
