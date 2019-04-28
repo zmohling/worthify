@@ -159,8 +159,11 @@ public class AccountsController {
             else outerfirst = false;
             boolean first = true;
             System.out.println(apiAccountsList[i].getType());
-            if(!first) returnStr = returnStr + ",";
-            else first = false;
+            if(!first) {
+                returnStr = returnStr + ",";
+            } else {
+                first = false;
+            }
             returnStr = returnStr + "\"" + apiAccountsList[i].getAccountId() + "\"" + ": {";
             if(apiAccountsList[i].getType().equals("Stock")) {
                 Stock stock = new Stock();
@@ -180,7 +183,9 @@ public class AccountsController {
                 }
                 StockRetrieval stockRetrieval = new StockRetrieval();
                 returnStr = returnStr + stockRetrieval.retrieve5yData(stock.getTicker(), stock.getDate());
-                if(!first && !Date.valueOf(LocalDate.now()).equals(stock.getDate())) returnStr = returnStr + ",";
+                if(!first && !Date.valueOf(LocalDate.now()).equals(stock.getDate())
+                        && (LocalDate.now().minusDays(1).getDayOfWeek().getValue() != Calendar.SATURDAY ||
+                        (LocalDate.now().minusDays(1).getDayOfWeek().getValue() != Calendar.SUNDAY))) returnStr = returnStr + ",";
                 stock.setDate(Date.valueOf(LocalDate.now()));
                 stockRepo.editDate(stock.getDate(), stock.getAccountID());
                 returnStr = returnStr + "\"" + Date.valueOf(LocalDate.now()) + "\": \"" + stockRetrieval.retrieveStock(stock.getTicker()) + "\"";
