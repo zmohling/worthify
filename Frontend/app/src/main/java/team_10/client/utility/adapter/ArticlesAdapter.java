@@ -134,10 +134,12 @@ public class ArticlesAdapter extends
                                     if (currentVote.equals("-1"))
                                     {
                                         viewHolder.downVote.setImageResource(R.drawable.downvote_vote);
+                                        viewHolder.upVote.setImageResource(R.drawable.upvote_no_vote);
                                     }
                                     else
                                     {
                                         viewHolder.downVote.setImageResource(R.drawable.downvote_no_vote);
+                                        viewHolder.upVote.setImageResource(R.drawable.upvote_no_vote);
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -176,10 +178,12 @@ public class ArticlesAdapter extends
                                     if (currentVote.equals("1"))
                                     {
                                         viewHolder.upVote.setImageResource(R.drawable.upvote_vote);
+                                        viewHolder.downVote.setImageResource(R.drawable.downvote_no_vote);
                                     }
                                     else
                                     {
                                         viewHolder.upVote.setImageResource(R.drawable.upvote_no_vote);
+                                        viewHolder.downVote.setImageResource(R.drawable.downvote_no_vote);
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
