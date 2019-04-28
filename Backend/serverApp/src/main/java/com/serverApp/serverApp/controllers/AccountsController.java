@@ -169,7 +169,13 @@ public class AccountsController {
                 stock = stockRepo.getStock(stock.getAccountID());
                 if(stock.getDate() == null) {
                     JSONObject obj2 = new JSONObject(accounts.getTransactions());
-                    Date date = Date.valueOf(obj2.get("date").toString());
+                    JSONObject obj3 = new JSONObject(accounts.getTransactions());
+                    Iterator<String> iterator = obj2.keys();
+                    String string = "";
+                    while(iterator.hasNext()) {
+                        string = iterator.next();
+                    }
+                    Date date = Date.valueOf(string);
                     stock.setDate(date);
                 }
                 StockRetrieval stockRetrieval = new StockRetrieval();
