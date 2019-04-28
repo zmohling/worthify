@@ -182,10 +182,9 @@ public class AccountsController {
                     stock.setDate(date);
                 }
                 StockRetrieval stockRetrieval = new StockRetrieval();
-                returnStr = returnStr + stockRetrieval.retrieve5yData(stock.getTicker(), stock.getDate());
-                if(!first && !Date.valueOf(LocalDate.now()).equals(stock.getDate())
-                        && (LocalDate.now().minusDays(1).getDayOfWeek().getValue() != Calendar.SATURDAY ||
-                        (LocalDate.now().minusDays(1).getDayOfWeek().getValue() != Calendar.SUNDAY))) returnStr = returnStr + ",";
+                String returnedFromStockRetrieval = stockRetrieval.retrieve5yData(stock.getTicker(), stock.getDate());
+                returnStr = returnStr + returnedFromStockRetrieval;
+                if(returnedFromStockRetrieval != "") returnStr = returnStr + ",";
                 stock.setDate(Date.valueOf(LocalDate.now()));
                 stockRepo.editDate(stock.getDate(), stock.getAccountID());
                 returnStr = returnStr + "\"" + Date.valueOf(LocalDate.now()) + "\": \"" + stockRetrieval.retrieveStock(stock.getTicker()) + "\"";
