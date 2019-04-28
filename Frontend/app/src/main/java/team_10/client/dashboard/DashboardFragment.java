@@ -2,8 +2,14 @@ package team_10.client.dashboard;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,10 +26,19 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import team_10.client.MainActivity;
 import team_10.client.R;
@@ -70,6 +85,44 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         view.findViewById(R.id.buttonLogout).setOnClickListener(this);
         view.findViewById(R.id.button_add_account).setOnClickListener(this);
+
+        List<Entry> entries = new ArrayList<Entry>();
+        Random rand = new Random();
+        int last = 0;
+        for(int i = 0; i < 100; i++) {
+            Entry e = new Entry();
+            e.setX(i);
+            if(last < 5) {
+                last = last + Math.abs(rand.nextInt() % 6);
+                e.setY(last);
+            } else {
+                last = last + rand.nextInt()%6;
+                e.setY(last);
+            }
+            entries.add(e);
+        }
+        //chart
+        LineChart chart = view.findViewById(R.id.graph);
+        LineDataSet dataset = new LineDataSet(entries, "sample");
+        dataset.setColor(Color.parseColor("#16A085"));
+        dataset.setDrawFilled(true);
+        dataset.setDrawCircles(false);
+        dataset.setFillColor(Color.parseColor("#16A085"));
+        dataset.setFillAlpha(25);
+        dataset.setHighlightEnabled(false);
+        LineData lineData = new LineData(dataset);
+        chart.setData(lineData);
+        chart.setAutoScaleMinMaxEnabled(true);
+        chart.getXAxis().setDrawGridLines(false);
+        chart.getAxisLeft().setDrawGridLines(false);
+        chart.getLegend().setEnabled(false);
+        chart.getDescription().setEnabled(false);
+        chart.setViewPortOffsets(0f, 0f, 0f, 0f);
+        chart.getAxisLeft().setTextSize(12);
+        chart.getXAxis().setEnabled(false);
+        chart.getAxisLeft().setTextColor(Color.parseColor("#80FFFFFF"));
+        chart.getAxisLeft().setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+
 
         // ListView of Accounts with adapter
         lv = view.findViewById(R.id.list);
