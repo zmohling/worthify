@@ -122,23 +122,26 @@ public class AccountsController {
                 "{\"accounts\":[";
         while((iterator).hasNext()) {
             Accounts accounts = iterator.next();
-            rString = rString +
-                    "{\"accountID\":\"" + accounts.getAccountId() + "\"," +
-                    "\"label\":\"" + accounts.getLabel() + "\"," +
-                    "\"transactions\":" + accounts.getTransactions() + "," +
-                    "\"type\":\"" + accounts.getType() + "\"";
-            if(accounts.getType().equals("CertificateOfDeposit")) {
-                rString = rString + ",\"maturityDate\":\"" + certRepo.getCertificateOfDeposite(accounts.getAccountId()).getMaturityDate() + "\"}";
-            } else if(accounts.getType().equals("RealEstate")) {
-                rString = rString + ",\"address\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getAddress() + "\"";
-                rString = rString + ",\"city\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getCity() + "\"";
-                rString = rString + ",\"state\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getState() + "\"}";
-            } else if(accounts.getType().equals("Stock")) {
-                rString = rString + ",\"ticker\":\"" + stockRepo.getStock(accounts.getAccountId()).getTicker() + "\"}";
-            } else {
-                rString = rString + "}";
+            if(accounts.getIsActive() == 1) {
+                rString = rString +
+                        "{\"accountID\":\"" + accounts.getAccountId() + "\"," +
+                        "\"label\":\"" + accounts.getLabel() + "\"," +
+                        "\"isActive\":\"" + accounts.getIsActive() + "\"," +
+                        "\"transactions\":" + accounts.getTransactions() + "," +
+                        "\"type\":\"" + accounts.getType() + "\"";
+                if (accounts.getType().equals("CertificateOfDeposit")) {
+                    rString = rString + ",\"maturityDate\":\"" + certRepo.getCertificateOfDeposite(accounts.getAccountId()).getMaturityDate() + "\"}";
+                } else if (accounts.getType().equals("RealEstate")) {
+                    rString = rString + ",\"address\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getAddress() + "\"";
+                    rString = rString + ",\"city\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getCity() + "\"";
+                    rString = rString + ",\"state\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getState() + "\"}";
+                } else if (accounts.getType().equals("Stock")) {
+                    rString = rString + ",\"ticker\":\"" + stockRepo.getStock(accounts.getAccountId()).getTicker() + "\"}";
+                } else {
+                    rString = rString + "}";
+                }
+                if (iterator.hasNext()) rString = rString + ",";
             }
-            if(iterator.hasNext()) rString = rString + ",";
         }
         rString = rString + "]}";
         return rString;
