@@ -1,7 +1,9 @@
 package team_10.client.dashboard;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -88,7 +90,27 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
         });
 
-        updateDashboardUI();
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                new AlertDialog.Builder(MainActivity.myContext)
+                        .setTitle("Delete Account")
+                        .setMessage("Are you sure you want to delete this account?")
+
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAccountsRepository.disableAccount(accounts.get(position).getID());
+                                updateDashboardUI();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+
+                return true;
+            }
+        });
+
+        DashboardFragment.updateDashboardUI();
 
         return view;
     }
@@ -183,7 +205,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         AddEditAccountView addEditAccountView = new AddEditAccountView();
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, addEditAccountView, "")
+                .add(R.id.container, addEditAccountView, "")
                 .addToBackStack(null)
                 .commit();
 

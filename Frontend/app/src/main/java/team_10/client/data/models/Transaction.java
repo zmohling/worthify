@@ -12,7 +12,7 @@ public abstract class Transaction implements Serializable {
     @UserInputField(
             priority = 0,
             name = "Value",
-            inputType = Number.class
+            inputType = Double.class
     )
     protected Double value;
 
@@ -68,7 +68,7 @@ public abstract class Transaction implements Serializable {
      * Sets the value of the transaction.
      * @param transactionID transaction to set value for
      */
-    public void setValue(int transactionID) { this.transactionID = transactionID; }
+    public void setID(int transactionID) { this.transactionID = transactionID; }
 
     /**
      * Gets the transactions account.

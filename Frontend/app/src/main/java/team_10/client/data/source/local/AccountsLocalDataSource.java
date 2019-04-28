@@ -154,7 +154,13 @@ public class AccountsLocalDataSource implements AccountsDataSource {
 
                     Double value = account.getValue(date);
 
-                    values.put(date, value);
+                    if (values.containsKey(date)) {
+                        Double cachedValue = values.get(date);
+
+                        values.put(date, value + cachedValue);
+                    } else {
+                        values.put(date, value);
+                    }
 
                 }
             }

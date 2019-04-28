@@ -91,7 +91,7 @@ public class Loan extends Account {
         @UserInputField(
                 priority = 2,
                 name = "Interest Rate",
-                inputType = Number.class
+                inputType = Double.class
         )
         Double interestRate;
 

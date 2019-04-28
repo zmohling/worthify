@@ -113,7 +113,7 @@ public class CertificateOfDeposit extends Account {
         @UserInputField(
                 priority = 2,
                 name = "APR",
-                inputType = Number.class
+                inputType = Double.class
         )
         Double annualPercentReturn;
 

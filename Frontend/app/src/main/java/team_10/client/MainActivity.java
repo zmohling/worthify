@@ -17,8 +17,6 @@ import java.io.IOException;
 import java.net.Socket;
 
 import team_10.client.dashboard.DashboardFragment;
-import team_10.client.data.User;
-import team_10.client.data.models.Account;
 import team_10.client.data.source.AccountsRepository;
 import team_10.client.data.source.UserRepository;
 import team_10.client.login_and_registration.LoginActivity;
@@ -98,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         } else {
             mUserRepository = UserRepository.getInstance();
             mAccountsRepository = AccountsRepository.getInstance();
+
+//            mAccountsRepository.deleteAllAccounts();
+//            mUserRepository.removeUserData();
         }
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNav = navigation;

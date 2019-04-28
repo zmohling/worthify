@@ -131,7 +131,8 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
     @Override
     public void deleteTransaction(LocalDate date) {
-
+        mAccountModel.removeTransaction(date);
+        this.initializeTransactionViews();
     }
 
     @Override

@@ -318,9 +318,20 @@ public class AccountsRepository implements AccountsDataSource {
 
     @Override
     public void disableAccount(@NonNull String accountID) {
-//        if (mCachedAccounts.containsKey(accountID)) {
-//            mCachedAccounts.get(accountID);
-//        }
+        Account account = mCachedAccounts.get(accountID);
+        account.setIsActive(0);
+
+        saveAccount(account, new SaveAccountCallback() {
+            @Override
+            public void onAccountSaved() {
+
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+        });
     }
 
     @Override
@@ -338,7 +349,11 @@ public class AccountsRepository implements AccountsDataSource {
     @Override
     public void getValues(@NonNull PERIOD period, GetValuesCallback callback) {
 
-        invalidateValueCache();
+        if (mCachedValues!= null && mCachedValues.size() > 0 && !mCacheIsDirty) {
+            callback.onValuesLoaded(mCachedValues);
+            return;
+        }
+
 
         GetValuesCallback dualCallback = new GetValuesCallback() {
 
@@ -360,8 +375,13 @@ public class AccountsRepository implements AccountsDataSource {
             }
         };
 
-        mAccountsLocalDataSource.getValues(period, dualCallback);
-        mAccountsRemoteDataSource.getValues(period, dualCallback);
+
+        if (mCacheIsDirty) {
+
+            mAccountsRemoteDataSource.getValues(period, dualCallback);
+
+            mAccountsLocalDataSource.getValues(period, dualCallback);
+        }
     }
 
     private void mergeValuesToCache(Map<LocalDate, Double> values) {

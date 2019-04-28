@@ -61,8 +61,9 @@ public abstract class Account implements Serializable {
      * @param d date
      * @return the removed transaction
      */
-    public Transaction removeTransaction(LocalDate d) {
-        return (Transaction) transactions.remove(d);
+    public team_10.client.data.models.Transaction removeTransaction(LocalDate d) {
+        this.transactions.remove(d);
+        return transactions.remove(d);
     }
 
     /**

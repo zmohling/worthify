@@ -93,11 +93,17 @@ public abstract class InputFieldFactory {
                                                 final UserInputField userInputField) throws IllegalAccessException {
         View v = inflater.inflate(R.layout.item_string_input_view, null);
 
-//        if (inputField.type.isInstance(BigDecimal.class)) {
-//
-//        }
 
-        // Title text
+        int inputType = 0;
+
+        if (Integer.class.isAssignableFrom(userInputField.inputType())) {
+            inputType = InputType.TYPE_CLASS_NUMBER;
+
+        } else if (Double.class.isAssignableFrom(userInputField.inputType())) {
+            inputType = InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL;
+        }
+
+            // Title text
         final TextView textView = (TextView) v.findViewById(R.id.item_string_input_view_TITLE);
         textView.setText(userInputField.name() + ":");
         // Hint text
@@ -118,7 +124,12 @@ public abstract class InputFieldFactory {
             public void afterTextChanged(Editable s) {
                 try {
 
-                    field.set(account, Double.parseDouble(s.toString()));
+                    if (Integer.class.isAssignableFrom(userInputField.inputType())) {
+                        field.set(account, Integer.parseInt(s.toString()));
+
+                    } else if (Double.class.isAssignableFrom(userInputField.inputType())) {
+                        field.set(account, Double.parseDouble(s.toString()));
+                    }
 
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();

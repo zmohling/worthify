@@ -25,6 +25,7 @@ import team_10.client.constant.TYPE;
 import team_10.client.constant.URL;
 import team_10.client.data.User;
 import team_10.client.data.models.Account;
+import team_10.client.data.models.Transaction;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.data.source.AccountsRepository;
 import team_10.client.utility.adapter.AbstractAccountAdapter;
@@ -60,6 +61,7 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
     public void getAccounts(@NonNull LoadAccountsCallback callback) {
         List<Account> returnVal = new ArrayList<>();
         String requestBody = null;
+
         try {
             JsonObject userAccountsRequest = new JsonObject();
             userAccountsRequest.addProperty("id", Integer.toString(SharedPreferencesManager.getUser().getID()));
@@ -74,6 +76,8 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
                     @Override
                     public void onResponse(String response) {
                         try {
+
+                            System.out.println(response);
 
                             JSONObject object = new JSONObject(response);
 
@@ -183,8 +187,6 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
         b.setPrettyPrinting();
         Gson g = b.create();
 
-        Map<String, Map<LocalDate, Double>> wrapper = new HashMap<>();
-
         VolleyPostRequest request = new VolleyPostRequest(null, URL.URL_FETCH_ACCOUNTS, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -202,11 +204,47 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
                         Toast.makeText(MainActivity.myContext, "Error: " + message, Toast.LENGTH_SHORT).show();
 
                     } else {
-                        Type mapType = new TypeToken<Map<String, Map<LocalDate, Double>>>() {}.getType();
+                        Type mapType = new TypeToken<Map<String, Map<LocalDate, Double>>>() {
+                        }.getType();
+                        Map<String, Map<LocalDate, Double>> wrapper = g.fromJson(response, mapType);
 
-                        System.out.println("Successfully fetched data from the server:\n" + g.fromJson(response, mapType));
+                        if (wrapper != null)
+                            updateTransactions(wrapper);
+                        else
+                            return;
 
-                        //callback.onValuesLoaded(values);
+                        List<Account> cachedAccounts = new ArrayList<>(
+                                AccountsRepository.getInstance().getCachedAccounts().values());
+
+                        Map<LocalDate, Double> values = new HashMap<>();
+
+                        LocalDate date = LocalDate.now().minusDays(
+                                period.getDaysPerPeriod() * period.getPeriodsOnGraph());
+
+                        while (date.isBefore(LocalDate.now())) {
+                            for (Account account : cachedAccounts) {
+                                if (TYPE.getType(account.getClass()).isValueOnNetwork()) {
+
+                                    Double value = account.getValue(date);
+
+                                    if (values.containsKey(date)) {
+                                        Double cachedValue = values.get(date);
+
+                                        values.put(date, value + cachedValue);
+                                    } else {
+                                        values.put(date, value);
+                                    }
+
+                                }
+                            }
+
+                            date = date.plusDays(period.getDaysPerPeriod());
+                        }
+
+                        System.out.println("Successfully fetched data from the server:\n" + wrapper);
+
+                        callback.onValuesLoaded(values);
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -215,31 +253,42 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
         });
 
         request.execute();
-//
-//        dailyTotalValues.put(LocalDate.now().minusDays(4), General.round(100.055, 2));
-//        dailyTotalValues.put(LocalDate.now().minusDays(3), General.round(105.22255, 2));
-//        dailyTotalValues.put(LocalDate.now().minusDays(2), General.round(120.314, 2));
-//        dailyTotalValues.put(LocalDate.now(), General.round(150.01, 2));
-//
-//        wrapper.put("000006820006", dailyTotalValues);
-//
-//        Map<LocalDate, Double> dailyTotalValues1 = new HashMap<>();
-//
-//        dailyTotalValues1.put(LocalDate.now().minusDays(3), General.round(9505.6666, 2));
-//        dailyTotalValues1.put(LocalDate.now().minusDays(2), General.round(10022, 2));
-//        dailyTotalValues1.put(LocalDate.now().minusDays(1), General.round(11000.99, 2));
-//        dailyTotalValues1.put(LocalDate.now(), General.round(11000.99, 2));
-//
-//        wrapper.put("000006820007", dailyTotalValues1);
-//
-//        Map<LocalDate, Double> dailyTotalValues2 = new HashMap<>();
-//
-//        dailyTotalValues2.put(LocalDate.now(), General.round(21.2001, 2));
-//
-//        wrapper.put("000006820008", dailyTotalValues2);
-//
+    }
 
-//
-//        System.out.println(g.toJson(wrapper));
+    private void updateTransactions(@NonNull Map<String, Map<LocalDate, Double>> values) {
+        final Map<String, Account> cachedAccounts = AccountsRepository.getInstance().getCachedAccounts();
+
+        for (String accountID : values.keySet()) {
+
+            if (!cachedAccounts.containsKey(accountID))
+                return;
+
+            Account account = cachedAccounts.get(accountID);
+
+            for (LocalDate date : values.get(accountID).keySet()) {
+
+                Double value = values.get(accountID).get(date);
+
+                Transaction t = account.getTransaction(date);
+
+                t.setValue(value);
+
+                if (date.isEqual(LocalDate.now()))
+                    continue;
+
+                AccountsRepository.getInstance().saveAccount(account, new SaveAccountCallback() {
+                    @Override
+                    public void onAccountSaved() {
+
+                    }
+
+                    @Override
+                    public void onDataNotAvailable() {
+
+                    }
+                });
+
+            }
+        }
     }
 }
