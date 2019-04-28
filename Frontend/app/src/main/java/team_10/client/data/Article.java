@@ -8,12 +8,17 @@ public class Article {
     private String title;
     private String description;
     private String pictureUrl;
+    private String articleID;
+    private String articleVotes;
+    private String currentVote;
 
-    public Article(String titles, String descriptions, String pictureUrls, String name) {
+    public Article(String titles, String descriptions, String pictureUrls, String name, String articleIDs, String articleVotess) {
         url = name;
         title = titles;
         description = descriptions;
         pictureUrl = pictureUrls;
+        articleID = articleIDs;
+        articleVotes = articleVotess;
     }
 
     /**
@@ -41,6 +46,20 @@ public class Article {
      * @return picture url
      */
     public String getPictureUrl() { return pictureUrl; }
+
+    /**
+     * Gets the article's ID
+     * @return article ID
+     */
+    public String getArticleID() { return articleID; }
+
+    public String getArticleVotes() { return articleVotes; }
+
+    public void setArticleVotes(String newVotes) { articleVotes = newVotes; }
+
+    public String getCurrentVote() { return currentVote; }
+
+    public void setCurrentVote(String newVote) { currentVote = newVote; }
 
     private static int lastContactId = 0;
 }
