@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,6 +16,7 @@ import java.util.List;
 import team_10.client.R;
 import team_10.client.constant.TYPE;
 import team_10.client.data.models.Account;
+import team_10.client.data.source.AccountsRepository;
 
 /**
  * List Adapter for the accounts on the dashboard fragment.
@@ -40,7 +44,6 @@ public class CustomListAdapter extends ArrayAdapter {
         }
 
         Account a = (Account) getItem(position);
-
         if (a != null) {
             String s = a.getClass().getSimpleName();
 
@@ -48,8 +51,31 @@ public class CustomListAdapter extends ArrayAdapter {
             if (t != null) {
                 s = t.toString();
             }
+            TextView label = (TextView) v.findViewById(R.id.account_label);
+            label.setText(a.getLabel());
 
-            TextView tt1 = (TextView) v.findViewById(R.id.account_title);
+            TextView value = (TextView) v.findViewById(R.id.account_value);
+            double todaysValue = 100;                                            //WILL NEED TO CHANGE
+            value.setText("" + todaysValue);
+
+            TextView percent = (TextView) v.findViewById(R.id.account_percent);
+            double yesterdayValue = 110;                                        //WILL NEED TO CHANGE
+            double difference = (todaysValue - yesterdayValue) / yesterdayValue;
+            if (difference < 0)
+            {
+                ImageView image = (ImageView) v.findViewById(R.id.account_percent_image);
+                image.setImageResource(R.drawable.percent_down);
+            }
+            else
+            {
+                ImageView image = (ImageView) v.findViewById(R.id.account_percent_image);
+                image.setImageResource(R.drawable.percent_up);
+            }
+            percent.setText("" + String.format("%.2f", Math.abs(difference)) + "%");
+
+
+
+           /* TextView tt1 = (TextView) v.findViewById(R.id.account_title);
 //            TextView tt2 = (TextView) v.findViewById(R.id.categoryId);
 //            TextView tt3 = (TextView) v.findViewById(R.id.description);
 
@@ -67,6 +93,7 @@ public class CustomListAdapter extends ArrayAdapter {
 //            if (tt3 != null) {
 //                tt3.setText(p.getDescription());
 //            }
+            */
         }
 
         return v;

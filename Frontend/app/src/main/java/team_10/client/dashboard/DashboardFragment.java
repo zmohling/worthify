@@ -2,14 +2,9 @@ package team_10.client.dashboard;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Paint;
-import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,7 +21,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -35,17 +29,13 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
 import team_10.client.MainActivity;
 import team_10.client.R;
-import team_10.client.constant.PERIOD;
 import team_10.client.constant.TYPE;
 import team_10.client.dashboard.add_edit_account.AddEditAccountPresenter;
 import team_10.client.dashboard.add_edit_account.AddEditAccountView;
@@ -252,6 +242,13 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         AccountsRepository.getInstance().getAccounts(new AccountsDataSource.LoadAccountsCallback() {
             @Override
             public void onAccountsLoaded(List<Account> accounts) {
+                for (int i = 0; i < accounts.size(); i++)
+                {
+                    if (accounts.get(i).isActive() == 0)
+                    {
+                        accounts.remove(i);
+                    }
+                }
                 customAdapter = new CustomListAdapter(MainActivity.myContext, R.layout.item_account_list_item, accounts);
                 lv.setAdapter(customAdapter);
 
