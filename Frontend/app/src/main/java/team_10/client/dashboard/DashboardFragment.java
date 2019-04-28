@@ -109,15 +109,22 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         //chart
         LineChart chart = view.findViewById(R.id.graph);
         LineDataSet dataset = new LineDataSet(entries, "sample");
-        dataset.setColor(Color.parseColor("#16A085"));
         dataset.setDrawFilled(true);
         dataset.setDrawCircles(false);
-        dataset.setFillColor(Color.parseColor("#16A085"));
         dataset.setFillAlpha(25);
         dataset.setHighlightEnabled(false);
+        if(entries.get(entries.size()-1).getY() < entries.get(entries.size()-2).getY())
+        {
+            dataset.setColor(Color.parseColor("#FF3232"));
+            dataset.setFillColor(Color.parseColor("#FF3232"));
+        } else if(entries.get(entries.size()-1).getY() >= entries.get(entries.size()-2).getY()) {
+            dataset.setColor(Color.parseColor("#16A085"));
+            dataset.setFillColor(Color.parseColor("#16A085"));
+        }
         LineData lineData = new LineData(dataset);
         chart.setData(lineData);
-        chart.setAutoScaleMinMaxEnabled(true);
+        //chart.setAutoScaleMinMaxEnabled(true);
+        chart.setDragYEnabled(false);
         chart.getXAxis().setDrawGridLines(false);
         chart.getAxisRight().setEnabled(false);
         chart.getLegend().setEnabled(false);
