@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
 
     public static Context myContext;
     public static Socket socket;
+    public String currentFragment;
+    public int firstLoad;
 
     public static AccountsRepository mAccountsRepository;
     public static UserRepository mUserRepository;
@@ -55,15 +57,18 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
             switch (item.getItemId()) {
                 case R.id.navigation_news:
                     f = new NewsFragment();
-                    worked = loadFragment(f, "other");
+                    worked = loadFragment(f, "news");
+                    currentFragment = "news";
                     break;
                 case R.id.navigation_dashboard:
                     f = new DashboardFragment();
                     worked = loadFragment(f, "home");
+                    currentFragment = "home";
                     break;
                 case R.id.navigation_settings:
                     f = new SettingsFragment();
-                    worked = loadFragment(f, "other");
+                    worked = loadFragment(f, "settings");
+                    currentFragment = "settings";
             }
 
             return worked;
@@ -102,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNav = navigation;
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        firstLoad = 0;
         navigation.setSelectedItemId(R.id.navigation_dashboard);
         //loadFragment(new DashboardFragment(), "home");
     }
@@ -123,33 +129,49 @@ public class MainActivity extends AppCompatActivity implements DashboardFragment
     public boolean loadFragment(Fragment fragment, String name) {
         //switching fragment
         //fragment.getId();
-        if (fragment != null) {
+        if (fragment != null && name != currentFragment) {
             final FragmentManager fragmentManager = getSupportFragmentManager();
+            if (name.equals("home") && firstLoad == 1)
+            {
+                fragmentManager.popBackStack("settings", POP_BACK_STACK_INCLUSIVE);
+                fragmentManager.popBackStack("news", POP_BACK_STACK_INCLUSIVE);
+                bottomNav.getMenu().getItem(1).setChecked(true);
+                return true;
+            }
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             // 1. Know how many fragments there are in the stack
             final int count = fragmentManager.getBackStackEntryCount();
             // 2. If the fragment is **not** "home type", save it to the stack
-            if (name.equals("other") && count == 0) {
+            if ((name.equals("news") || name.equals("settings")) && count == 0) {
                 fragmentTransaction.addToBackStack(name);
             }
             // Commit !
             fragmentTransaction.commit();
             // 3. After the commit, if the fragment is not an "home type" the back stack is changed, triggering the
             // OnBackStackChanged callback
-            fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-                @Override
-                public void onBackStackChanged() {
-                    // If the stack decreases it means I clicked the back button
-                    if (fragmentManager.getBackStackEntryCount() <= count) {
-                        // pop all the fragment and remove the listener
-                        fragmentManager.popBackStack("other", POP_BACK_STACK_INCLUSIVE);
-                        fragmentManager.removeOnBackStackChangedListener(this);
-                        // set the home button selected
-                        bottomNav.getMenu().getItem(1).setChecked(true);
+            if (name.equals("home")) {
+                firstLoad = 1;
+                fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+                    @Override
+                    public void onBackStackChanged() {
+                        // If the stack decreases it means I clicked the back button
+                        if (fragmentManager.getBackStackEntryCount() <= count) {
+                            // pop all the fragment and remove the listener
+                            fragmentManager.popBackStack("settings", POP_BACK_STACK_INCLUSIVE);
+                            fragmentManager.popBackStack("news", POP_BACK_STACK_INCLUSIVE);
+                            currentFragment = "home";
+                            //fragmentManager.removeOnBackStackChangedListener(this);
+                            // set the home button selected
+                            bottomNav.getMenu().getItem(1).setChecked(true);
+                        }
                     }
-                }
-            });
+                });
+            }
+            return true;
+        }
+        if (fragment != null)
+        {
             return true;
         }
         return false;
