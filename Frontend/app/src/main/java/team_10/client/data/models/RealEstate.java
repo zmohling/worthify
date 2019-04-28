@@ -1,34 +1,35 @@
 package team_10.client.data.models;
 
-import android.content.Context;
-import android.view.View;
-
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.time.LocalDate;
-import java.util.Vector;
 
-import team_10.client.utility.io.VolleySingleton;
-
-import static team_10.client.constant.URL.ROOT_URL;
+import team_10.client.data.UserInputField;
 
 /**
  * Real Estate account type.
  */
 public class RealEstate extends Account {
+    @UserInputField(
+            priority = 1,
+            name = "Address",
+            inputType = String.class
+    )
     public String address;
-    public String city;
-    public String state;
-    public Context context;
 
-    public RealEstate(Context context, String address, String city, String state) {
-        this.context = context;
+    @UserInputField(
+            priority = 2,
+            name = "City",
+            inputType = String.class
+    )
+    public String city;
+
+    @UserInputField(
+            priority = 3,
+            name = "State",
+            inputType = String.class
+    )
+    public String state;
+
+    public RealEstate(String address, String city, String state) {
         this.address = address;
         this.city = city;
         this.state = state;
@@ -56,63 +57,66 @@ public class RealEstate extends Account {
      * @return double value
      */
     public double getValue(LocalDate d) {
-        Vector<LocalDate> transaction_dates = new Vector<LocalDate>(transactions.keySet());
+//        Vector<LocalDate> transaction_dates = new Vector<LocalDate>(transactions.keySet());
+//
+//        double total = 0;
+//        final double[] stockValue = new double[1];
+//
+//        if (transaction_dates.size() <= 0) {
+//            throw new IllegalStateException("No transactions for this account.");
+//        } else {
+//            for (int i = 0; i < transaction_dates.size(); i++) {
+//
+//                LocalDate fromDate = transaction_dates.get(i);
+//                LocalDate toDate;
+//
+//                if ((i + 1) >= transaction_dates.size() || transaction_dates.get(i + 1).isAfter(d)) {
+//                    toDate = d;
+//                    i = Integer.MAX_VALUE - 1; // Stop calculating if date d is before last transaction
+//                } else {
+//                    toDate = transaction_dates.get(i + 1);
+//                }
+//                String urlStock = ROOT_URL + address + city + state;
+//                StringRequest stringRequest = new StringRequest(Request.Method.GET, urlStock,
+//                        new Response.Listener<String>() {
+//                            @Override
+//                            public void onResponse(String response) {
+//                                try {
+//                                    JSONObject returned = new JSONObject(response);
+//                                    try {
+//                                        //JSONObject userJson = returned.getJSONObject("value");
+//                                        stockValue[0] = returned.getDouble("value");
+//
+//                                    } catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        },
+//                        new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//                                System.out.println(error.getMessage());
+//                            }
+//                        });
+//                VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+//            }
+//        }
 
-        double total = 0;
-        final double[] stockValue = new double[1];
+        return 0; // round to nearest cent
+    }
 
-        if (transaction_dates.size() <= 0) {
-            throw new IllegalStateException("No transactions for this account.");
+    public team_10.client.data.models.Transaction getTransaction(LocalDate date) {
+        if (date != null && transactions.containsKey(date)) {
+            return transactions.get(date);
         } else {
-            for (int i = 0; i < transaction_dates.size(); i++) {
-
-                LocalDate fromDate = transaction_dates.get(i);
-                LocalDate toDate;
-
-                if ((i + 1) >= transaction_dates.size() || transaction_dates.get(i + 1).isAfter(d)) {
-                    toDate = d;
-                    i = Integer.MAX_VALUE - 1; // Stop calculating if date d is before last transaction
-                } else {
-                    toDate = transaction_dates.get(i + 1);
-                }
-                String urlStock = ROOT_URL + address + city + state;
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, urlStock,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject returned = new JSONObject(response);
-                                    try {
-                                        //JSONObject userJson = returned.getJSONObject("value");
-                                        stockValue[0] = returned.getDouble("value");
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                System.out.println(error.getMessage());
-                            }
-                        });
-                VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
-            }
+            return new Transaction();
         }
-
-        return stockValue[0]; // round to nearest cent
     }
 
-    @Override
-    public View getView(Context context) {
-        return null;
-    }
 
-    public team_10.client.data.models.Transaction getTransaction() { return new Transaction(); }
 
     private class Transaction extends team_10.client.data.models.Transaction {
 

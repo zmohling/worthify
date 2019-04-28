@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.widget.LinearLayout;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -121,12 +122,15 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
     }
 
     @Override
-    public void editTransaction() {
+    public void editTransaction(LocalDate date) {
+        AddEditTransactionContract.View view = mAddEditAccountView.showAddEditTransactionView();
 
+        AddEditTransactionContract.Presenter presenter = new AddEditTransactionPresenter(date,
+                mAccountModel, mAccountsRepository, view, this, true);
     }
 
     @Override
-    public void deleteTransaction() {
+    public void deleteTransaction(LocalDate date) {
 
     }
 
@@ -209,11 +213,11 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
     public void initializeTransactionViews() {
         TransactionsAdapter adapter = new TransactionsAdapter(
-                getTransactions(mAccountModel)
+                getTransactions(mAccountModel), this
         );
 
         TransactionsAdapter recurringAdapter = new TransactionsAdapter(
-                getRecurringTransactions(mAccountModel)
+                getRecurringTransactions(mAccountModel), this
         );
 
         mAddEditAccountView.setTransactionRecyclerAdapter(adapter);

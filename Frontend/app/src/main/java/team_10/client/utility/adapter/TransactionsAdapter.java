@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import team_10.client.R;
+import team_10.client.dashboard.add_edit_account.AddEditAccountContract;
 import team_10.client.data.models.Transaction;
 
 /**
@@ -20,6 +21,8 @@ public class TransactionsAdapter extends
         RecyclerView.Adapter<TransactionsAdapter.ViewHolder> {
 
     private Context parentContext;
+
+    private final AddEditAccountContract.Presenter mAddEditAccountPresenter;
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -49,8 +52,9 @@ public class TransactionsAdapter extends
     private List<Transaction> mArticles;
 
     // Pass in the contact array into the constructor
-    public TransactionsAdapter(List<Transaction> articles) {
-        mArticles = articles;
+    public TransactionsAdapter(List<Transaction> articles, AddEditAccountContract.Presenter addEditAccountPresenter) {
+        this.mArticles = articles;
+        this.mAddEditAccountPresenter = addEditAccountPresenter;
     }
 
     @Override
@@ -77,6 +81,13 @@ public class TransactionsAdapter extends
         // Set item views based on your views and data model
         viewHolder.titleTextView.setText(article.getAccount().getLabel());
         viewHolder.descriptionTextView.setText(article.getValue() + "");
+
+        viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAddEditAccountPresenter.editTransaction(article.getDate());
+            }
+        });
 
        /* viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override

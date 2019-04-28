@@ -54,7 +54,7 @@ public class CustomListAdapter extends ArrayAdapter {
 //            TextView tt3 = (TextView) v.findViewById(R.id.description);
 
             if (tt1 != null) {
-                double value = a.getValue(LocalDate.now().plusMonths(18));
+                double value = a.getValue(LocalDate.now());
                 tt1.setText("Label: " + a.getLabel() +
                         ", Type: " + s + ", Today's Value: " +
                         value);

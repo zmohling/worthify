@@ -1,18 +1,9 @@
 package team_10.client.data.models;
 
-import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Vector;
 
-import team_10.client.R;
 import team_10.client.data.UserInputField;
 import team_10.client.utility.General;
 
@@ -74,7 +65,7 @@ public class Loan extends Account {
 
                 //A = P(1 + r/n)^nt -> Daily Compound Interest
                 double principle = total + ((Transaction) transactions.get(fromDate)).getValue();
-                double rate = ((Transaction) transactions.get(fromDate)).getInterestRate();
+                double rate = ((Transaction) transactions.get(fromDate)).getInterestRate() / 100.0;
                 long n = fromDate.until(toDate, ChronoUnit.DAYS); //number of compounding periods (DAYS) per unit t
                 double t = n / (double) fromDate.lengthOfYear();
 
@@ -85,36 +76,13 @@ public class Loan extends Account {
         return General.round(total, 2); // round to nearest cent
     }
 
-    public View getView(Context context) {
-        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = vi.inflate(R.layout.item_string_input_view, null);
-
-        // Fill in the details
-        TextView textView = (TextView) v.findViewById(R.id.item_string_input_view_TITLE);
-        textView.setText("Label:");
-
-        EditText editText = (EditText) v.findViewById(R.id.item_string_input_view_INPUT);
-        editText.setHint((label == null) ? "" : label);
-
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                label = s.toString();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-        return v;
+    public team_10.client.data.models.Transaction getTransaction(LocalDate date) {
+        if (date != null && transactions.containsKey(date)) {
+            return transactions.get(date);
+        } else {
+            return new Transaction();
+        }
     }
-
-    public team_10.client.data.models.Transaction getTransaction() { return new Transaction(); }
 
     /**
      * Loan specific Transaction object.

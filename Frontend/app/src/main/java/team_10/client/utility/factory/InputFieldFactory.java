@@ -103,7 +103,7 @@ public abstract class InputFieldFactory {
         // Hint text
         final EditText editText = (EditText) v.findViewById(R.id.item_string_input_view_INPUT);
         editText.setHint((field.get(account) == null) ? "Click to Edit" : field.get(account).toString());
-        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override

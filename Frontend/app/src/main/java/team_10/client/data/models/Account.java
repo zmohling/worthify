@@ -1,8 +1,5 @@
 package team_10.client.data.models;
 
-import android.content.Context;
-import android.view.View;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.TreeMap;
@@ -120,7 +117,7 @@ public abstract class Account implements Serializable {
         this.isActive = isActive;
     }
 
-    public abstract team_10.client.data.models.Transaction getTransaction();
+    public abstract team_10.client.data.models.Transaction getTransaction(LocalDate date);
 
     /**
      * Gets the value of the account.
@@ -128,14 +125,6 @@ public abstract class Account implements Serializable {
      * @return double value
      */
     public abstract double getValue(LocalDate d);
-
-    /**
-     * Returns the view the account was made in.
-     * @param context current context
-     * @return View the account was made in
-     */
-    public abstract View getView(Context context);
-
 
     private class Transaction extends team_10.client.data.models.Transaction {
 

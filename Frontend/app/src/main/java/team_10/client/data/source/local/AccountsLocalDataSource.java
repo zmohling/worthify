@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -138,7 +139,29 @@ public class AccountsLocalDataSource implements AccountsDataSource {
     }
 
     @Override
-    public Map<LocalDate, Double> getValues(@NonNull PERIOD period) {
-        return null;
+    public void getValues(@NonNull PERIOD period, GetValuesCallback callback) {
+        List<Account> cachedAccounts = new ArrayList<>(
+                AccountsRepository.getInstance().getCachedAccounts().values());
+
+        Map<LocalDate, Double> values = new HashMap<>();
+
+        LocalDate date = LocalDate.now().minusDays(
+                period.getDaysPerPeriod() * period.getPeriodsOnGraph());
+
+        while (date.isBefore(LocalDate.now())) {
+            for (Account account : cachedAccounts) {
+                if (!(TYPE.getType(account.getClass()).isValueOnNetwork())) {
+
+                    Double value = account.getValue(date);
+
+                    values.put(date, value);
+
+                }
+            }
+
+            date = date.plusDays(period.getDaysPerPeriod());
+        }
+
+        callback.onValuesLoaded(values);
     }
 }

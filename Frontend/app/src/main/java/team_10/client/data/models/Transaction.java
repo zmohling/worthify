@@ -44,7 +44,7 @@ public abstract class Transaction implements Serializable {
      * Gets value of the transaction.
      * @return value
      */
-    public double getValue() {
+    public Double getValue() {
         return this.value;
     }
 
@@ -52,7 +52,7 @@ public abstract class Transaction implements Serializable {
      * Sets value of the transaction.
      * @param value value
      */
-    public void setValue(double value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 

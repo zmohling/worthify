@@ -1,15 +1,17 @@
 package team_10.client.data.models;
 
-import android.content.Context;
-import android.view.View;
-
 import java.time.LocalDate;
-import java.util.Vector;
+
+import team_10.client.data.UserInputField;
 
 public class Stock extends Account {
+
+    @UserInputField(
+            priority = 1,
+            name = "Ticker",
+            inputType = String.class
+    )
     public String ticker;
-    public int amount;
-    public double valueOfStock;
 
     public Stock() {
     }
@@ -22,31 +24,20 @@ public class Stock extends Account {
         this.ticker = symbol;
     }
 
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
     public void addTransaction(LocalDate d, double value, int amount) {
         addTransaction(d, amount, 0, value, transactions.size());
     }
 
     public void addTransaction(LocalDate d, int amount, int recurring, double value, int transactionId) {
-        this.amount = this.amount + amount;
-        if (this.amount < 0) {
-            this.amount = 0;
-        }
-        Transaction t = new Transaction(value, transactionId, recurring, d);
+
+        Transaction t = new Transaction(value, amount, transactionId, recurring, d);
         t.setAccount(this);
         transactions.put(d, t);
     }
 
     public double getValue(LocalDate d) {
-        Vector<LocalDate> transaction_dates = new Vector<LocalDate>(transactions.keySet());
-        valueOfStock = 0;
+//        Vector<LocalDate> transaction_dates = new Vector<LocalDate>(transactions.keySet());
+//        valueOfStock = 0;
 //
 //        if (transaction_dates.size() <= 0) {
 //            throw new IllegalStateException("No transactions for this account.");
@@ -227,38 +218,35 @@ public class Stock extends Account {
 //                //waitForResponse(); */
 //            }
 //        }
-        return valueOfStock; // round to nearest cent
+        return 0; // round to nearest cent
     }
 
-    @Override
-    public View getView(Context context) {
-        return null;
-    }
 
-    private boolean waitForResponse() {
-        for (int i = 0; i < 10; i++) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                break;
-            }
-            if (valueOfStock != 0) {
-                return true;
-            }
+    public team_10.client.data.models.Transaction getTransaction(LocalDate date) {
+        if (date != null && transactions.containsKey(date)) {
+            return transactions.get(date);
+        } else {
+            return new Transaction();
         }
-        return false;
     }
 
-    public team_10.client.data.models.Transaction getTransaction() { return new Transaction(); }
+
 
 
     private class Transaction extends team_10.client.data.models.Transaction {
 
+        @UserInputField(
+                priority = 0,
+                name = "Amount",
+                inputType = Number.class
+        )
+        public int amount;
+
         Transaction() { }
 
-        Transaction(double value, int transactionID, int recurring, LocalDate date) {
+        Transaction(double value, int amount, int transactionID, int recurring, LocalDate date) {
             this.value = value;
+            this.amount = amount;
             this.transactionID = transactionID;
             this.recurring = recurring;
             this.date = date;
