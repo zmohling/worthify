@@ -14,6 +14,7 @@ import java.util.List;
 
 import team_10.client.MainActivity;
 import team_10.client.constant.URL;
+import team_10.client.data.User;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.utility.io.AppExecutors;
@@ -72,10 +73,9 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
                                 callback.onAccountsLoaded(accounts);
 
                             } else if (object.has("error") &&
-                                    object.getBoolean("error")) {
+                                    object.getBoolean("error") && User.getToken() != "") {
 
                                 String message = object.getString("message");
-
                                 Toast.makeText(MainActivity.myContext, "Error: " + message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {

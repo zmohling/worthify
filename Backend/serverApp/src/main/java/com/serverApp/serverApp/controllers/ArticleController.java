@@ -34,12 +34,13 @@ import java.util.List;
 @RestController
 public class ArticleController {
 
-    private ArrayList<String> keywords = new ArrayList<> (Arrays.asList("real estate", "interest rates", "student loans", "saving", "savings account", "CD", "CD rates"));
+    private ArrayList<String> keywords = new ArrayList<> (Arrays.asList("investment", "business", "trading", "real estate", "interest rates", "student loans", "saving", "savings account", "CD", "CD rates"));
     private String[] loanKeywords = {"interest rates", "student loans"};
     private String[] savingsAccountKeywords = {"saving", "savings account"};
     private String[] certificateOfDepositKeywords = {"CD", "CD rates"};
     private String[] realEstateKeywords = {"real estate"};
     private String[] StockKeyWords;
+    private String[] noUserKeyWords = {"investment", "business", "trading"};
 
     /**
      * @Autowired repository to ArticleRepository
@@ -276,6 +277,9 @@ public class ArticleController {
         Accounts[] accounts = accountRepo.getAccountsById(id);
         //System.out.println("Number of accounts: " + accounts.length);
         ArrayList<String> keywords = new ArrayList<>();
+        if(id == -1) {
+            keywords.addAll(Arrays.asList(noUserKeyWords));
+        }
         String[] tickerList = stockRepo.getTickers();
         ArrayList<String> tickers = new ArrayList<>((Arrays.asList(tickerList)));
         boolean loansRetrieved = false, savingsAccountsRetrieved = false, CDsRetrieved = false, realEstateRetrieved = false;
