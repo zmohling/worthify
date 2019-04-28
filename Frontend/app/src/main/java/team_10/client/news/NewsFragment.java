@@ -100,7 +100,7 @@ public class NewsFragment extends Fragment {
                             for (i = 0; i < numArticles; i++) {
                                 try {
                                     JSONObject userJson = returned.getJSONObject("article"+ i);
-                                    articles.add(new Article(URLDecoder.decode(userJson.getString("title"), "UTF-8"), URLDecoder.decode(userJson.getString("description"), "UTF-8"), userJson.getString("pictureUrl"), userJson.getString("url")));
+                                    articles.add(new Article(URLDecoder.decode(userJson.getString("title"), "UTF-8"), URLDecoder.decode(userJson.getString("description"), "UTF-8"), userJson.getString("pictureUrl"), userJson.getString("url"), userJson.getString("id"), userJson.getString("votes")));
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
