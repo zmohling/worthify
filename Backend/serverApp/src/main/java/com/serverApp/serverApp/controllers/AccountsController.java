@@ -126,7 +126,7 @@ public class AccountsController {
                 rString = rString +
                         "{\"accountID\":\"" + accounts.getAccountId() + "\"," +
                         "\"label\":\"" + accounts.getLabel() + "\"," +
-                        "\"isActive\":\"" + accounts.getIsActive() + "\"," +
+                        "\"isActive\":" + accounts.getIsActive() + "," +
                         "\"transactions\":" + accounts.getTransactions() + "," +
                         "\"type\":\"" + accounts.getType() + "\"";
                 if (accounts.getType().equals("CertificateOfDeposit")) {
