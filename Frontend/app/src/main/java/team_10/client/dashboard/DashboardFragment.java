@@ -20,6 +20,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +30,7 @@ import team_10.client.R;
 import team_10.client.constant.TYPE;
 import team_10.client.dashboard.add_edit_account.AddEditAccountPresenter;
 import team_10.client.dashboard.add_edit_account.AddEditAccountView;
+import team_10.client.data.User;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.data.source.AccountsRepository;
@@ -113,9 +115,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 break;
             case R.id.button_add_account:
 
-                startAccountPickerPopup();
+                if(User.getToken() != "") {
+                    startAccountPickerPopup();
+                    // TODO: dialog to warn user about adding accounts w/o internet connection
+                } else {
+                    Toast.makeText(MainActivity.myContext, "You must be a registered user to add an account.", Toast.LENGTH_SHORT).show();
+                }
+                //startAddEditAccounts(null, Loan.class);
 
-                // TODO: dialog to warn user about adding accounts w/o internet connection
 
                 break;
         }
