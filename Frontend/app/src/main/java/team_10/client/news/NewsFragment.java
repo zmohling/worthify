@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 
 import team_10.client.R;
@@ -112,10 +113,17 @@ public class NewsFragment extends Fragment {
                             Comparator<Article> articleComparator = new Comparator<Article>() {
                                 @Override
                                 public int compare(Article o1, Article o2) {
-                                    return Integer.parseInt(o1.getArticleVotes()) - Integer.parseInt(o2.getArticleVotes());
+                                    int value;
+                                    int o1val;
+                                    int o2val;
+                                    o1val = Integer.parseInt(o1.getArticleVotes());
+                                    o2val = Integer.parseInt(o2.getArticleVotes());
+                                    value = o1val - o2val;
+                                    return value;
                                 }
                             };
                             articles.sort(articleComparator);
+                            Collections.reverse(articles);
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
