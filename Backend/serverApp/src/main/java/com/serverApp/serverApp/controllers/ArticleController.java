@@ -5,6 +5,7 @@ import com.serverApp.serverApp.other.ArticleRetrieval;
 import com.serverApp.serverApp.repositories.AccountsRepository;
 import com.serverApp.serverApp.repositories.ArticleRepository;
 import com.serverApp.serverApp.repositories.StockRepository;
+import com.serverApp.serverApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +51,9 @@ public class ArticleController {
 
     @Autowired
     StockRepository stockRepo;
+
+    @Autowired
+    UserRepository userRepo;
 
     /**
      * @Autowired repository to AccountsRepository
@@ -326,6 +330,9 @@ public class ArticleController {
         for (int i = 0; i < keywords.size(); i++) {
             articles.addAll(Arrays.asList(articleRepo.getAllArticlesWithKeyword(keywords.get(i))));
         }
+        articles.addAll(Arrays.asList(articleRepo.getAllPopularArticles()));
+
+        articles = removeDuplicates(articles);
 
         String rString = "{";
         if (articles.size() > 0) {
@@ -419,6 +426,9 @@ public class ArticleController {
      */
     @RequestMapping("/article/upvote/{userId}/{articleId}")
     public String upvoteArticle(@PathVariable long userId, @PathVariable long articleId){
+        if(userRepo.checkUserInDb(userId) != 1){
+            return "{\"error\":\"user \'" + userId +"\' does not exist\"}";
+        }
         if(articleRepo.getNumArticles(articleId) == 1){
             Article article = articleRepo.getOne(articleId);
             int vote = getUserVote(userId, article);
@@ -473,6 +483,9 @@ public class ArticleController {
      */
     @RequestMapping("/article/downvote/{userId}/{articleId}")
     public String downvoteArticle(@PathVariable long userId, @PathVariable long articleId){
+        if(userRepo.checkUserInDb(userId) != 1){
+            return "{\"error\":\"user \'" + userId +"\' does not exist\"}";
+        }
         if(articleRepo.getNumArticles(articleId) == 1){
             Article article = articleRepo.getOne(articleId);
 
@@ -559,4 +572,21 @@ public class ArticleController {
         return -1;
     }
 
+    /**
+     * removes any duplicate articles from an arraylist of articles
+     * @param articles is the list of articles to remove from
+     */
+    public ArrayList<Article> removeDuplicates(ArrayList<Article> articles){
+        ArrayList<Long> ids = new ArrayList<Long>();
+
+        ArrayList<Article> returnList = new ArrayList<Article>();
+
+        for(int i = 0; i < articles.size(); i ++){
+            if(!ids.contains(articles.get(i).getId())){
+                ids.add(articles.get(i).getId());
+                returnList.add(articles.get(i));
+            }
+        }
+        return returnList;
+    }
 }
