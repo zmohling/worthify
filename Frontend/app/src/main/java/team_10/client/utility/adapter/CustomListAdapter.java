@@ -8,15 +8,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.time.LocalDate;
 import java.util.List;
 
 import team_10.client.R;
 import team_10.client.constant.TYPE;
 import team_10.client.data.models.Account;
-import team_10.client.data.source.AccountsRepository;
 
 /**
  * List Adapter for the accounts on the dashboard fragment.
@@ -80,7 +76,7 @@ public class CustomListAdapter extends ArrayAdapter {
 //            TextView tt3 = (TextView) v.findViewById(R.id.description);
 
             if (tt1 != null) {
-                double value = a.getValue(LocalDate.now().plusMonths(18));
+                double value = a.getValue(LocalDate.now());
                 tt1.setText("Label: " + a.getLabel() +
                         ", Type: " + s + ", Today's Value: " +
                         value);

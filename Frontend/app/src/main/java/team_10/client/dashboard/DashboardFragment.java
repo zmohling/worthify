@@ -1,7 +1,9 @@
 package team_10.client.dashboard;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +25,10 @@ import android.widget.NumberPicker;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.time.LocalDate;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -32,11 +38,13 @@ import com.github.mikephil.charting.renderer.LineChartRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
 import team_10.client.MainActivity;
 import team_10.client.R;
+import team_10.client.constant.PERIOD;
 import team_10.client.constant.TYPE;
 import team_10.client.dashboard.add_edit_account.AddEditAccountPresenter;
 import team_10.client.dashboard.add_edit_account.AddEditAccountView;
@@ -45,6 +53,7 @@ import team_10.client.data.models.Account;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.data.source.AccountsRepository;
 import team_10.client.data.source.UserRepository;
+import team_10.client.utility.adapter.AbstractAccountAdapter;
 import team_10.client.utility.adapter.CustomListAdapter;
 
 /**
@@ -96,6 +105,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
             entries.add(e);
         }
+
         //chart
         LineChart chart = view.findViewById(R.id.graph);
         LineDataSet dataset = new LineDataSet(entries, "sample");
@@ -134,7 +144,27 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
         });
 
-        updateDashboardUI();
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                new AlertDialog.Builder(MainActivity.myContext)
+                        .setTitle("Delete Account")
+                        .setMessage("Are you sure you want to delete this account?")
+
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAccountsRepository.disableAccount(accounts.get(position).getID());
+                                updateDashboardUI();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+
+                return true;
+            }
+        });
+
+        DashboardFragment.updateDashboardUI();
 
         return view;
     }
@@ -168,7 +198,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 break;
             case R.id.button_add_account:
 
-                if(User.getToken() != "") {
+                if (User.getToken() != "") {
                     startAccountPickerPopup();
                     // TODO: dialog to warn user about adding accounts w/o internet connection
                 } else {
@@ -229,7 +259,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         AddEditAccountView addEditAccountView = new AddEditAccountView();
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, addEditAccountView, "")
+                .add(R.id.container, addEditAccountView, "")
                 .addToBackStack(null)
                 .commit();
 
@@ -248,6 +278,27 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         AccountsRepository.getInstance().getAccounts(new AccountsDataSource.LoadAccountsCallback() {
             @Override
             public void onAccountsLoaded(List<Account> accounts) {
+
+                DashboardFragment.accounts = accounts;
+
+                AccountsRepository.getInstance().getValues(PERIOD.DAY, new AccountsDataSource.GetValuesCallback() {
+                    @Override
+                    public void onValuesLoaded(Map<LocalDate, Double> values) {
+
+                        GsonBuilder b = new GsonBuilder();
+                        b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
+                        b.setPrettyPrinting();
+                        Gson g = b.create();
+
+                        System.out.println(g.toJson(values));
+                    }
+
+                    @Override
+                    public void onDataNotAvailable() {
+
+                    }
+                });
+
                 for (int i = 0; i < accounts.size(); i++)
                 {
                     if (accounts.get(i).isActive() == 0)
@@ -255,10 +306,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         accounts.remove(i);
                     }
                 }
+
                 customAdapter = new CustomListAdapter(MainActivity.myContext, R.layout.item_account_list_item, accounts);
                 lv.setAdapter(customAdapter);
-
-                DashboardFragment.accounts = accounts;
 
                 customAdapter.notifyDataSetChanged();
                 setListViewHeightBasedOnChildren(lv);
@@ -269,10 +319,11 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
             }
         });
+
     }
 
     /**
-     *     Update ListView height equal to total height of child views
+     * Update ListView height equal to total height of child views
      */
     private static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();

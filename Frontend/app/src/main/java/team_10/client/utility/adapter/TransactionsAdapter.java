@@ -1,6 +1,8 @@
 package team_10.client.utility.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import team_10.client.MainActivity;
 import team_10.client.R;
+import team_10.client.dashboard.add_edit_account.AddEditAccountPresenter;
 import team_10.client.data.models.Transaction;
 
 /**
@@ -20,6 +24,8 @@ public class TransactionsAdapter extends
         RecyclerView.Adapter<TransactionsAdapter.ViewHolder> {
 
     private Context parentContext;
+
+    private final AddEditAccountPresenter mAddEditAccountPresenter;
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -49,8 +55,9 @@ public class TransactionsAdapter extends
     private List<Transaction> mArticles;
 
     // Pass in the contact array into the constructor
-    public TransactionsAdapter(List<Transaction> articles) {
-        mArticles = articles;
+    public TransactionsAdapter(List<Transaction> articles, AddEditAccountPresenter addEditAccountPresenter) {
+        this.mArticles = articles;
+        this.mAddEditAccountPresenter = addEditAccountPresenter;
     }
 
     @Override
@@ -77,6 +84,33 @@ public class TransactionsAdapter extends
         // Set item views based on your views and data model
         viewHolder.titleTextView.setText(article.getAccount().getLabel());
         viewHolder.descriptionTextView.setText(article.getValue() + "");
+
+        viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAddEditAccountPresenter.editTransaction(article.getDate());
+            }
+        });
+
+        viewHolder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                new AlertDialog.Builder(MainActivity.myContext)
+                        .setTitle("Delete Transaction")
+                        .setMessage("Are you sure you want to delete this transaction?")
+
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAddEditAccountPresenter.deleteTransaction(article.getDate());
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+
+                return true;
+            }
+        });
 
        /* viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override

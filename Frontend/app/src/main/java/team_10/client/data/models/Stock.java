@@ -1,15 +1,20 @@
 package team_10.client.data.models;
 
-import android.content.Context;
-import android.view.View;
-
 import java.time.LocalDate;
-import java.util.Vector;
+import java.time.temporal.ChronoUnit;
+import java.util.Iterator;
+import java.util.Set;
+
+import team_10.client.data.UserInputField;
 
 public class Stock extends Account {
+
+    @UserInputField(
+            priority = 1,
+            name = "Ticker",
+            inputType = String.class
+    )
     public String ticker;
-    public int amount;
-    public double valueOfStock;
 
     public Stock() {
     }
@@ -22,243 +27,86 @@ public class Stock extends Account {
         this.ticker = symbol;
     }
 
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
     public void addTransaction(LocalDate d, double value, int amount) {
         addTransaction(d, amount, 0, value, transactions.size());
     }
 
     public void addTransaction(LocalDate d, int amount, int recurring, double value, int transactionId) {
-        this.amount = this.amount + amount;
-        if (this.amount < 0) {
-            this.amount = 0;
-        }
-        Transaction t = new Transaction(value, transactionId, recurring, d);
+
+        Transaction t = new Transaction(value, amount, 1, transactionId, recurring, d);
         t.setAccount(this);
         transactions.put(d, t);
     }
 
     public double getValue(LocalDate d) {
-        Vector<LocalDate> transaction_dates = new Vector<LocalDate>(transactions.keySet());
-        valueOfStock = 0;
-//
-//        if (transaction_dates.size() <= 0) {
-//            throw new IllegalStateException("No transactions for this account.");
-//        } else {
-//            for (int i = 0; i < transaction_dates.size(); i++) {
-//
-//                LocalDate fromDate = transaction_dates.get(i);
-//                LocalDate toDate;
-//
-//                if ((i + 1) >= transaction_dates.size() || transaction_dates.get(i + 1).isAfter(d)) {
-//                    toDate = d;
-//                    i = Integer.MAX_VALUE - 1; // Stop calculating if date d is before last transaction
-//                } else {
-//                    toDate = transaction_dates.get(i + 1);
-//                }
-//                /*
-//                String urlStock = ROOT_URL + symbol;
-//                StringRequest stringRequest = new StringRequest(Request.Method.GET, urlStock,
-//                        new Response.Listener<String>() {
-//                            @Override
-//                            public void onResponse(String response) {
-//                                try {
-//                                    JSONObject returned = new JSONObject(response);
-//                                        try {
-//                                            //JSONObject userJson = returned.getJSONObject("value");
-//                                            stockValue[0] = returned.getDouble("value");
-//
-//                                        } catch (JSONException e) {
-//                                            e.printStackTrace();
-//                                        }
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        },
-//                        new Response.ErrorListener() {
-//                            @Override
-//                            public void onErrorResponse(VolleyError error) {
-//                                System.out.println(error.getMessage());
-//                            }
-//                        });
-//                VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);*/
-//
-//                String requestBody = null;
-//                try {
-//                    JsonObject userAccountsRequest = new JsonObject();
-//                    JsonArray accountIdArray = new JsonArray();
-//                    accountIdArray.add(accountID);
-//                    userAccountsRequest.add("accountID", accountIdArray);
-//                    requestBody = userAccountsRequest.toString();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//                final String finalRequestBody = requestBody;
-//                /*StringRequest stringRequest = new StringRequest(Request.Method.POST, URL.URL_GET_API,
-//                        new Response.Listener<String>() {
-//                            @Override
-//                            public void onResponse(String response) {
-//                                try {
-//                                    JSONObject returned = new JSONObject(response);
-//
-//                                    if (returned.has(accountID)) {
-//                                        valueOfStock = returned.getDouble(accountID);
-//                                        System.out.println("Accounts Retrieval Successful");
-//                                    }  else {
-//                                        System.out.println("Accounts Retrieval Unsuccessful");
-//                                    }
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                    // gson catch exceptions
-//                                }
-//
-//                            }
-//                        },
-//                        new Response.ErrorListener() {
-//                            @Override
-//                            public void onErrorResponse(VolleyError error) {
-//                                Toast.makeText(context,
-//                                        (error.getMessage() == null) ? "Error Syncing with Server" : "Error Syncing with Server: " + error.getMessage(),
-//                                        Toast.LENGTH_SHORT).show();
-//                                System.out.println(error.toString());
-//                                error.printStackTrace();
-//                            }
-//                        }) {
-//
-//                    @Override
-//                    public String getBodyContentType() {
-//                        return String.format("text/plain;charset=UTF-8");
-//                    }
-//
-//                    @Override
-//                    public byte[] getBody() throws AuthFailureError {
-//                        try {
-//                            return finalRequestBody == null ? null : finalRequestBody.getBytes("utf-8");
-//                        } catch (UnsupportedEncodingException uee) {
-//                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-//                                    finalRequestBody, "utf-8");
-//                            return null;
-//                        }
-//                    }
-//
-//                    @Override
-//                    public Map<String, String> getHeaders() throws AuthFailureError {
-//                        Map<String, String>  params = new HashMap<String, String>();
-//                        final String basicAuth = User.getToken();
-//                        params.put("Authorization", basicAuth);
-//
-//                        return params;
-//                    }
-//
-//
-//                };*/
-//
-//                //RequestQueue requestQueue = VolleySingleton.getInstance(context).getRequestQueue();
-//                //requestQueue.add(stringRequest);
-//                //requestQueue.start();
-//
-//                RequestFuture<String> future = RequestFuture.newFuture();
-//                JSONObject userAccountsRequest = new JSONObject();
-//                JSONArray accountIdArray = new JSONArray();
-//                accountIdArray.put(accountID);
-//                try {
-//                    userAccountsRequest.put("accountID", accountIdArray);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                StringRequest request = new StringRequest(Request.Method.POST, URL.URL_GET_API, future, future){
-//                    @Override
-//                    public String getBodyContentType() {
-//                        return String.format("text/plain;charset=UTF-8");
-//                    }
-//
-//                    @Override
-//                    public byte[] getBody() {
-//                        try {
-//                            return finalRequestBody == null ? null : finalRequestBody.getBytes("utf-8");
-//                        } catch (UnsupportedEncodingException uee) {
-//                            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-//                                    finalRequestBody, "utf-8");
-//                            return null;
-//                        }
-//                    }
-//                    @Override
-//                    public Map<String, String> getHeaders() throws AuthFailureError {
-//                        Map<String, String> params = new HashMap<String, String>();
-//                        final String basicAuth = User.getToken();
-//                        params.put("Authorization", basicAuth);
-//
-//                        return params;
-//                    }
-//                };
-//                requestQueue.add(request);
-//
-//
-//
-//                try {
-//                    String returned = future.get(10000, TimeUnit.MILLISECONDS); // this will block
-//                    try {
-//                        JSONObject response = new JSONObject(returned);
-//                        if (response.has(accountID)) {
-//                            valueOfStock = response.getDouble(accountID);
-//                            System.out.println("Accounts Retrieval Successful");
-//                        }  else {
-//                            System.out.println("Accounts Retrieval Unsuccessful");
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        // gson catch exceptions
-//                    }
-//                } catch (InterruptedException e) {
-//                    // exception handling
-//                } catch (ExecutionException e) {
-//                    // exception handling
-//                } catch (TimeoutException e) {
-//                    e.printStackTrace();
-//                }
-//                //waitForResponse(); */
-//            }
-//        }
-        return valueOfStock; // round to nearest cent
-    }
 
-    @Override
-    public View getView(Context context) {
-        return null;
-    }
+        if (!transactions.isEmpty()) {
 
-    private boolean waitForResponse() {
-        for (int i = 0; i < 10; i++) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                break;
+            Set<LocalDate> dateSet = transactions.keySet();
+
+            LocalDate startDate = transactions.firstKey();
+
+            LocalDate endDate = null;
+
+            Iterator<LocalDate> localDateIterator = dateSet.iterator();
+            while (localDateIterator.hasNext()) {
+                LocalDate temp = localDateIterator.next();
+
+                if (temp.isBefore(d)) {
+                    startDate = temp;
+                } else if (temp.isAfter(d)){
+                    endDate = temp;
+                } else if (temp.isEqual(d)) {
+                    return transactions.get(temp).getValue();
+                }
             }
-            if (valueOfStock != 0) {
-                return true;
-            }
+
+            if (endDate == null)
+                return transactions.get(startDate).getValue();
+            else
+                return (startDate.until(d, ChronoUnit.DAYS) <= d.until(endDate, ChronoUnit.DAYS))
+                    ? transactions.get(startDate).getValue()
+                    : transactions.get(endDate).getValue();
+
         }
-        return false;
+
+        return 0; // if all else fails
     }
 
-    public team_10.client.data.models.Transaction getTransaction() { return new Transaction(); }
+
+    public team_10.client.data.models.Transaction getTransaction(LocalDate date) {
+        if (date != null && transactions.containsKey(date)) {
+            return transactions.get(date);
+        } else if (date != null){
+            Transaction t = new Transaction(0, 0, 0, transactions.size(), 0, date);
+            transactions.put(date, t);
+
+            return transactions.get(date);
+        } else {
+            return new Transaction();
+        }
+    }
+
+
 
 
     private class Transaction extends team_10.client.data.models.Transaction {
 
+        @UserInputField(
+                priority = 0,
+                name = "Amount",
+                inputType = Integer.class
+        )
+        public int amount;
+
+        public int visibility; // for populated transactions (i.e. a daily high stock value)
+
         Transaction() { }
 
-        Transaction(double value, int transactionID, int recurring, LocalDate date) {
+        Transaction(double value, int amount, int visibility, int transactionID, int recurring, LocalDate date) {
             this.value = value;
+            this.amount = amount;
+            this.visibility = visibility;
             this.transactionID = transactionID;
             this.recurring = recurring;
             this.date = date;
