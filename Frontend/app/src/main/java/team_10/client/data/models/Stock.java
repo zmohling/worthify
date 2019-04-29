@@ -33,7 +33,7 @@ public class Stock extends Account {
 
     public void addTransaction(LocalDate d, int amount, int recurring, double value, int transactionId) {
 
-        Transaction t = new Transaction(value, amount, 1, transactionId, recurring, d);
+        Transaction t = new Transaction(value, amount, transactionId, recurring, d);
         t.setAccount(this);
         transactions.put(d, t);
     }
@@ -78,7 +78,9 @@ public class Stock extends Account {
         if (date != null && transactions.containsKey(date)) {
             return transactions.get(date);
         } else if (date != null){
-            Transaction t = new Transaction(0, 0, 0, transactions.size(), 0, date);
+            Transaction t = new Transaction(0, 0, transactions.size(), 0, date);
+            t.setVisibility(1);
+
             transactions.put(date, t);
 
             return transactions.get(date);
@@ -99,14 +101,11 @@ public class Stock extends Account {
         )
         public int amount;
 
-        public int visibility; // for populated transactions (i.e. a daily high stock value)
-
         Transaction() { }
 
-        Transaction(double value, int amount, int visibility, int transactionID, int recurring, LocalDate date) {
+        Transaction(double value, int amount, int transactionID, int recurring, LocalDate date) {
             this.value = value;
             this.amount = amount;
-            this.visibility = visibility;
             this.transactionID = transactionID;
             this.recurring = recurring;
             this.date = date;

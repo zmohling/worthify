@@ -4,4 +4,6 @@ public interface HostReachableCallback {
 
     void onHostReachable();
 
+    void onHostUnreachable();
+
 }

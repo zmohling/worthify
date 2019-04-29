@@ -31,6 +31,7 @@ import team_10.client.data.source.AccountsRepository;
 import team_10.client.utility.adapter.AbstractAccountAdapter;
 import team_10.client.utility.adapter.LocalDateAdapter;
 import team_10.client.utility.io.AppExecutors;
+import team_10.client.utility.io.HostReachableCallback;
 import team_10.client.utility.io.IO;
 import team_10.client.utility.io.SharedPreferencesManager;
 import team_10.client.utility.io.VolleyPostRequest;
@@ -100,7 +101,17 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
                     }
                 });
 
-        request.execute();
+        request.execute(new HostReachableCallback() {
+            @Override
+            public void onHostReachable() {
+
+            }
+
+            @Override
+            public void onHostUnreachable() {
+                callback.onDataNotAvailable();
+            }
+        });
     }
 
 
@@ -154,6 +165,8 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
 
                     } else {
                         System.out.println("Successfully sent to server:\n" + finalRequestBody);
+
+                        callback.onAccountSaved();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -161,7 +174,17 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
             }
         });
 
-        request.execute();
+        request.execute(new HostReachableCallback() {
+            @Override
+            public void onHostReachable() {
+
+            }
+
+            @Override
+            public void onHostUnreachable() {
+                callback.onDataNotAvailable();
+            }
+        });
     }
 
     @Override
@@ -202,6 +225,8 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
                         String message = object.getString("message");
 
                         Toast.makeText(MainActivity.myContext, "Error: " + message, Toast.LENGTH_SHORT).show();
+
+                        callback.onDataNotAvailable();
 
                     } else {
                         Type mapType = new TypeToken<Map<String, Map<LocalDate, Double>>>() {
@@ -253,7 +278,17 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
             }
         });
 
-        request.execute();
+        request.execute(new HostReachableCallback() {
+            @Override
+            public void onHostReachable() {
+
+            }
+
+            @Override
+            public void onHostUnreachable() {
+                callback.onDataNotAvailable();
+            }
+        });
     }
 
     private void updateTransactions(@NonNull Map<String, Map<LocalDate, Double>> values) {

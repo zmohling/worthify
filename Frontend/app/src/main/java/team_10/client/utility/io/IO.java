@@ -119,6 +119,7 @@ public class IO {
                             callback.onHostReachable();
                         } else {
                             Toast.makeText(MainActivity.myContext, "Cannot Reach Server", Toast.LENGTH_SHORT).show();
+                            callback.onHostUnreachable();
                         }
                     }
                 });

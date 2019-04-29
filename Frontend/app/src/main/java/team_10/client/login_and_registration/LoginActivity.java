@@ -208,6 +208,11 @@ public class LoginActivity extends AppCompatActivity {
             public void onHostReachable() {
                 VolleySingleton.getInstance(LoginActivity.this).addToRequestQueue(stringRequest);
             }
+
+            @Override
+            public void onHostUnreachable() {
+
+            }
         });
     }
 }

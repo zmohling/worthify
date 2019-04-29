@@ -47,7 +47,7 @@ public abstract class Account implements Serializable {
      * @param recurring whether it is recurring
      */
     public void addTransaction(LocalDate d, double value, int transactionID, int recurring) {
-        Transaction t = new Transaction(value, transactionID, recurring, d);
+        Transaction t = new Transaction(value, 0, transactionID, recurring, d);
         addTransaction(t);
     }
 
@@ -130,8 +130,8 @@ public abstract class Account implements Serializable {
 
         Transaction() { }
 
-        Transaction(double value, int transactionID, int recurring, LocalDate date) {
-            super(value, transactionID, recurring, date);
+        Transaction(double value, int invisible, int transactionID, int recurring, LocalDate date) {
+            super(value, invisible, transactionID, recurring, date);
         }
     }
 }

@@ -24,6 +24,7 @@ public abstract class Transaction implements Serializable {
     protected LocalDate date;
 
     protected int transactionID;
+    protected int invisible;
     protected transient Account account;
 
     /* This value will be zero if not recurring. If nonzero, the recurring period can *
@@ -33,8 +34,9 @@ public abstract class Transaction implements Serializable {
     public Transaction() {
     }
 
-    public Transaction(double value, int transactionID, int recurring, LocalDate date) {
+    public Transaction(double value, int invisible, int transactionID, int recurring, LocalDate date) {
         this.value = value;
+        this.invisible = invisible;
         this.transactionID = transactionID;
         this.recurring = recurring;
         this.date = date;
@@ -109,5 +111,21 @@ public abstract class Transaction implements Serializable {
      * @param date date
      */
     public void setDate(LocalDate date) { this.date = date; }
+
+    /**
+     * Set whether this transaction is visible to the user
+     * @return
+     */
+    public int getVisibility() {
+        return this.invisible;
+    }
+
+    /**
+     * Get whether this transaction is visible to the user
+     * @param invisible
+     */
+    public void setVisibility(int invisible) {
+        this.invisible = invisible;
+    }
 
 }
