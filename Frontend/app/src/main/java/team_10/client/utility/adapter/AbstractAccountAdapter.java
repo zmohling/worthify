@@ -82,6 +82,7 @@ public class AbstractAccountAdapter implements JsonSerializer<Account>, JsonDese
 
             Gson outerGson = outerBuilder.create();
 
+            account = (Account) outerGson.fromJson(jsonObject, accountClass);
 
             /* Add non-serialized and inferred data */
             Set transactions = account.getTransactions().entrySet();

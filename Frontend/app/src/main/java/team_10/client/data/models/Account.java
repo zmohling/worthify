@@ -62,7 +62,6 @@ public abstract class Account implements Serializable {
      * @return the removed transaction
      */
     public team_10.client.data.models.Transaction removeTransaction(LocalDate d) {
-        this.transactions.remove(d);
         return transactions.remove(d);
     }
 
@@ -127,7 +126,7 @@ public abstract class Account implements Serializable {
      */
     public abstract double getValue(LocalDate d);
 
-    private class Transaction extends team_10.client.data.models.Transaction {
+    protected class Transaction extends team_10.client.data.models.Transaction {
 
         Transaction() { }
 
