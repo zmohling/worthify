@@ -326,6 +326,9 @@ public class ArticleController {
         for (int i = 0; i < keywords.size(); i++) {
             articles.addAll(Arrays.asList(articleRepo.getAllArticlesWithKeyword(keywords.get(i))));
         }
+        articles.addAll(Arrays.asList(articleRepo.getAllPopularArticles()));
+
+        articles = removeDuplicates(articles);
 
         String rString = "{";
         if (articles.size() > 0) {
@@ -559,4 +562,21 @@ public class ArticleController {
         return -1;
     }
 
+    /**
+     * removes any duplicate articles from an arraylist of articles
+     * @param articles is the list of articles to remove from
+     */
+    public ArrayList<Article> removeDuplicates(ArrayList<Article> articles){
+        ArrayList<Long> ids = new ArrayList<Long>();
+
+        ArrayList<Article> returnList = new ArrayList<Article>();
+
+        for(int i = 0; i < articles.size(); i ++){
+            if(!ids.contains(articles.get(i).getId())){
+                ids.add(articles.get(i).getId());
+                returnList.add(articles.get(i));
+            }
+        }
+        return returnList;
+    }
 }

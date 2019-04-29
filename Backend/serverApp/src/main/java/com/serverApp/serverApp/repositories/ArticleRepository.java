@@ -53,6 +53,10 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Query(value = "SELECT * FROM articles WHERE keyword = ?1 AND is_active = 1", nativeQuery = true)
     Article[] getAllArticlesWithKeyword(String keyword);
 
+
+    @Query(value="SELECT * FROM articles WHERE votes > 9", nativeQuery = true)
+    Article[] getAllPopularArticles();
+
     /**
      * custom query to archive an article
      * @param id of the article to donate
