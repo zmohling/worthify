@@ -5,6 +5,7 @@ import com.serverApp.serverApp.other.ArticleRetrieval;
 import com.serverApp.serverApp.repositories.AccountsRepository;
 import com.serverApp.serverApp.repositories.ArticleRepository;
 import com.serverApp.serverApp.repositories.StockRepository;
+import com.serverApp.serverApp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +51,9 @@ public class ArticleController {
 
     @Autowired
     StockRepository stockRepo;
+
+    @Autowired
+    UserRepository userRepo;
 
     /**
      * @Autowired repository to AccountsRepository
@@ -422,6 +426,9 @@ public class ArticleController {
      */
     @RequestMapping("/article/upvote/{userId}/{articleId}")
     public String upvoteArticle(@PathVariable long userId, @PathVariable long articleId){
+        if(userRepo.checkUserInDb(userId) == 1){
+            return "{\"error\":\"user + \'" + userId +"\' does not exist\"}";
+        }
         if(articleRepo.getNumArticles(articleId) == 1){
             Article article = articleRepo.getOne(articleId);
             int vote = getUserVote(userId, article);
