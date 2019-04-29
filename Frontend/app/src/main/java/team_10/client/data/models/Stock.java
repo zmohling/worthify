@@ -16,6 +16,7 @@ public class Stock extends Account {
     )
     public String ticker;
 
+
     public Stock() {
     }
 
@@ -47,13 +48,11 @@ public class Stock extends Account {
             LocalDate startDate = transactions.firstKey();
 
             LocalDate endDate = null;
-
+            Transaction transaction;
             Double val;
-
             Iterator<LocalDate> localDateIterator = dateSet.iterator();
             while (localDateIterator.hasNext()) {
                 LocalDate temp = localDateIterator.next();
-
                 if (temp.isBefore(d)) {
                     startDate = temp;
                 } else if (temp.isAfter(d)) {
@@ -108,6 +107,14 @@ public class Stock extends Account {
         public int amount;
 
         public int visibility; // for populated transactions (i.e. a daily high stock value)
+
+        public int getAmount() {
+            return amount;
+        }
+
+        public int getVisibility() {
+            return visibility;
+        }
 
         Transaction() { }
 

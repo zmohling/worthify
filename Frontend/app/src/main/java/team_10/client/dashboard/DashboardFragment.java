@@ -27,10 +27,14 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -321,27 +325,37 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         b.setPrettyPrinting();
                         Gson g = b.create();
 
-                        System.out.println(g.toJson(values));
-
+                        System.out.println("\"" + g.toJson(values)+ "\"");
+                        String str = g.toJson(values);
                         pullToRefresh.setRefreshing(false);
-
-                        // Sort dates
-                        List<LocalDate> dates = new ArrayList<>(values.keySet());
-                        dates.sort((foo, bar) -> (int) (foo.toEpochDay() - bar.toEpochDay()));
 
                         List<Entry> entries = new ArrayList<>();
 
-                        int i = 0;
-                        for (LocalDate date: dates) {
-                            Entry graphEntry = new Entry();
+                        if(str.compareTo("{}") == 0) {
+                            for(int i = 0; i < 2; i++) {
+                                Entry graphEntry = new Entry();
 
-                            graphEntry.setX(i);
-                            graphEntry.setY(values.get(date).floatValue());
+                                graphEntry.setX(i);
+                                graphEntry.setY(0);
+                                entries.add(graphEntry);
+                            }
+                        } else {
+                            // Sort dates
+                            List<LocalDate> dates = new ArrayList<>(values.keySet());
+                            dates.sort((foo, bar) -> (int) (foo.toEpochDay() - bar.toEpochDay()));
 
-                            i++;
-                            entries.add(graphEntry);
+
+                            int i = 0;
+                            for (LocalDate date : dates) {
+                                Entry graphEntry = new Entry();
+
+                                graphEntry.setX(i);
+                                graphEntry.setY(values.get(date).floatValue());
+
+                                i++;
+                                entries.add(graphEntry);
+                            }
                         }
-
 
                         dataset = new LineDataSet(entries, "sample");
                         dataset.setDrawFilled(true);
@@ -350,9 +364,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         dataset.setHighlightEnabled(false);
                         dataset.setColor(Color.parseColor("#16A085"));
                         dataset.setFillColor(Color.parseColor("#16A085"));
-
+                        IFillFormatter fillFormatter = new IFillFormatter() {
+                            @Override
+                            public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+                                return 0f;
+                            }
+                        };
+                        dataset.setFillFormatter(fillFormatter);
                         LineData lineData = new LineData(dataset);
-
                         chart.notifyDataSetChanged();
                         chart.setData(lineData);
                         chart.invalidate();
