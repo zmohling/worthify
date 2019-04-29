@@ -122,23 +122,26 @@ public class AccountsController {
                 "{\"accounts\":[";
         while((iterator).hasNext()) {
             Accounts accounts = iterator.next();
-            rString = rString +
-                    "{\"accountID\":\"" + accounts.getAccountId() + "\"," +
-                    "\"label\":\"" + accounts.getLabel() + "\"," +
-                    "\"transactions\":" + accounts.getTransactions() + "," +
-                    "\"type\":\"" + accounts.getType() + "\"";
-            if(accounts.getType().equals("CertificateOfDeposit")) {
-                rString = rString + ",\"maturityDate\":\"" + certRepo.getCertificateOfDeposite(accounts.getAccountId()).getMaturityDate() + "\"}";
-            } else if(accounts.getType().equals("RealEstate")) {
-                rString = rString + ",\"address\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getAddress() + "\"";
-                rString = rString + ",\"city\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getCity() + "\"";
-                rString = rString + ",\"state\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getState() + "\"}";
-            } else if(accounts.getType().equals("Stock")) {
-                rString = rString + ",\"ticker\":\"" + stockRepo.getStock(accounts.getAccountId()).getTicker() + "\"}";
-            } else {
-                rString = rString + "}";
+            if(accounts.getIsActive() == 1) {
+                rString = rString +
+                        "{\"accountID\":\"" + accounts.getAccountId() + "\"," +
+                        "\"label\":\"" + accounts.getLabel() + "\"," +
+                        "\"isActive\":" + accounts.getIsActive() + "," +
+                        "\"transactions\":" + accounts.getTransactions() + "," +
+                        "\"type\":\"" + accounts.getType() + "\"";
+                if (accounts.getType().equals("CertificateOfDeposit")) {
+                    rString = rString + ",\"maturityDate\":\"" + certRepo.getCertificateOfDeposite(accounts.getAccountId()).getMaturityDate() + "\"}";
+                } else if (accounts.getType().equals("RealEstate")) {
+                    rString = rString + ",\"address\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getAddress() + "\"";
+                    rString = rString + ",\"city\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getCity() + "\"";
+                    rString = rString + ",\"state\":\"" + realEstateRepo.getRealEstate(accounts.getAccountId()).getState() + "\"}";
+                } else if (accounts.getType().equals("Stock")) {
+                    rString = rString + ",\"ticker\":\"" + stockRepo.getStock(accounts.getAccountId()).getTicker() + "\"}";
+                } else {
+                    rString = rString + "}";
+                }
+                if (iterator.hasNext()) rString = rString + ",";
             }
-            if(iterator.hasNext()) rString = rString + ",";
         }
         rString = rString + "]}";
         return rString;
@@ -159,8 +162,11 @@ public class AccountsController {
             else outerfirst = false;
             boolean first = true;
             System.out.println(apiAccountsList[i].getType());
-            if(!first) returnStr = returnStr + ",";
-            else first = false;
+            if(!first) {
+                returnStr = returnStr + ",";
+            } else {
+                first = false;
+            }
             returnStr = returnStr + "\"" + apiAccountsList[i].getAccountId() + "\"" + ": {";
             if(apiAccountsList[i].getType().equals("Stock")) {
                 Stock stock = new Stock();
@@ -169,12 +175,19 @@ public class AccountsController {
                 stock = stockRepo.getStock(stock.getAccountID());
                 if(stock.getDate() == null) {
                     JSONObject obj2 = new JSONObject(accounts.getTransactions());
-                    Date date = Date.valueOf(obj2.get("date").toString());
+                    JSONObject obj3 = new JSONObject(accounts.getTransactions());
+                    Iterator<String> iterator = obj2.keys();
+                    String string = "";
+                    while(iterator.hasNext()) {
+                        string = iterator.next();
+                    }
+                    Date date = Date.valueOf(string);
                     stock.setDate(date);
                 }
                 StockRetrieval stockRetrieval = new StockRetrieval();
-                returnStr = returnStr + stockRetrieval.retrieve5yData(stock.getTicker(), stock.getDate());
-                if(!first && !Date.valueOf(LocalDate.now()).equals(stock.getDate())) returnStr = returnStr + ",";
+                String returnedFromStockRetrieval = stockRetrieval.retrieve5yData(stock.getTicker(), stock.getDate());
+                returnStr = returnStr + returnedFromStockRetrieval;
+                if(returnedFromStockRetrieval != "") returnStr = returnStr + ",";
                 stock.setDate(Date.valueOf(LocalDate.now()));
                 stockRepo.editDate(stock.getDate(), stock.getAccountID());
                 returnStr = returnStr + "\"" + Date.valueOf(LocalDate.now()) + "\": \"" + stockRetrieval.retrieveStock(stock.getTicker()) + "\"";

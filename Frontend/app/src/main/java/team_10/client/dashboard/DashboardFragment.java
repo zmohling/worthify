@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,11 +27,20 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.time.LocalDate;
+
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.renderer.LineChartRenderer;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 import team_10.client.MainActivity;
 import team_10.client.R;
@@ -79,6 +89,50 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         view.findViewById(R.id.buttonLogout).setOnClickListener(this);
         view.findViewById(R.id.button_add_account).setOnClickListener(this);
+
+        List<Entry> entries = new ArrayList<>();
+        Random rand = new Random();
+        int last = 0;
+        for(int i = 0; i < 100; i++) {
+            Entry e = new Entry();
+            e.setX(i);
+            if(last < 5) {
+                last = last + Math.abs(rand.nextInt() % 6);
+                e.setY(last);
+            } else {
+                last = last + rand.nextInt() % 6;
+                e.setY(last);
+            }
+            entries.add(e);
+        }
+
+        //chart
+        LineChart chart = view.findViewById(R.id.graph);
+        LineDataSet dataset = new LineDataSet(entries, "sample");
+        dataset.setDrawFilled(true);
+        dataset.setDrawCircles(false);
+        dataset.setFillAlpha(25);
+        dataset.setHighlightEnabled(false);
+        dataset.setColor(Color.parseColor("#16A085"));
+        dataset.setFillColor(Color.parseColor("#16A085"));
+        LineData lineData = new LineData(dataset);
+        chart.setData(lineData);
+        //chart.setAutoScaleMinMaxEnabled(true);
+        chart.setDragYEnabled(false);
+        chart.getXAxis().setDrawGridLines(false);
+        chart.getAxisRight().setEnabled(false);
+        chart.getLegend().setEnabled(false);
+        chart.getDescription().setEnabled(false);
+        chart.setMinOffset(0f);
+        //chart.setViewPortOffsets(0f, 0f, 0f, 0f);
+        chart.getAxisLeft().setTextSize(12);
+        chart.getXAxis().setEnabled(false);
+        chart.getAxisLeft().setDrawAxisLine(false);
+        chart.getAxisLeft().setDrawGridLinesBehindData(true);
+        chart.getAxisLeft().setTextColor(Color.parseColor("#80FFFFFF"));
+        chart.getAxisLeft().setCenterAxisLabels(true);
+        chart.getAxisLeft().setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+
 
         // ListView of Accounts with adapter
         lv = view.findViewById(R.id.list);
@@ -224,6 +278,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         AccountsRepository.getInstance().getAccounts(new AccountsDataSource.LoadAccountsCallback() {
             @Override
             public void onAccountsLoaded(List<Account> accounts) {
+
                 DashboardFragment.accounts = accounts;
 
                 AccountsRepository.getInstance().getValues(PERIOD.DAY, new AccountsDataSource.GetValuesCallback() {
@@ -243,6 +298,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
                     }
                 });
+
+                for (int i = 0; i < accounts.size(); i++)
+                {
+                    if (accounts.get(i).isActive() == 0)
+                    {
+                        accounts.remove(i);
+                    }
+                }
 
                 customAdapter = new CustomListAdapter(MainActivity.myContext, R.layout.item_account_list_item, accounts);
                 lv.setAdapter(customAdapter);
