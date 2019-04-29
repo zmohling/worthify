@@ -12,13 +12,14 @@ public class Article {
     private String articleVotes;
     private String currentVote;
 
-    public Article(String titles, String descriptions, String pictureUrls, String name, String articleIDs, String articleVotess) {
+    public Article(String titles, String descriptions, String pictureUrls, String name, String articleIDs, String articleVotess, String currentVotes) {
         url = name;
         title = titles;
         description = descriptions;
         pictureUrl = pictureUrls;
         articleID = articleIDs;
         articleVotes = articleVotess;
+        currentVote = currentVotes;
     }
 
     /**

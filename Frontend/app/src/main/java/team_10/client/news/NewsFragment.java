@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import team_10.client.R;
 import team_10.client.data.Article;
@@ -100,7 +101,7 @@ public class NewsFragment extends Fragment {
                             for (i = 0; i < numArticles; i++) {
                                 try {
                                     JSONObject userJson = returned.getJSONObject("article"+ i);
-                                    articles.add(new Article(URLDecoder.decode(userJson.getString("title"), "UTF-8"), URLDecoder.decode(userJson.getString("description"), "UTF-8"), userJson.getString("pictureUrl"), userJson.getString("url"), userJson.getString("id"), userJson.getString("votes")));
+                                    articles.add(new Article(URLDecoder.decode(userJson.getString("title"), "UTF-8"), URLDecoder.decode(userJson.getString("description"), "UTF-8"), userJson.getString("pictureUrl"), userJson.getString("url"), userJson.getString("id"), userJson.getString("votes"), userJson.getString("vote")));
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -108,6 +109,13 @@ public class NewsFragment extends Fragment {
                                     e.printStackTrace();
                                 }
                             }
+                            Comparator<Article> articleComparator = new Comparator<Article>() {
+                                @Override
+                                public int compare(Article o1, Article o2) {
+                                    return Integer.parseInt(o1.getArticleVotes()) - Integer.parseInt(o2.getArticleVotes());
+                                }
+                            };
+                            articles.sort(articleComparator);
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();

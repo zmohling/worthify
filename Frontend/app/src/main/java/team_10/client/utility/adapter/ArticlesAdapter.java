@@ -118,6 +118,15 @@ public class ArticlesAdapter extends
             imageViewHolder.setVisibility(View.GONE);
         }
 
+        if (article.getCurrentVote() == "-1")
+        {
+            viewHolder.downVote.setImageResource(R.drawable.downvote_vote);
+        }
+        else if (article.getCurrentVote() == "1")
+        {
+            viewHolder.upVote.setImageResource(R.drawable.upvote_vote);
+        }
+
         viewHolder.downVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,6 +140,8 @@ public class ArticlesAdapter extends
                                     String currentVote = returned.getString("currentVote");
                                     String articleVotes = returned.getString("articleVotes");
                                     viewHolder.votesTextView.setText("Votes: " + articleVotes);
+                                    article.setCurrentVote(currentVote);
+                                    article.setArticleVotes(articleVotes);
                                     if (currentVote.equals("-1"))
                                     {
                                         viewHolder.downVote.setImageResource(R.drawable.downvote_vote);
@@ -175,6 +186,8 @@ public class ArticlesAdapter extends
                                     String currentVote = returned.getString("currentVote");
                                     String articleVotes = returned.getString("articleVotes");
                                     viewHolder.votesTextView.setText("Votes: " + articleVotes);
+                                    article.setCurrentVote(currentVote);
+                                    article.setArticleVotes(articleVotes);
                                     if (currentVote.equals("1"))
                                     {
                                         viewHolder.upVote.setImageResource(R.drawable.upvote_vote);
