@@ -426,8 +426,8 @@ public class ArticleController {
      */
     @RequestMapping("/article/upvote/{userId}/{articleId}")
     public String upvoteArticle(@PathVariable long userId, @PathVariable long articleId){
-        if(userRepo.checkUserInDb(userId) == 1){
-            return "{\"error\":\"user + \'" + userId +"\' does not exist\"}";
+        if(userRepo.checkUserInDb(userId) != 1){
+            return "{\"error\":\"user \'" + userId +"\' does not exist\"}";
         }
         if(articleRepo.getNumArticles(articleId) == 1){
             Article article = articleRepo.getOne(articleId);
@@ -483,6 +483,9 @@ public class ArticleController {
      */
     @RequestMapping("/article/downvote/{userId}/{articleId}")
     public String downvoteArticle(@PathVariable long userId, @PathVariable long articleId){
+        if(userRepo.checkUserInDb(userId) != 1){
+            return "{\"error\":\"user \'" + userId +"\' does not exist\"}";
+        }
         if(articleRepo.getNumArticles(articleId) == 1){
             Article article = articleRepo.getOne(articleId);
 
