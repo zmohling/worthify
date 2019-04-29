@@ -16,20 +16,22 @@ import team_10.client.data.models.Stock;
  * Enum for types of accounts.
  */
 public enum TYPE {
-    CERTIFICATEOFDEPOSIT("Certificate of Deposit", CertificateOfDeposit.class, false),
-    LOAN("Loan", Loan.class, false),
-    SAVINGSACCOUNT("Savings Account", SavingsAccount.class, false),
-    REALESTATE("Real Estate", RealEstate.class, true),
-    STOCK("Stock", Stock.class, true);
+    CERTIFICATEOFDEPOSIT("Certificate of Deposit", CertificateOfDeposit.class, false, true),
+    LOAN("Loan", Loan.class, false, false),
+    SAVINGSACCOUNT("Savings Account", SavingsAccount.class, false, true),
+    REALESTATE("Real Estate", RealEstate.class, true, true),
+    STOCK("Stock", Stock.class, true, true);
 
     private String displayName;
     private Class<? extends Account> clazz;
     private boolean isValueOnNetwork;
+    private boolean isAsset;
 
-    TYPE(@NonNull String displayName, @NonNull Class<? extends Account> clazz, @NonNull boolean isValueOnNetwork) {
+    TYPE(@NonNull String displayName, @NonNull Class<? extends Account> clazz, @NonNull boolean isValueOnNetwork, @NonNull boolean isAsset) {
         this.displayName = displayName;
         this.clazz = clazz;
         this.isValueOnNetwork = isValueOnNetwork;
+        this.isAsset = isAsset;
     }
 
     /**
@@ -82,6 +84,8 @@ public enum TYPE {
     }
 
     public @NonNull boolean isValueOnNetwork() { return this.isValueOnNetwork; }
+
+    public @NonNull boolean isAsset() { return this.isAsset; }
 
     public @NonNull Class<? extends Account> getClazz() {
         return this.clazz;

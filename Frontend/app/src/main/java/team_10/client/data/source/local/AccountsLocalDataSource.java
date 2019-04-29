@@ -152,7 +152,8 @@ public class AccountsLocalDataSource implements AccountsDataSource {
             for (Account account : cachedAccounts) {
                 if (!(TYPE.getType(account.getClass()).isValueOnNetwork())) {
 
-                    Double value = account.getValue(date);
+                    int assetOrLiabilityMuliplier = (TYPE.getType(account.getClass()).isAsset()) ? 1 : -1;
+                    Double value = account.getValue(date) * assetOrLiabilityMuliplier;
 
                     if (values.containsKey(date)) {
                         Double cachedValue = values.get(date);

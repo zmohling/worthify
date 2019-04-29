@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
 
 import team_10.client.MainActivity;
 import team_10.client.R;
@@ -64,6 +63,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     private static CustomListAdapter customAdapter;
     private static ListView lv;
     private static SwipeRefreshLayout pullToRefresh;
+
+    private static LineChart chart;
+    private static LineDataSet dataset;
+
     private static List<Account> accounts;
 
     private OnFragmentInteractionListener mListener;
@@ -99,33 +102,25 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
         });
 
-        List<Entry> entries = new ArrayList<>();
-        Random rand = new Random();
-        int last = 0;
-        for (int i = 0; i < 100; i++) {
-            Entry e = new Entry();
-            e.setX(i);
-            if (last < 5) {
-                last = last + Math.abs(rand.nextInt() % 6);
-                e.setY(last);
-            } else {
-                last = last + rand.nextInt() % 6;
-                e.setY(last);
-            }
-            entries.add(e);
-        }
+//        List<Entry> entries = new ArrayList<>();
+//        Random rand = new Random();
+//        int last = 0;
+//        for (int i = 0; i < 100; i++) {
+//            Entry e = new Entry();
+//            e.setX(i);
+//            if (last < 5) {
+//                last = last + Math.abs(rand.nextInt() % 6);
+//                e.setY(last);
+//            } else {
+//                last = last + rand.nextInt() % 6;
+//                e.setY(last);
+//            }
+//            entries.add(e);
+//        }
 
         //chart
-        LineChart chart = view.findViewById(R.id.graph);
-        LineDataSet dataset = new LineDataSet(entries, "sample");
-        dataset.setDrawFilled(true);
-        dataset.setDrawCircles(false);
-        dataset.setFillAlpha(25);
-        dataset.setHighlightEnabled(false);
-        dataset.setColor(Color.parseColor("#16A085"));
-        dataset.setFillColor(Color.parseColor("#16A085"));
-        LineData lineData = new LineData(dataset);
-        chart.setData(lineData);
+        chart = view.findViewById(R.id.graph);
+
         //chart.setAutoScaleMinMaxEnabled(true);
         chart.setDragYEnabled(false);
         chart.getXAxis().setDrawGridLines(false);
@@ -141,6 +136,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         chart.getAxisLeft().setTextColor(Color.parseColor("#80FFFFFF"));
         chart.getAxisLeft().setCenterAxisLabels(true);
         chart.getAxisLeft().setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+
 
 
         // ListView of Accounts with adapter
@@ -328,6 +324,38 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         System.out.println(g.toJson(values));
 
                         pullToRefresh.setRefreshing(false);
+
+                        // Sort dates
+                        List<LocalDate> dates = new ArrayList<>(values.keySet());
+                        dates.sort((foo, bar) -> (int) (foo.toEpochDay() - bar.toEpochDay()));
+
+                        List<Entry> entries = new ArrayList<>();
+
+                        int i = 0;
+                        for (LocalDate date: dates) {
+                            Entry graphEntry = new Entry();
+
+                            graphEntry.setX(i);
+                            graphEntry.setY(values.get(date).floatValue());
+
+                            i++;
+                            entries.add(graphEntry);
+                        }
+
+
+                        dataset = new LineDataSet(entries, "sample");
+                        dataset.setDrawFilled(true);
+                        dataset.setDrawCircles(false);
+                        dataset.setFillAlpha(25);
+                        dataset.setHighlightEnabled(false);
+                        dataset.setColor(Color.parseColor("#16A085"));
+                        dataset.setFillColor(Color.parseColor("#16A085"));
+
+                        LineData lineData = new LineData(dataset);
+
+                        chart.notifyDataSetChanged();
+                        chart.setData(lineData);
+                        chart.invalidate();
 
                         updateDashboardUI();
                     }
