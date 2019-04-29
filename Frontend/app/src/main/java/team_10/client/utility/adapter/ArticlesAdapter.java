@@ -115,13 +115,20 @@ public class ArticlesAdapter extends
             imageViewHolder.setVisibility(View.GONE);
         }
 
-        if (article.getCurrentVote() == "-1")
+        if (article.getCurrentVote().equals("-1"))
         {
             viewHolder.downVote.setImageResource(R.drawable.downvote_vote);
+            viewHolder.upVote.setImageResource(R.drawable.upvote_no_vote);
         }
-        else if (article.getCurrentVote() == "1")
+        else if (article.getCurrentVote().equals("1"))
         {
             viewHolder.upVote.setImageResource(R.drawable.upvote_vote);
+            viewHolder.downVote.setImageResource(R.drawable.downvote_no_vote);
+        }
+        else
+        {
+            viewHolder.upVote.setImageResource(R.drawable.upvote_no_vote);
+            viewHolder.downVote.setImageResource(R.drawable.downvote_no_vote);
         }
 
         viewHolder.downVote.setOnClickListener(new View.OnClickListener() {
