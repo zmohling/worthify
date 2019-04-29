@@ -48,6 +48,8 @@ public class Stock extends Account {
 
             LocalDate endDate = null;
 
+            String string;
+
             Iterator<LocalDate> localDateIterator = dateSet.iterator();
             while (localDateIterator.hasNext()) {
                 LocalDate temp = localDateIterator.next();
@@ -57,16 +59,21 @@ public class Stock extends Account {
                 } else if (temp.isAfter(d)){
                     endDate = temp;
                 } else if (temp.isEqual(d)) {
-                    return transactions.get(temp).getValue();
+                    if(transactions.get(temp).getValue() == null) {
+                        return 0.0;
+                    } else return transactions.get(temp).getValue();
                 }
             }
 
             if (endDate == null)
-                return transactions.get(startDate).getValue();
+                if(transactions.get(startDate).getValue() == null) {
+                    return 0.0;
+                } else return transactions.get(startDate).getValue();
             else
+
                 return (startDate.until(d, ChronoUnit.DAYS) <= d.until(endDate, ChronoUnit.DAYS))
-                    ? transactions.get(startDate).getValue()
-                    : transactions.get(endDate).getValue();
+                        ? transactions.get(startDate).getValue()
+                        : transactions.get(endDate).getValue();
 
         }
 
