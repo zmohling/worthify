@@ -54,7 +54,7 @@ public interface AccountsDataSource {
 
     void deleteAllAccounts();
 
-    void refreshAccounts(@NonNull LoadAccountsCallback callback);
+    void refreshAccounts();
 
     void getValues(@NonNull PERIOD period, GetValuesCallback callback);
 

@@ -134,7 +134,7 @@ public class AccountsLocalDataSource implements AccountsDataSource {
     }
 
     @Override
-    public void refreshAccounts(@NonNull LoadAccountsCallback callback) {
+    public void refreshAccounts() {
 
     }
 

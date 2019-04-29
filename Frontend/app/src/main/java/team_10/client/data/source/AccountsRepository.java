@@ -342,8 +342,8 @@ public class AccountsRepository implements AccountsDataSource {
     }
 
     @Override
-    public void refreshAccounts(@NonNull LoadAccountsCallback callback) {
-
+    public void refreshAccounts() {
+        invalidateValueCache();
     }
 
     @Override
@@ -376,12 +376,10 @@ public class AccountsRepository implements AccountsDataSource {
         };
 
 
-        if (mCacheIsDirty) {
-
             mAccountsRemoteDataSource.getValues(period, dualCallback);
 
             mAccountsLocalDataSource.getValues(period, dualCallback);
-        }
+
     }
 
     private void mergeValuesToCache(Map<LocalDate, Double> values) {
@@ -403,7 +401,10 @@ public class AccountsRepository implements AccountsDataSource {
     }
 
     private void invalidateValueCache() {
+
         mCachedValues.clear();
+
+        mCacheIsDirty = true;
     }
 
     /**

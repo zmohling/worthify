@@ -6,24 +6,29 @@
     android:background="@color/background"
     tools:context=".dashboard.DashboardFragment">
 
-    <ScrollView
-        android:id="@+id/scroll"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:fillViewport="true">
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:paddingBottom="10dp"
+        <ScrollView
+            android:id="@+id/scroll"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
 
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/main"
+            <RelativeLayout
+                android:paddingBottom="10dp"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="60dp"
-                tools:context=".dashboard.DashboardFragment">
+                android:layout_height="fill_parent">
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/main"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="60dp"
+                    tools:context=".dashboard.DashboardFragment">
 
 
                     <com.github.mikephil.charting.charts.LineChart
@@ -36,46 +41,43 @@
                         android:src="@drawable/temp_graph" />
 
 
+                    <Button
+                        android:id="@+id/button_add_account"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_margin="5dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/graph"
+                        android:background="@drawable/ic_add_black_24dp"
+                        android:backgroundTint="@color/primary_accent" />
 
-
+                    <ListView
+                        android:id="@+id/list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/button_add_account"
+                        android:background="@null"
+                        android:layout_marginHorizontal="5dp"
+                        android:dividerHeight="5dp"
+                        android:divider="@null"
+                        android:footerDividersEnabled="false"
+                        android:headerDividersEnabled="false"></ListView>
+                </RelativeLayout>
 
                 <Button
-                    android:id="@+id/button_add_account"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="5dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_below="@id/graph"
-                    android:background="@drawable/ic_add_black_24dp"
-                    android:backgroundTint="@color/primary_accent" />
-
-                <ListView
-                    android:id="@+id/list"
+                    android:id="@+id/buttonLogout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="100dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="100dp"
+                    android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_below="@id/button_add_account"
-                    android:background="@null"
-                    android:layout_marginHorizontal="5dp"
-                    android:dividerHeight="5dp"
-                    android:divider="@null"
-                    android:footerDividersEnabled="false"
-                    android:headerDividersEnabled="false">
-                </ListView>
+                    android:background="@drawable/greenbtn_bg"
+                    android:text="Logout"
+                    android:textColor="@color/text" />
             </RelativeLayout>
-
-            <Button
-                android:id="@+id/buttonLogout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="100dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="100dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/greenbtn_bg"
-                android:text="Logout"
-                android:textColor="@color/text" />
-        </RelativeLayout>
-    </ScrollView>
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

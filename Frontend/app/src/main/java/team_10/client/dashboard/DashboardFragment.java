@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,17 +26,15 @@ import android.widget.NumberPicker;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import java.time.LocalDate;
-
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.renderer.LineChartRenderer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,11 +63,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     private View view;
     private static CustomListAdapter customAdapter;
     private static ListView lv;
+    private static SwipeRefreshLayout pullToRefresh;
     private static List<Account> accounts;
 
     private OnFragmentInteractionListener mListener;
-    private AccountsRepository mAccountsRepository;
 
+    private AccountsRepository mAccountsRepository;
     private AddEditAccountPresenter mAddEditAccountPresenter;
 
     public DashboardFragment() {
@@ -90,13 +90,22 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         view.findViewById(R.id.buttonLogout).setOnClickListener(this);
         view.findViewById(R.id.button_add_account).setOnClickListener(this);
 
+        pullToRefresh = (SwipeRefreshLayout) view.findViewById(R.id.pullToRefresh);
+
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh(true);
+            }
+        });
+
         List<Entry> entries = new ArrayList<>();
         Random rand = new Random();
         int last = 0;
-        for(int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
             Entry e = new Entry();
             e.setX(i);
-            if(last < 5) {
+            if (last < 5) {
                 last = last + Math.abs(rand.nextInt() % 6);
                 e.setY(last);
             } else {
@@ -164,7 +173,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
         });
 
-        DashboardFragment.updateDashboardUI();
+        refresh(false);
 
         return view;
     }
@@ -275,11 +284,37 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
      */
     public static void updateDashboardUI() {
 
-        AccountsRepository.getInstance().getAccounts(new AccountsDataSource.LoadAccountsCallback() {
-            @Override
+        for (int i = 0; i < accounts.size(); i++) {
+            if (accounts.get(i).isActive() == 0) {
+                accounts.remove(i);
+            }
+        }
+
+        customAdapter.notifyDataSetChanged();
+        setListViewHeightBasedOnChildren(lv);
+
+    }
+
+    /**
+     * Load accounts from cache and getValues for graph
+     * @param deepRefresh reload accounts from remote
+     */
+    private void refresh(boolean deepRefresh) {
+
+        if (deepRefresh)
+            mAccountsRepository.refreshAccounts();
+
+        mAccountsRepository.getAccounts(new AccountsDataSource.LoadAccountsCallback() {
+
             public void onAccountsLoaded(List<Account> accounts) {
 
                 DashboardFragment.accounts = accounts;
+
+                if (accounts == null)
+                    DashboardFragment.accounts = new ArrayList<>();
+
+                customAdapter = new CustomListAdapter(MainActivity.myContext, R.layout.item_account_list_item, accounts);
+                lv.setAdapter(customAdapter);
 
                 AccountsRepository.getInstance().getValues(PERIOD.DAY, new AccountsDataSource.GetValuesCallback() {
                     @Override
@@ -291,6 +326,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                         Gson g = b.create();
 
                         System.out.println(g.toJson(values));
+
+                        pullToRefresh.setRefreshing(false);
+
+                        updateDashboardUI();
                     }
 
                     @Override
@@ -298,20 +337,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
                     }
                 });
-
-                for (int i = 0; i < accounts.size(); i++)
-                {
-                    if (accounts.get(i).isActive() == 0)
-                    {
-                        accounts.remove(i);
-                    }
-                }
-
-                customAdapter = new CustomListAdapter(MainActivity.myContext, R.layout.item_account_list_item, accounts);
-                lv.setAdapter(customAdapter);
-
-                customAdapter.notifyDataSetChanged();
-                setListViewHeightBasedOnChildren(lv);
             }
 
             @Override
@@ -319,7 +344,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
             }
         });
-
     }
 
     /**
