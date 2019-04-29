@@ -55,7 +55,7 @@ public class AddEditTransactionPresenter implements AddEditTransactionContract.P
 
         if (isNewTransaction()) {
 
-            mTransactionModel = mAccountModel.getTransaction();
+            mTransactionModel = mAccountModel.getTransaction(null);
 
             if (mAddEditTransactionView.isActive()) {
 
@@ -68,7 +68,7 @@ public class AddEditTransactionPresenter implements AddEditTransactionContract.P
 
         } else {
 
-            // TODO: Assign Transaction model
+            mTransactionModel = mAccountModel.getTransaction(mTransactionID);
 
             if (mAddEditTransactionView.isActive()) {
 

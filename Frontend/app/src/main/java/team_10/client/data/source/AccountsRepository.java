@@ -2,15 +2,14 @@ package team_10.client.data.source;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import team_10.client.MainActivity;
 import team_10.client.constant.PERIOD;
@@ -18,8 +17,6 @@ import team_10.client.constant.TYPE;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.local.AccountsLocalDataSource;
 import team_10.client.data.source.remote.AccountsRemoteDataSource;
-import team_10.client.utility.General;
-import team_10.client.utility.adapter.AbstractAccountAdapter;
 import team_10.client.utility.io.AppExecutors;
 import team_10.client.utility.io.IO;
 
@@ -34,6 +31,8 @@ public class AccountsRepository implements AccountsDataSource {
     private final UserDataSource mUserRepository;
 
     Map<String, Account> mCachedAccounts;
+
+    Map<LocalDate, Double> mCachedValues;
 
     boolean mCacheIsDirty = false;
 
@@ -50,6 +49,8 @@ public class AccountsRepository implements AccountsDataSource {
         mUserRepository = userDataSource;
 
         mCachedAccounts = new LinkedHashMap<>();
+
+        mCachedValues = new HashMap<>();
 
         // TODO: Fetch remote accounts on every boot
     }
@@ -317,9 +318,20 @@ public class AccountsRepository implements AccountsDataSource {
 
     @Override
     public void disableAccount(@NonNull String accountID) {
-//        if (mCachedAccounts.containsKey(accountID)) {
-//            mCachedAccounts.get(accountID);
-//        }
+        Account account = mCachedAccounts.get(accountID);
+        account.setIsActive(0);
+
+        saveAccount(account, new SaveAccountCallback() {
+            @Override
+            public void onAccountSaved() {
+
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+        });
     }
 
     @Override
@@ -335,42 +347,63 @@ public class AccountsRepository implements AccountsDataSource {
     }
 
     @Override
-    public Map<LocalDate, Double> getValues(@NonNull PERIOD period) {
+    public void getValues(@NonNull PERIOD period, GetValuesCallback callback) {
 
-        Map<String, Map<LocalDate, Double>> wrapper = new HashMap<>();
-        Map<LocalDate, Double> dailyTotalValues = new HashMap<>();
+        if (mCachedValues!= null && mCachedValues.size() > 0 && !mCacheIsDirty) {
+            callback.onValuesLoaded(mCachedValues);
+            return;
+        }
 
-        dailyTotalValues.put(LocalDate.now().minusDays(4), General.round(100.055, 2));
-        dailyTotalValues.put(LocalDate.now().minusDays(3), General.round(105.22255, 2));
-        dailyTotalValues.put(LocalDate.now().minusDays(2), General.round(120.314, 2));
-        dailyTotalValues.put(LocalDate.now(), General.round(150.01, 2));
 
-        wrapper.put("000006820006", dailyTotalValues);
+        GetValuesCallback dualCallback = new GetValuesCallback() {
 
-        Map<LocalDate, Double> dailyTotalValues1 = new HashMap<>();
+            int sourcesCalculated = 0; // will be 2 when both sources have calculated and returned
 
-        dailyTotalValues1.put(LocalDate.now().minusDays(3), General.round(9505.6666, 2));
-        dailyTotalValues1.put(LocalDate.now().minusDays(2), General.round(10022, 2));
-        dailyTotalValues1.put(LocalDate.now().minusDays(1), General.round(11000.99, 2));
-        dailyTotalValues1.put(LocalDate.now(), General.round(11000.99, 2));
+            @Override
+            public void onValuesLoaded(Map<LocalDate, Double> values) {
+                sourcesCalculated++;
 
-        wrapper.put("000006820007", dailyTotalValues1);
+                mergeValuesToCache(values);
 
-        Map<LocalDate, Double> dailyTotalValues2 = new HashMap<>();
+                if (sourcesCalculated == 2)
+                    callback.onValuesLoaded(mCachedValues);
+            }
 
-        dailyTotalValues2.put(LocalDate.now(), General.round(21.2001, 2));
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        };
 
-        wrapper.put("000006820008", dailyTotalValues2);
 
-        GsonBuilder b = new GsonBuilder();
-        b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
-        b.setPrettyPrinting();
-        Gson g = b.create();
+        if (mCacheIsDirty) {
 
-        System.out.println(g.toJson(wrapper));
+            mAccountsRemoteDataSource.getValues(period, dualCallback);
 
-        return  dailyTotalValues;
+            mAccountsLocalDataSource.getValues(period, dualCallback);
+        }
+    }
 
+    private void mergeValuesToCache(Map<LocalDate, Double> values) {
+        Set<LocalDate> dates = values.keySet();
+
+        Iterator<LocalDate> localDateIterator = dates.iterator();
+        while (localDateIterator.hasNext()) {
+            LocalDate date = localDateIterator.next();
+            Double value = values.get(date);
+
+            if (mCachedValues.containsKey(date)) {
+                Double cachedValue = mCachedValues.get(date);
+
+                mCachedValues.put(date, value + cachedValue);
+            } else {
+                mCachedValues.put(date, value);
+            }
+        }
+    }
+
+    private void invalidateValueCache() {
+        mCachedValues.clear();
     }
 
     /**

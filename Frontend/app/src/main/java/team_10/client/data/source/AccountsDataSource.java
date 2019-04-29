@@ -33,6 +33,13 @@ public interface AccountsDataSource {
         void onDataNotAvailable();
     }
 
+    interface GetValuesCallback {
+
+        void onValuesLoaded(Map<LocalDate, Double> values);
+
+        void onDataNotAvailable();
+    }
+
     void getAccounts(@NonNull LoadAccountsCallback callback);
 
     void getAccount(@NonNull String accountID, @NonNull GetAccountCallback callback);
@@ -49,6 +56,6 @@ public interface AccountsDataSource {
 
     void refreshAccounts(@NonNull LoadAccountsCallback callback);
 
-    Map<LocalDate, Double> getValues(@NonNull PERIOD period);
+    void getValues(@NonNull PERIOD period, GetValuesCallback callback);
 
 }

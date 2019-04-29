@@ -4,13 +4,18 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +25,11 @@ import team_10.client.constant.TYPE;
 import team_10.client.constant.URL;
 import team_10.client.data.User;
 import team_10.client.data.models.Account;
+import team_10.client.data.models.Transaction;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.data.source.AccountsRepository;
+import team_10.client.utility.adapter.AbstractAccountAdapter;
+import team_10.client.utility.adapter.LocalDateAdapter;
 import team_10.client.utility.io.AppExecutors;
 import team_10.client.utility.io.IO;
 import team_10.client.utility.io.SharedPreferencesManager;
@@ -53,6 +61,7 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
     public void getAccounts(@NonNull LoadAccountsCallback callback) {
         List<Account> returnVal = new ArrayList<>();
         String requestBody = null;
+
         try {
             JsonObject userAccountsRequest = new JsonObject();
             userAccountsRequest.addProperty("id", Integer.toString(SharedPreferencesManager.getUser().getID()));
@@ -67,6 +76,8 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
                     @Override
                     public void onResponse(String response) {
                         try {
+
+                            System.out.println(response);
 
                             JSONObject object = new JSONObject(response);
 
@@ -169,7 +180,115 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
     }
 
     @Override
-    public Map<LocalDate, Double> getValues(@NonNull PERIOD period) {
-        return null;
+    public void getValues(@NonNull PERIOD period, GetValuesCallback callback) {
+        GsonBuilder b = new GsonBuilder();
+        b.registerTypeAdapter(Account.class, new AbstractAccountAdapter());
+        b.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
+        b.setPrettyPrinting();
+        Gson g = b.create();
+
+        VolleyPostRequest request = new VolleyPostRequest(null, URL.URL_FETCH_ACCOUNTS, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                System.out.println(response);
+
+                try {
+                    JSONObject object = new JSONObject(response);
+
+                    if (object.has("error") &&
+                            object.getBoolean("error")) {  // handle request specific errors
+
+                        String message = object.getString("message");
+
+                        Toast.makeText(MainActivity.myContext, "Error: " + message, Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Type mapType = new TypeToken<Map<String, Map<LocalDate, Double>>>() {
+                        }.getType();
+                        Map<String, Map<LocalDate, Double>> wrapper = g.fromJson(response, mapType);
+
+                        if (wrapper != null)
+                            updateTransactions(wrapper);
+                        else
+                            return;
+
+                        List<Account> cachedAccounts = new ArrayList<>(
+                                AccountsRepository.getInstance().getCachedAccounts().values());
+
+                        Map<LocalDate, Double> values = new HashMap<>();
+
+                        LocalDate date = LocalDate.now().minusDays(
+                                period.getDaysPerPeriod() * period.getPeriodsOnGraph());
+
+                        while (date.isBefore(LocalDate.now())) {
+                            for (Account account : cachedAccounts) {
+                                if (TYPE.getType(account.getClass()).isValueOnNetwork()) {
+
+                                    Double value = account.getValue(date);
+
+                                    if (values.containsKey(date)) {
+                                        Double cachedValue = values.get(date);
+
+                                        values.put(date, value + cachedValue);
+                                    } else {
+                                        values.put(date, value);
+                                    }
+
+                                }
+                            }
+
+                            date = date.plusDays(period.getDaysPerPeriod());
+                        }
+
+                        System.out.println("Successfully fetched data from the server:\n" + wrapper);
+
+                        callback.onValuesLoaded(values);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        request.execute();
+    }
+
+    private void updateTransactions(@NonNull Map<String, Map<LocalDate, Double>> values) {
+        final Map<String, Account> cachedAccounts = AccountsRepository.getInstance().getCachedAccounts();
+
+        for (String accountID : values.keySet()) {
+
+            if (!cachedAccounts.containsKey(accountID))
+                return;
+
+            Account account = cachedAccounts.get(accountID);
+
+            for (LocalDate date : values.get(accountID).keySet()) {
+
+                Double value = values.get(accountID).get(date);
+
+                Transaction t = account.getTransaction(date);
+
+                t.setValue(value);
+
+                if (date.isEqual(LocalDate.now()))
+                    continue;
+
+                AccountsRepository.getInstance().saveAccount(account, new SaveAccountCallback() {
+                    @Override
+                    public void onAccountSaved() {
+
+                    }
+
+                    @Override
+                    public void onDataNotAvailable() {
+
+                    }
+                });
+
+            }
+        }
     }
 }

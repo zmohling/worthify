@@ -1,5 +1,7 @@
 package team_10.client.dashboard.add_edit_account;
 
+import java.time.LocalDate;
+
 import team_10.client.BasePresenter;
 import team_10.client.BaseView;
 import team_10.client.dashboard.add_edit_transaction.AddEditTransactionContract;
@@ -22,9 +24,9 @@ public interface AddEditAccountContract {
 
         void addTransaction();
 
-        void editTransaction();
+        void editTransaction(LocalDate date);
 
-        void deleteTransaction();
+        void deleteTransaction(LocalDate date);
 
         boolean isDataMissing();
     }
