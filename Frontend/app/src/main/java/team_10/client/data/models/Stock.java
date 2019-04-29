@@ -16,6 +16,7 @@ public class Stock extends Account {
     )
     public String ticker;
 
+
     public Stock() {
     }
 
@@ -112,6 +113,17 @@ public class Stock extends Account {
                 inputType = Integer.class
         )
         public int amount;
+
+
+        public int visibility; // for populated transactions (i.e. a daily high stock value)
+
+        public int getAmount() {
+            return amount;
+        }
+
+        public int getVisibility() {
+            return visibility;
+        }
 
         Transaction() { }
 
