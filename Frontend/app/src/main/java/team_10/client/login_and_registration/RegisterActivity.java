@@ -244,6 +244,11 @@ public class RegisterActivity extends AppCompatActivity {
             public void onHostReachable() {
                 VolleySingleton.getInstance(RegisterActivity.this).addToRequestQueue(stringRequest);
             }
+
+            @Override
+            public void onHostUnreachable() {
+
+            }
         });
     }
 }

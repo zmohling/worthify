@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -21,8 +20,6 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
 
 import team_10.client.R;
@@ -169,6 +166,11 @@ public class ArticlesAdapter extends
                     public void onHostReachable() {
                         VolleySingleton.getInstance(viewHolder.context).addToRequestQueue(stringRequest);
                     }
+
+                    @Override
+                    public void onHostUnreachable() {
+
+                    }
                 });
             }
         });
@@ -214,6 +216,11 @@ public class ArticlesAdapter extends
                     @Override
                     public void onHostReachable() {
                         VolleySingleton.getInstance(viewHolder.context).addToRequestQueue(stringRequest);
+                    }
+
+                    @Override
+                    public void onHostUnreachable() {
+
                     }
                 });
             }

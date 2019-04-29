@@ -8,9 +8,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import team_10.client.R;
+import team_10.client.constant.PERIOD;
 import team_10.client.constant.TYPE;
 import team_10.client.data.models.Account;
 
@@ -51,23 +53,25 @@ public class CustomListAdapter extends ArrayAdapter {
             label.setText(a.getLabel());
 
             TextView value = (TextView) v.findViewById(R.id.account_value);
-            double todaysValue = 100;                                            //WILL NEED TO CHANGE
+            double todaysValue = a.getValue(LocalDate.now());                                            //WILL NEED TO CHANGE
             value.setText("" + todaysValue);
 
             TextView percent = (TextView) v.findViewById(R.id.account_percent);
-            double yesterdayValue = 110;                                        //WILL NEED TO CHANGE
+            double yesterdayValue = a.getValue(LocalDate.now().minusDays(PERIOD.WEEK.getDaysPerPeriod()));                                        //WILL NEED TO CHANGE
             double difference = (todaysValue - yesterdayValue) / yesterdayValue;
-            if (difference < 0)
-            {
-                ImageView image = (ImageView) v.findViewById(R.id.account_percent_image);
-                image.setImageResource(R.drawable.percent_down);
-            }
-            else
+
+            if (t.isAsset())
             {
                 ImageView image = (ImageView) v.findViewById(R.id.account_percent_image);
                 image.setImageResource(R.drawable.percent_up);
             }
-            percent.setText("" + String.format("%.2f", Math.abs(difference)) + "%");
+            else
+            {
+                ImageView image = (ImageView) v.findViewById(R.id.account_percent_image);
+                image.setImageResource(R.drawable.percent_down);
+            }
+
+            percent.setText("" + String.format("%.2f", Math.abs(difference * 100)) + "%");
 
 
 

@@ -239,7 +239,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
         while (transactionIterator.hasNext()) {
             Transaction t = transactionIterator.next();
 
-            if (t.getRecurring() != 0)
+            if (t.getRecurring() != 0 || t.getVisibility() == 1)
                 transactionIterator.remove();
         }
 
@@ -258,7 +258,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
         while (transactionIterator.hasNext()) {
             Transaction t = transactionIterator.next();
 
-            if (t.getRecurring() == 0)
+            if (t.getRecurring() == 0 || t.getVisibility() == 1)
                 transactionIterator.remove();
         }
 

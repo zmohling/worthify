@@ -162,7 +162,7 @@ public abstract class InputFieldFactory {
                                   int dayOfMonth) {
                 try {
 
-                    field.set(account, LocalDate.of(year, monthOfYear, dayOfMonth));
+                    field.set(account, LocalDate.of(year, ++monthOfYear, dayOfMonth));
                     editText.setHint(field.get(account).toString());
 
                 } catch (IllegalAccessException e) {

@@ -14,7 +14,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -50,7 +49,6 @@ import team_10.client.data.User;
 import team_10.client.data.models.Account;
 import team_10.client.data.source.AccountsDataSource;
 import team_10.client.data.source.AccountsRepository;
-import team_10.client.data.source.UserRepository;
 import team_10.client.utility.adapter.AbstractAccountAdapter;
 import team_10.client.utility.adapter.CustomListAdapter;
 
@@ -90,7 +88,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        view.findViewById(R.id.buttonLogout).setOnClickListener(this);
         view.findViewById(R.id.button_add_account).setOnClickListener(this);
 
         pullToRefresh = (SwipeRefreshLayout) view.findViewById(R.id.pullToRefresh);
@@ -197,10 +194,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         Activity parent = getActivity();
 
         switch (v.getId()) {
-            case R.id.buttonLogout:
-                UserRepository.getInstance().removeUserData();
-                parent.finish();
-                break;
             case R.id.button_add_account:
 
                 if (User.getToken() != "") {
@@ -280,12 +273,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
      */
     public static void updateDashboardUI() {
 
-        for (int i = 0; i < accounts.size(); i++) {
-            if (accounts.get(i).isActive() == 0) {
-                accounts.remove(i);
-            }
-        }
-
         customAdapter.notifyDataSetChanged();
         setListViewHeightBasedOnChildren(lv);
 
@@ -308,6 +295,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
                 if (accounts == null)
                     DashboardFragment.accounts = new ArrayList<>();
+
+                for (int i = 0; i < DashboardFragment.accounts.size(); i++) {
+                    if (DashboardFragment.accounts.get(i).isActive() == 0) {
+                        DashboardFragment.accounts.remove(i);
+                    }
+                }
 
                 customAdapter = new CustomListAdapter(MainActivity.myContext, R.layout.item_account_list_item, accounts);
                 lv.setAdapter(customAdapter);
@@ -379,23 +372,24 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     /**
      * Update ListView height equal to total height of child views
      */
-    private static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
+    private static void setListViewHeightBasedOnChildren (ListView listView) {
+
+        ListAdapter adapter = listView.getAdapter();
+
+        if (adapter == null) {
             return;
         }
-
+        ViewGroup vg = listView;
         int totalHeight = 0;
-        int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(), MeasureSpec.AT_MOST);
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
+        for (int i = 0; i < adapter.getCount(); i++) {
+            View listItem = adapter.getView(i, null, vg);
+            listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();
         }
 
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + listView.getPaddingBottom();
-        listView.setLayoutParams(params);
+        ViewGroup.LayoutParams par = listView.getLayoutParams();
+        par.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
+        listView.setLayoutParams(par);
         listView.requestLayout();
     }
 

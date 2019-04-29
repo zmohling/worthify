@@ -34,7 +34,10 @@ public class AccountsRepository implements AccountsDataSource {
 
     Map<LocalDate, Double> mCachedValues;
 
-    boolean mCacheIsDirty = false;
+    boolean mAccountCacheIsDirty = false;
+
+    boolean mValueCacheIsDirty = false;
+
 
     // Binary value for if account data has been queued
     // to send to the server
@@ -75,27 +78,23 @@ public class AccountsRepository implements AccountsDataSource {
 
     @Override
     public void getAccounts(@NonNull LoadAccountsCallback callback) {
-        if (mCachedAccounts != null && mCachedAccounts.size() > 0 && !mCacheIsDirty) {
+        if (mCachedAccounts != null && mCachedAccounts.size() > 0 && !mAccountCacheIsDirty) {
             callback.onAccountsLoaded(new ArrayList<>(mCachedAccounts.values()));
             return;
         }
 
-        if (mCacheIsDirty) {
-            getAccountsFromRemoteDataSource(callback);
-        } else {
-            mAccountsLocalDataSource.getAccounts(new LoadAccountsCallback() {
-                @Override
-                public void onAccountsLoaded(List<Account> accounts) {
-                    refreshCache(accounts);
-                    callback.onAccountsLoaded(new ArrayList<>(mCachedAccounts.values()));
-                }
+        mAccountsLocalDataSource.getAccounts(new LoadAccountsCallback() {
+            @Override
+            public void onAccountsLoaded(List<Account> accounts) {
+                refreshCache(accounts);
+                callback.onAccountsLoaded(new ArrayList<>(mCachedAccounts.values()));
+            }
 
-                @Override
-                public void onDataNotAvailable() {
-                    getAccountsFromRemoteDataSource(callback);
-                }
-            });
-        }
+            @Override
+            public void onDataNotAvailable() {
+                getAccountsFromRemoteDataSource(callback);
+            }
+        });
     }
 
     private void getAccountsFromRemoteDataSource(@NonNull final LoadAccountsCallback callback) {
@@ -119,13 +118,13 @@ public class AccountsRepository implements AccountsDataSource {
             mCachedAccounts = new LinkedHashMap<>();
         }
 
-        mCachedAccounts.clear();
+        //mCachedAccounts.clear();
 
         for (Account account : accounts) {
             mCachedAccounts.put(account.getID(), account);
         }
 
-        mCacheIsDirty = false;
+        mAccountCacheIsDirty = false;
     }
 
     private void refreshLocalDataSource(List<Account> accounts) {
@@ -336,8 +335,10 @@ public class AccountsRepository implements AccountsDataSource {
 
     @Override
     public void deleteAllAccounts() {
-        mCacheIsDirty = true;
+        mAccountCacheIsDirty = true;
+        mValueCacheIsDirty = true;
         mCachedAccounts.clear();
+        mCachedValues.clear();
         mAccountsLocalDataSource.deleteAllAccounts();
     }
 
@@ -349,7 +350,7 @@ public class AccountsRepository implements AccountsDataSource {
     @Override
     public void getValues(@NonNull PERIOD period, GetValuesCallback callback) {
 
-        if (mCachedValues!= null && mCachedValues.size() > 0 && !mCacheIsDirty) {
+        if (mCachedValues != null && mCachedValues.size() > 0 && !mValueCacheIsDirty) {
             callback.onValuesLoaded(mCachedValues);
             return;
         }
@@ -365,20 +366,24 @@ public class AccountsRepository implements AccountsDataSource {
 
                 mergeValuesToCache(values);
 
-                if (sourcesCalculated == 2)
+                if (sourcesCalculated == 2) {
+
+                    mValueCacheIsDirty = false;
+
                     callback.onValuesLoaded(mCachedValues);
+                }
             }
 
             @Override
             public void onDataNotAvailable() {
-                callback.onDataNotAvailable();
+                callback.onValuesLoaded(mCachedValues);;
             }
         };
 
 
-            mAccountsRemoteDataSource.getValues(period, dualCallback);
+        mAccountsRemoteDataSource.getValues(period, dualCallback);
 
-            mAccountsLocalDataSource.getValues(period, dualCallback);
+        mAccountsLocalDataSource.getValues(period, dualCallback);
 
     }
 
@@ -402,9 +407,10 @@ public class AccountsRepository implements AccountsDataSource {
 
     private void invalidateValueCache() {
 
-        mCachedValues.clear();
+        mAccountCacheIsDirty = true;
 
-        mCacheIsDirty = true;
+        mValueCacheIsDirty = true;
+        mCachedValues.clear();
     }
 
     /**

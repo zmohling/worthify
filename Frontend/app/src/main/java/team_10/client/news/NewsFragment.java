@@ -135,6 +135,11 @@ public class NewsFragment extends Fragment {
             public void onHostReachable() {
                 VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
             }
+
+            @Override
+            public void onHostUnreachable() {
+
+            }
         });
     }
 

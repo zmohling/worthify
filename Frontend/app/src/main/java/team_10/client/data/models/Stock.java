@@ -33,7 +33,7 @@ public class Stock extends Account {
 
     public void addTransaction(LocalDate d, int amount, int recurring, double value, int transactionId) {
 
-        Transaction t = new Transaction(value, amount, 1, transactionId, recurring, d);
+        Transaction t = new Transaction(value, amount, transactionId, recurring, d);
         t.setAccount(this);
         transactions.put(d, t);
     }
@@ -48,26 +48,32 @@ public class Stock extends Account {
 
             LocalDate endDate = null;
 
-            Iterator<LocalDate> localDateIterator = dateSet.iterator();
-            while (localDateIterator.hasNext()) {
-                LocalDate temp = localDateIterator.next();
+            /* THIS IS CAUSING NULLPOINTER EXCEPTION BECAUSE VALUES AREN"T BEING *
+             * STORED PROPERLY WHEN VALUES ARE FETCHED                           */
+            try {
+                Iterator<LocalDate> localDateIterator = dateSet.iterator();
+                while (localDateIterator.hasNext()) {
+                    LocalDate temp = localDateIterator.next();
 
-                if (temp.isBefore(d)) {
-                    startDate = temp;
-                } else if (temp.isAfter(d)){
-                    endDate = temp;
-                } else if (temp.isEqual(d)) {
-                    return transactions.get(temp).getValue();
+                    if (temp.isBefore(d)) {
+                        startDate = temp;
+                    } else if (temp.isAfter(d)) {
+                        endDate = temp;
+                    } else if (temp.isEqual(d)) {
+                        return transactions.get(temp).getValue();
+                    }
                 }
+
+                if (endDate == null)
+                    return transactions.get(startDate).getValue();
+                else
+                    return (startDate.until(d, ChronoUnit.DAYS) <= d.until(endDate, ChronoUnit.DAYS))
+                            ? transactions.get(startDate).getValue()
+                            : transactions.get(endDate).getValue();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                return 0;
             }
-
-            if (endDate == null)
-                return transactions.get(startDate).getValue();
-            else
-                return (startDate.until(d, ChronoUnit.DAYS) <= d.until(endDate, ChronoUnit.DAYS))
-                    ? transactions.get(startDate).getValue()
-                    : transactions.get(endDate).getValue();
-
         }
 
         return 0; // if all else fails
@@ -78,7 +84,9 @@ public class Stock extends Account {
         if (date != null && transactions.containsKey(date)) {
             return transactions.get(date);
         } else if (date != null){
-            Transaction t = new Transaction(0, 0, 0, transactions.size(), 0, date);
+            Transaction t = new Transaction(0, 0, transactions.size(), 0, date);
+            t.setVisibility(1);
+
             transactions.put(date, t);
 
             return transactions.get(date);
@@ -99,14 +107,11 @@ public class Stock extends Account {
         )
         public int amount;
 
-        public int visibility; // for populated transactions (i.e. a daily high stock value)
-
         Transaction() { }
 
-        Transaction(double value, int amount, int visibility, int transactionID, int recurring, LocalDate date) {
+        Transaction(double value, int amount, int transactionID, int recurring, LocalDate date) {
             this.value = value;
             this.amount = amount;
-            this.visibility = visibility;
             this.transactionID = transactionID;
             this.recurring = recurring;
             this.date = date;
