@@ -53,7 +53,7 @@ public class Article implements Serializable {
     @Column(name = "keyword")
     private String keyword;
 
-    @Column(name = "votes")
+    @Column(name = "votes", nullable = false)
     private int votes;
 
     @OneToMany(mappedBy="article", cascade = CascadeType.ALL)
