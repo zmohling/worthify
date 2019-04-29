@@ -48,14 +48,14 @@ public class Stock extends Account {
             LocalDate startDate = transactions.firstKey();
             Double val;
             LocalDate endDate = null;
-
+            Transaction transaction = new Transaction();
             /* THIS IS CAUSING NULLPOINTER EXCEPTION BECAUSE VALUES AREN"T BEING *
              * STORED PROPERLY WHEN VALUES ARE FETCHED                           */
             try {
                 Iterator<LocalDate> localDateIterator = dateSet.iterator();
                     while (localDateIterator.hasNext()) {
                         LocalDate temp = localDateIterator.next();
-
+                        transaction =
                         if (temp.isBefore(d)) {
                             startDate = temp;
                         } else if (temp.isAfter(d)) {
