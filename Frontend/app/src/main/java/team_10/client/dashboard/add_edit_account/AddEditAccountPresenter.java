@@ -89,7 +89,6 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
 
     @Override
     public void unsubscribe() {
-        DashboardFragment.updateDashboardUI();
     }
 
 
@@ -99,6 +98,7 @@ public class AddEditAccountPresenter implements AddEditAccountContract.Presenter
         mAccountsRepository.saveAccount(mAccountModel, new AccountsDataSource.SaveAccountCallback() {
             @Override
             public void onAccountSaved() {
+                DashboardFragment.refresh(false);
             }
 
             @Override

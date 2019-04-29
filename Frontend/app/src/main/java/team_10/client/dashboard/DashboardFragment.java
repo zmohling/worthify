@@ -299,12 +299,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
      * Load accounts from cache and getValues for graph
      * @param deepRefresh reload accounts from remote
      */
-    private void refresh(boolean deepRefresh) {
+    public static void refresh(boolean deepRefresh) {
 
         if (deepRefresh)
-            mAccountsRepository.refreshAccounts();
+            AccountsRepository.getInstance().refreshAccounts();
 
-        mAccountsRepository.getAccounts(new AccountsDataSource.LoadAccountsCallback() {
+        AccountsRepository.getInstance().getAccounts(new AccountsDataSource.LoadAccountsCallback() {
 
             public void onAccountsLoaded(List<Account> accounts) {
 
@@ -334,14 +334,16 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
                     @Override
                     public void onDataNotAvailable() {
-
+                        pullToRefresh.setRefreshing(false);
+                        updateDashboardUI();
                     }
                 });
             }
 
             @Override
             public void onDataNotAvailable() {
-
+                pullToRefresh.setRefreshing(false);
+                updateDashboardUI();
             }
         });
     }
