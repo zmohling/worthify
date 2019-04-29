@@ -45,31 +45,37 @@ public class Stock extends Account {
             Set<LocalDate> dateSet = transactions.keySet();
 
             LocalDate startDate = transactions.firstKey();
-
+            Double val;
             LocalDate endDate = null;
 
             /* THIS IS CAUSING NULLPOINTER EXCEPTION BECAUSE VALUES AREN"T BEING *
              * STORED PROPERLY WHEN VALUES ARE FETCHED                           */
             try {
                 Iterator<LocalDate> localDateIterator = dateSet.iterator();
-                while (localDateIterator.hasNext()) {
-                    LocalDate temp = localDateIterator.next();
+                    while (localDateIterator.hasNext()) {
+                        LocalDate temp = localDateIterator.next();
 
-                    if (temp.isBefore(d)) {
-                        startDate = temp;
-                    } else if (temp.isAfter(d)) {
-                        endDate = temp;
-                    } else if (temp.isEqual(d)) {
-                        return transactions.get(temp).getValue();
+                        if (temp.isBefore(d)) {
+                            startDate = temp;
+                        } else if (temp.isAfter(d)) {
+                            endDate = temp;
+                        } else if (temp.isEqual(d)) {
+                            if (transactions.get(temp).getValue() == null) {
+                                return 0.0;
+                            } else return transactions.get(temp).getValue();
+                        }
                     }
-                }
-
-                if (endDate == null)
-                    return transactions.get(startDate).getValue();
-                else
-                    return (startDate.until(d, ChronoUnit.DAYS) <= d.until(endDate, ChronoUnit.DAYS))
-                            ? transactions.get(startDate).getValue()
-                            : transactions.get(endDate).getValue();
+                    if (endDate == null)
+                        if (transactions.get(startDate).getValue() == null) {
+                            return 0.0;
+                        } else return transactions.get(startDate).getValue();
+                    else
+                        val = (startDate.until(d, ChronoUnit.DAYS) <= d.until(endDate, ChronoUnit.DAYS))
+                                ?transactions.get(startDate).getValue()
+                                : transactions.get(endDate).getValue();
+                    if(val == null) {
+                        return 0;
+                    } else return val;
             } catch (NullPointerException e) {
                 e.printStackTrace();
                 return 0;
