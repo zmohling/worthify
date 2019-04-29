@@ -10,11 +10,17 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import team_10.client.MainActivity;
 import team_10.client.R;
 import team_10.client.dashboard.add_edit_account.AddEditAccountPresenter;
+import team_10.client.data.UserInputField;
 import team_10.client.data.models.Transaction;
 
 /**
@@ -82,8 +88,28 @@ public class TransactionsAdapter extends
         final Transaction article = mArticles.get(position);
 
         // Set item views based on your views and data model
-        viewHolder.titleTextView.setText(article.getAccount().getLabel());
-        viewHolder.descriptionTextView.setText(article.getValue() + "");
+        viewHolder.titleTextView.setText(article.getDate().toString());
+
+        getUsableFields(article.getClass());
+
+        Set<Field> fieldsSet = fields.keySet();
+
+        Iterator<Field> iterator = fieldsSet.iterator();
+        while (iterator.hasNext()) {
+            Field field = iterator.next();
+            Object o = null;
+
+            try {
+                o = field.get(article);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+            if (o != null) {
+                viewHolder.descriptionTextView.setText(o.toString() + "");
+                break;
+            }
+        }
 
         viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,37 +137,31 @@ public class TransactionsAdapter extends
                 return true;
             }
         });
-
-       /* viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LayoutInflater inflater = LayoutInflater.from(parentContext);
-                View popupView = inflater.inflate(R.layout.modal_edit_transaction, null);
-
-                int width = LinearLayout.LayoutParams.MATCH_PARENT;
-                int height = LinearLayout.LayoutParams.MATCH_PARENT;
-                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, true);
-                popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    popupWindow.setElevation(100);
-                }
-                TextView nameText = (TextView) popupView.findViewById(R.id.modal_transaction_name);
-                nameText.setText("Label: " + article.getAccount().getLabel());
-                TextView textView = (TextView) popupView.findViewById(R.id.modal_transaction_value);
-                textView.setText("Value of Transaction:  " + article.getValue());
-                TextView dateText = (TextView) popupView.findViewById(R.id.modal_transaction_date);
-                dateText.setText("Date of Transaction: " + article.getDate().toString());
-
-                ((Button) popupView.findViewById(R.id.modal_transaction_cancel)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        popupWindow.dismiss();
-                    }
-                });
-            }
-        });
-        */
     }
+
+    private Map<Field, UserInputField> fields;
+
+    private void getUsableFields(Class<? extends Transaction> clazz) {
+
+        LinearLayout v = new LinearLayout(MainActivity.myContext);
+
+        v.setOrientation(LinearLayout.VERTICAL);
+
+        fields = new TreeMap<>((o1, o2) -> o1.getAnnotation(UserInputField.class).priority() -
+                o2.getAnnotation(UserInputField.class).priority());
+
+        for (Field field : clazz.getFields()) {
+
+            field.setAccessible(true);
+
+            if (field.isAnnotationPresent(UserInputField.class)) {
+
+                fields.put(field, field.getAnnotation(UserInputField.class));
+
+            }
+        }
+    }
+
 
     // Returns the total count of items in the list
     @Override

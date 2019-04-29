@@ -48,26 +48,32 @@ public class Stock extends Account {
 
             LocalDate endDate = null;
 
-            Iterator<LocalDate> localDateIterator = dateSet.iterator();
-            while (localDateIterator.hasNext()) {
-                LocalDate temp = localDateIterator.next();
+            /* THIS IS CAUSING NULLPOINTER EXCEPTION BECAUSE VALUES AREN"T BEING *
+             * STORED PROPERLY WHEN VALUES ARE FETCHED                           */
+            try {
+                Iterator<LocalDate> localDateIterator = dateSet.iterator();
+                while (localDateIterator.hasNext()) {
+                    LocalDate temp = localDateIterator.next();
 
-                if (temp.isBefore(d)) {
-                    startDate = temp;
-                } else if (temp.isAfter(d)){
-                    endDate = temp;
-                } else if (temp.isEqual(d)) {
-                    return transactions.get(temp).getValue();
+                    if (temp.isBefore(d)) {
+                        startDate = temp;
+                    } else if (temp.isAfter(d)) {
+                        endDate = temp;
+                    } else if (temp.isEqual(d)) {
+                        return transactions.get(temp).getValue();
+                    }
                 }
+
+                if (endDate == null)
+                    return transactions.get(startDate).getValue();
+                else
+                    return (startDate.until(d, ChronoUnit.DAYS) <= d.until(endDate, ChronoUnit.DAYS))
+                            ? transactions.get(startDate).getValue()
+                            : transactions.get(endDate).getValue();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                return 0;
             }
-
-            if (endDate == null)
-                return transactions.get(startDate).getValue();
-            else
-                return (startDate.until(d, ChronoUnit.DAYS) <= d.until(endDate, ChronoUnit.DAYS))
-                    ? transactions.get(startDate).getValue()
-                    : transactions.get(endDate).getValue();
-
         }
 
         return 0; // if all else fails
