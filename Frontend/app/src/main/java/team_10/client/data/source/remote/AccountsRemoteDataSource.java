@@ -218,7 +218,6 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
 
                 try {
                     JSONObject object = new JSONObject(response);
-
                     if (object.has("error") &&
                             object.getBoolean("error")) {  // handle request specific errors
 
@@ -232,7 +231,6 @@ public class AccountsRemoteDataSource implements AccountsDataSource {
                         Type mapType = new TypeToken<Map<String, Map<LocalDate, Double>>>() {
                         }.getType();
                         Map<String, Map<LocalDate, Double>> wrapper = g.fromJson(response, mapType);
-
                         if (wrapper != null)
                             updateTransactions(wrapper);
                         else

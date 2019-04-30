@@ -187,10 +187,10 @@ public class AccountsController {
                 StockRetrieval stockRetrieval = new StockRetrieval();
                 String returnedFromStockRetrieval = stockRetrieval.retrieve5yData(stock.getTicker(), stock.getDate());
                 returnStr = returnStr + returnedFromStockRetrieval;
-                if(returnedFromStockRetrieval != "") returnStr = returnStr + ",";
+                //if(returnedFromStockRetrieval != "") returnStr = returnStr + ",";
                 stock.setDate(Date.valueOf(LocalDate.now()));
                 stockRepo.editDate(stock.getDate(), stock.getAccountID());
-                returnStr = returnStr + "\"" + Date.valueOf(LocalDate.now()) + "\": \"" + stockRetrieval.retrieveStock(stock.getTicker()) + "\"";
+                //returnStr = returnStr + "\"" + Date.valueOf(LocalDate.now()) + "\": \"" + stockRetrieval.retrieveStock(stock.getTicker()) + "\"";
             } else {
                 RealEstate realEstate = new RealEstate();
                 realEstate = realEstateRepo.getRealEstate(apiAccountsList[i].getAccountId());
