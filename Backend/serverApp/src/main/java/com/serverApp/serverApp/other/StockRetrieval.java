@@ -62,7 +62,7 @@ public class StockRetrieval {
         boolean first = true;
         for(int i = 0; i < arr.size(); i++) {
             Date iterDate = java.sql.Date.valueOf(LocalDate.parse(arr.get(i).getAsJsonObject().get("date").getAsString()));
-            if(date.compareTo(iterDate) <= 0) {
+            if(date.compareTo(iterDate) < 0) {
                 if (!first) {
                     returnStr = returnStr + ",";
                 }
