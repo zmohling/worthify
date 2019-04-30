@@ -55,7 +55,6 @@ public class Stock extends Account {
                 Iterator<LocalDate> localDateIterator = dateSet.iterator();
                     while (localDateIterator.hasNext()) {
                         LocalDate temp = localDateIterator.next();
-                        transaction =
                         if (temp.isBefore(d)) {
                             startDate = temp;
                         } else if (temp.isAfter(d)) {
