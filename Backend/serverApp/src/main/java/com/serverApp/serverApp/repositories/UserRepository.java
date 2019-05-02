@@ -7,6 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * JPA repository for Users
+ *
+ * @author Griffin Stout and Michae Davis
+ *
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
@@ -15,6 +21,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT count(*) FROM users WHERE email = ?1", nativeQuery = true)
     int checkEmail(String email);
+
+    @Query(value = "SELECT count(*) FROM users WHERE id = ?1", nativeQuery = true)
+    int checkUserInDb(long id);
 
     @Query(value = "SELECT * FROM users WHERE email = ?1 AND password = ?2", nativeQuery = true)
     User getUser(String email, String password);
@@ -33,6 +42,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT * FROM users WHERE type = 0", nativeQuery = true)
     User[] listAll();
+
+    @Modifying
+    @Transactional
+    @Query(value ="UPDATE users u set u.salt = ?1, u.password = ?2 WHERE u.email = ?3", nativeQuery = true)
+    void changePassword(byte[] salt, String password, String email);
+
+    @Modifying
+    @Transactional
+    @Query(value ="UPDATE users u set u.email = ?1 WHERE u.email = ?2", nativeQuery = true)
+    void changeEmail(String changedEmail, String email);
 
     @Modifying
     @Transactional

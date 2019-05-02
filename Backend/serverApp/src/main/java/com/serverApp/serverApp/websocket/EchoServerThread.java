@@ -3,6 +3,11 @@ package com.serverApp.serverApp.websocket;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * a thread that gets created when a user connects
+ *
+ * @author Griffin Stout
+ */
 public class EchoServerThread extends Thread{
     private EchoServer server = null;
     private Socket socket = null;

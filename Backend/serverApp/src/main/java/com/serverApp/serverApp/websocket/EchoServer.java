@@ -1,13 +1,18 @@
 package com.serverApp.serverApp.websocket;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+
+/**
+ * websocket server that handles all online users and their threads
+ *
+ * @author Griffin Stout
+ */
 public class EchoServer implements Runnable {
 
     private ServerSocket socket = null;

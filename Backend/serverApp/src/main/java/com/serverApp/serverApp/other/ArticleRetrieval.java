@@ -12,11 +12,19 @@ import com.serverApp.serverApp.models.Article;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
+/**
+ * class that uses an HTTP connection to retrieve a list of articles from a url
+ *
+ * @author Griffin Stout
+ */
 public class ArticleRetrieval {
 
     private HttpURLConnection conn;
 
+    /**
+     * @param url url to get articles from
+     * @return arraylist of articles
+     */
     public ArrayList<Article> getFromURL(URL url){
         try{
             conn = (HttpURLConnection) url.openConnection();

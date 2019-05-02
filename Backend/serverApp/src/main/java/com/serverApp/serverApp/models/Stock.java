@@ -3,8 +3,15 @@ package com.serverApp.serverApp.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
-//use IEX API
+/**
+ * Entity representing the stocks table
+ *
+ * @author Michael Davis
+ */
 @Entity
 @Table(name = "stocks")
 public class Stock implements Serializable {
@@ -19,6 +26,9 @@ public class Stock implements Serializable {
 
     @Column(name = "ticker")
     private String ticker;
+
+    @Column(name = "date")
+    private java.sql.Date date;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -46,5 +56,13 @@ public class Stock implements Serializable {
 
     public void setTicker(String ticker) {
         this.ticker = ticker;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

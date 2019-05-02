@@ -9,6 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
+/**
+ * JPA repository for Accounts
+ *
+ * @author Michael Davis
+ *
+ */
 @Repository
 public interface AccountsRepository extends JpaRepository<Accounts, Long> {
 
@@ -20,6 +26,14 @@ public interface AccountsRepository extends JpaRepository<Accounts, Long> {
 
     @Query(value = "SELECT * FROM accounts WHERE CAST(SUBSTRING(accountID, 1, 8) as unsigned) = ?1", nativeQuery = true)
     Accounts[] getAccountsById(long userId);
+
+    @Query(value = "SELECT * FROM accounts WHERE CAST(SUBSTRING(accountID, 1, 8) as unsigned) = ?1 AND (type = \"Stock\" OR type = \"RealEstate\")", nativeQuery = true)
+    Accounts[] getAPIAccounts(long userId);
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE accounts SET label = ?1, transactions = ?2 WHERE accountID = ?3", nativeQuery = true)
+    void editAccount(String label, String transaction, String accountID);
+
 
     @Transactional
     @Modifying

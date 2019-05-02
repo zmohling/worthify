@@ -1,13 +1,13 @@
 package com.serverApp.serverApp.models;
 
-
-import org.hibernate.type.BlobType;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Blob;
 
-
+/**
+ * Entity representing the accounts table
+ *
+ * @author Michael Davis
+ */
 @Entity
 @Table(name = "accounts")
 public class Accounts implements Serializable{

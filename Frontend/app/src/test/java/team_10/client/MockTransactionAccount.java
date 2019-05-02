@@ -1,15 +1,13 @@
 package team_10.client;
 
 import org.junit.Test;
-import org.mockito.Mock;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
-import team_10.client.object.account.Account;
-import team_10.client.object.account.Loan;
-import team_10.client.object.account.Transaction;
+import team_10.client.data.models.Account;
+import team_10.client.data.models.Loan;
+import team_10.client.data.models.Transaction;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;

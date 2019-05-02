@@ -1,40 +1,71 @@
 package team_10.client.constant;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import team_10.client.object.account.Account;
+import team_10.client.data.models.Account;
+import team_10.client.data.models.CertificateOfDeposit;
+import team_10.client.data.models.Loan;
+import team_10.client.data.models.RealEstate;
+import team_10.client.data.models.SavingsAccount;
+import team_10.client.data.models.Stock;
 
+/**
+ * Enum for types of accounts.
+ */
 public enum TYPE {
-    CERTIFICATEOFDEPOSIT("Certificate of Deposit", "CertificateOfDeposit"),
-    LOAN("Loan", "Loan"),
-    SAVINGSACCOUNT("Savings Account", "SavingsAccount"),
-    STOCK("Stock", "Stock");
+    CERTIFICATEOFDEPOSIT("Certificate of Deposit", CertificateOfDeposit.class, false, true),
+    LOAN("Loan", Loan.class, false, false),
+    SAVINGSACCOUNT("Savings Account", SavingsAccount.class, false, true),
+    REALESTATE("Real Estate", RealEstate.class, true, true),
+    STOCK("Stock", Stock.class, true, true);
 
-    private String simpleName;
-    private String className;
+    private String displayName;
+    private Class<? extends Account> clazz;
+    private boolean isValueOnNetwork;
+    private boolean isAsset;
 
-    TYPE(String simpleName, String className) {
-        this.simpleName = simpleName;
-        this.className = className;
+    TYPE(@NonNull String displayName, @NonNull Class<? extends Account> clazz, @NonNull boolean isValueOnNetwork, @NonNull boolean isAsset) {
+        this.displayName = displayName;
+        this.clazz = clazz;
+        this.isValueOnNetwork = isValueOnNetwork;
+        this.isAsset = isAsset;
     }
 
-    public Class<Account> getTypeClass() {
-        String p = "team_10.client.object.account.";
-        Class<Account> c = null;
+    /**
+     * Gets the type of the account.
+     * @return the type's account class
+     */
+    public Class<? extends Account> getTypeClass() {
+        return this.clazz;
+    }
 
-        try {
-            c = (Class<Account>) Class.forName(p + className);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+    /**
+     * Finds type that matches.
+     * @param s
+     * @return the type that matches s in the types list
+     */
+    public static TYPE getType(String s) {
+        for (TYPE t : TYPE.values()) {
+            if (t.displayName.equals(s)) {
+                return t;
+            }
         }
 
-        return c;
+
+        return null;
     }
 
-    public static TYPE firstMatch(String s) {
+    /**
+     * Returns TYPE enum member for clazz
+     * @param clazz Class which will be used to find it's coordinating TYPE
+     * @return TYPE
+     */
+    public static TYPE getType(Class<? extends Account> clazz) {
         for (TYPE t : TYPE.values()) {
-            if (t.simpleName.equals(s)) {
+            if (t.clazz.equals(clazz)) {
                 return t;
             }
         }
@@ -42,11 +73,28 @@ public enum TYPE {
         return null;
     }
 
+    /**
+     * Overrides Object's toString() method and
+     * returns the TYPE's display name.
+     * @return Name of type suited for displaying to the user.
+     */
     @Override
-    public String toString() {
-        return simpleName;
+    public @NonNull String toString() {
+        return this.displayName;
     }
 
+    public @NonNull boolean isValueOnNetwork() { return this.isValueOnNetwork; }
+
+    public @NonNull boolean isAsset() { return this.isAsset; }
+
+    public @NonNull Class<? extends Account> getClazz() {
+        return this.clazz;
+    }
+
+    /**
+     * Gets all types and finds there strings.
+     * @return all types of accounts as a list of strings
+     */
     public static List<String> getAllAsStrings() {
         ArrayList<String> types = new ArrayList<>();
         TYPE[] t = TYPE.values();

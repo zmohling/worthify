@@ -1,8 +1,9 @@
 package com.serverApp.serverApp.models;
 
 
-
-
+/**
+ * source class
+ */
 public class Source {
 
     public String id;

@@ -5,6 +5,11 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 
+/**
+ *
+ * Entity representing the CertificateOfDeposit table
+ * @author Michael Davis
+ */
 @Entity
 @Table(name = "certificateOfDeposit")
 public class CertificateOfDeposit implements Serializable {

@@ -7,8 +7,8 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import team_10.client.object.Article;
-import team_10.client.utility.ArticlesAdapter;
+import team_10.client.data.Article;
+import team_10.client.utility.adapter.ArticlesAdapter;
 
 import static junit.framework.TestCase.assertEquals;
 

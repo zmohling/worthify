@@ -1,11 +1,15 @@
 package com.serverApp.serverApp.models;
 
-import net.bytebuddy.implementation.bind.annotation.Default;
-import org.hibernate.validator.constraints.Length;
-
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Entity representing the articles table
+ *
+ * @author Griffin Stout
+ */
 @Entity
 @Table(name="articles")
 public class Article implements Serializable {
@@ -49,6 +53,19 @@ public class Article implements Serializable {
     @Column(name = "keyword")
     private String keyword;
 
+    @Column(name = "votes", nullable = false)
+    private int votes;
+
+    @OneToMany(mappedBy="article", cascade = CascadeType.ALL)
+    private List<Vote> voters = new ArrayList<>();
+
+    public int getVotes() {
+        return votes;
+    }
+
+    public void setVotes(int votes) {
+        this.votes = votes;
+    }
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -148,5 +165,13 @@ public class Article implements Serializable {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public List<Vote> getVoters() {
+        return voters;
+    }
+
+    public void setVoters(List<Vote> voters) {
+        this.voters = voters;
     }
 }
